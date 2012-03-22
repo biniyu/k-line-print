@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 CKLinePrintView::CKLinePrintView()
 {
 	// TODO: 在此处添加构造代码
-
+	m_bDrawTrackingCrossLine = FALSE;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -59,7 +59,7 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-	CRect rc;
+	CRect rc, rc1, rc2, rc3;
 	KLineRenderer klr;
 
 	GetClientRect(&rc);
@@ -80,7 +80,20 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	MemDC.FillSolidRect(0,0,rc.Width(),rc.Height(),RGB(255,255,255));
 	//绘图
 
-	klr.Render(&MemDC, rc, pDoc->klc);
+	rc1 = rc;
+	rc1.bottom /= 2;
+
+	rc2 = rc;
+	rc2.top = rc.bottom /2;
+	rc2.right = rc.right / 2;
+
+	rc3 = rc;
+	rc3.top = rc.bottom / 2;
+	rc3.left = rc.right / 2;
+
+	klr.Render(&MemDC, rc1, pDoc->klc15s);
+	klr.Render(&MemDC, rc2, pDoc->klc1min);
+	klr.Render(&MemDC, rc3, pDoc->klc1min);
 
 	if(m_bDrawTrackingCrossLine)
 	{
@@ -178,6 +191,28 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		pDoc->ViewNeighborDate(FALSE);
 	}
 
+	if(nChar == VK_UP)
+	{
+		pDoc->klc15s.Inflate();
+	}
+
+	if(nChar == VK_DOWN)
+	{
+		pDoc->klc15s.Deflate();
+	}
+
+	if(nChar == VK_LEFT)
+	{
+		pDoc->klc15s.MovePrev();
+	}
+
+	if(nChar == VK_RIGHT)
+	{
+		pDoc->klc15s.MoveNext();
+	}
+
+	Invalidate(FALSE);
+
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
@@ -195,6 +230,7 @@ void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	m_bDrawTrackingCrossLine = !m_bDrawTrackingCrossLine;
+	cp = point;
 	Invalidate(FALSE);
 	CView::OnLButtonDblClk(nFlags, point);
 }

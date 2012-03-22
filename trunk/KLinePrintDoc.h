@@ -17,7 +17,8 @@ protected: // 仅从序列化创建
 // 属性
 public:
 
-	KLineCollection klc;
+	KLineCollection klc15s;
+	KLineCollection klc1min;
 
 // 操作
 public:

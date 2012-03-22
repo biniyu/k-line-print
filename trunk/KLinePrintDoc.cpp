@@ -91,7 +91,8 @@ void CKLinePrintDoc::OnFileOpen()
 	{
 		CString FilePathName = dlg.GetPathName(); 
 
-		klc.clear();
+		klc15s.clear();
+		klc1min.clear();
 
 		TickReader tr;
 
@@ -121,7 +122,8 @@ void CKLinePrintDoc::OnFileOpen()
 		kline.low = tcPrev.low;
 		kline.vol = tcPrev.avgvol;
 	
-		klc.Generate(tc, 30, kline);
+		klc15s.Generate(tc, 15, kline);
+		klc1min.Generate(tc, 60, kline);
 
 		this->SetTitle(CString(m_CurCsvFile.c_str()));
 		
@@ -256,7 +258,9 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
-	klc.clear();
+	klc15s.clear();
+
+	klc1min.clear();
 
 	TickReader tr;
 
@@ -278,9 +282,10 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 	kline.low = tcPrev.low;
 	kline.vol = tcPrev.avgvol;
 
-	klc.Generate(tc, 30, kline);
+	klc15s.Generate(tc, 15, kline);
+	klc1min.Generate(tc, 60, kline);
 
 	this->SetTitle(CString(m_CurCsvFile.c_str()));
 	
-	this->UpdateAllViews(0);	
+//	this->UpdateAllViews(0);	
 }

@@ -62,13 +62,15 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 	float pixelPerVol = ((float)rect.Height()) / (kVolRatio + 1) / klines.maxvol;
 
 	//	计算K线的宽度
-	float kWidth = (rect.Width() - (klines.size() + 1) * kSpace)/(float)klines.size();
+	float kWidth = (rect.Width() - (klines.endidx - klines.startidx + 2) * kSpace)
+		/(float)(klines.endidx - klines.startidx + 1);
 
-	CPen penRed, penGreen, penWhite, *pOldPen;
+	CPen penRed, penGreen, penWhite, penGreyDotted, *pOldPen;
 
     penRed.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
     penGreen.CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
     penWhite.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+    penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
 
 	float timeLinePos = rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
 	float axleLinePos = rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
@@ -86,8 +88,8 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 	pDC->LineTo(rect.right, axleLinePos);
 
 	//	绘制价格线
-//	pDC->MoveTo(1, rect.top);
-//	pDC->LineTo(1, rect.bottom);
+	pDC->MoveTo(rect.left + 1, rect.top);
+	pDC->LineTo(rect.left + 1, rect.bottom);
 
 	CString strPercent;
 
@@ -98,10 +100,10 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 	float kLastAvgPos = 0;
 	float kLastMiddle = 0;
 
-	for(int i = 0; i < klines.size(); i++)
+	for(int i = klines.startidx; i <= klines.endidx; i++)
 	{
 		/* 计算左右方向 */
-		float kLeft = rect.left + (i+1) * kSpace + kWidth * i;
+		float kLeft = rect.left + (i - klines.startidx + 1) * kSpace + kWidth * (i - klines.startidx);
 		float kMiddle = kLeft + kWidth / 2;
 		float kRight = kLeft + kWidth;
 
@@ -116,8 +118,8 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 		/* 绘制均价线 */
 		if(i > 0) 
 		{
-			pDC->MoveTo(kLastMiddle, kLastAvgPos);
-			pDC->LineTo(kMiddle, kAvgPos);
+//			pDC->MoveTo(kLastMiddle, kLastAvgPos);
+//			pDC->LineTo(kMiddle, kAvgPos);
 		}
 
 		kLastAvgPos = kAvgPos;
@@ -163,10 +165,22 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 		pDC->LineTo(kRight, kVolPos);
 		pDC->LineTo(kRight, rect.bottom);
 
+		//	
+		if(i == klines.curidx)
+		{
+			pDC->SelectObject(&penGreyDotted);
+			pDC->MoveTo(rect.left, kClosePos);
+			pDC->LineTo(rect.right, kClosePos);
+
+			pDC->MoveTo(kMiddle, rect.top);
+			pDC->LineTo(kMiddle, rect.bottom);
+		}
+
 		pDC->SelectObject(pOldPen);
 	}
 
     penGreen.DeleteObject();
     penRed.DeleteObject();
     penWhite.DeleteObject();
+	penGreyDotted.DeleteObject();
 }

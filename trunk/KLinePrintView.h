@@ -2,7 +2,6 @@
 // KLinePrintView.h : CKLinePrintView 类的接口
 //
 
-
 #pragma once
 
 
