@@ -2,7 +2,6 @@
 #include "KLineCollection.h"
 #include "TickReader.h"
 
-#define ZOOM_STEP 20
 
 KLineCollection::KLineCollection(void)
 {
@@ -12,44 +11,6 @@ KLineCollection::KLineCollection(void)
 KLineCollection::~KLineCollection(void)
 {
 
-}
-
-void KLineCollection::Inflate()
-{
-	int s1 = curidx - startidx;
-	int s2 = endidx - curidx;
-
-	startidx += ZOOM_STEP * s1 / (float) (s1+s2);
-	endidx -= ZOOM_STEP * s2 / (float) (s1+s2);
-
-	if(startidx < 0) startidx = 0;
-	if(endidx > size() - 1) endidx = size() - 1;
-
-//	GetHighLowPrice();
-}
-
-void KLineCollection::Deflate()
-{
-	int s1 = curidx - startidx;
-	int s2 = endidx - curidx;
-
-	startidx -= ZOOM_STEP * s1 / (float) (s1+s2);
-	endidx += ZOOM_STEP * s2 / (float) (s1+s2);
-
-	if(startidx < 0) startidx = 0;
-	if(endidx > size() - 1) endidx = size() - 1;
-
-//	GetHighLowPrice();
-}
-
-void KLineCollection::MovePrev()
-{
-	curidx--;
-}
-
-void KLineCollection::MoveNext()
-{
-	curidx++;
 }
 
 void KLineCollection::GetHighLowPrice()
@@ -141,9 +102,4 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 	}
 
 	avgvol = totalVol/(float)kCount;
-
-	// 初始化显示区域
-	startidx = 0;
-	endidx = size() - 1;
-	curidx = (startidx + endidx) / 2;
 }

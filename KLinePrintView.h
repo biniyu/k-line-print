@@ -4,6 +4,10 @@
  
 #pragma once
 
+#include "KLineRenderer.h"
+
+class KLineCollection;
+class CKLinePrintDoc;
 
 class CKLinePrintView : public CView
 {
@@ -17,6 +21,26 @@ public:
 
 // 操作
 public:
+
+	void Render();
+
+	void Set5SecData(KLineCollection* pData) 
+	{ 
+		klr_5sec.SetKLineData(pData); 
+		Render();
+	}
+
+	void Set1MinData(KLineCollection* pData) 
+	{ 
+		klr_1min.SetKLineData(pData); 
+		Render();
+	}
+
+	void SetDayData(KLineCollection* pData)  
+	{ 
+		klr_day.SetKLineData(pData); 
+		Render();
+	}
 
 // 重写
 public:
@@ -40,6 +64,13 @@ protected:
 	CPoint cp;
 	BOOL m_bDrawTrackingCrossLine;
 
+	KLineRenderer klr_5sec;
+	KLineRenderer klr_1min;
+	KLineRenderer klr_day;
+
+	CDC			m_MemDC;
+	CBitmap		m_MemBitmap;
+
 // 生成的消息映射函数
 protected:
 	afx_msg void OnFilePrintPreview();
@@ -50,6 +81,8 @@ public:
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // KLinePrintView.cpp 中的调试版本

@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include "KLinePrint.h"
 
+#include "MainFrm.h"
+#include "KLinePrintView.h"
 #include "KLinePrintDoc.h"
 #include "TickReader.h"
 #include "KLineCollection.h"
@@ -86,6 +88,8 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 
 void CKLinePrintDoc::OnFileOpen()
 {
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
 	CFileDialog dlg(TRUE); ///TRUE为OPEN对话框，FALSE为SAVE AS对话框
 	if(dlg.DoModal() == IDOK)
 	{
@@ -124,6 +128,9 @@ void CKLinePrintDoc::OnFileOpen()
 	
 		klc15s.Generate(tc, 15, kline);
 		klc1min.Generate(tc, 60, kline);
+
+		pView->Set1MinData(&klc1min);
+		pView->Set5SecData(&klc15s);
 
 		this->SetTitle(CString(m_CurCsvFile.c_str()));
 		
@@ -258,6 +265,8 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
 	klc15s.clear();
 
 	klc1min.clear();
@@ -285,7 +294,10 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 	klc15s.Generate(tc, 15, kline);
 	klc1min.Generate(tc, 60, kline);
 
+	pView->Set1MinData(&klc1min);
+	pView->Set5SecData(&klc15s);
+
 	this->SetTitle(CString(m_CurCsvFile.c_str()));
 	
-//	this->UpdateAllViews(0);	
+	this->UpdateAllViews(0);	
 }

@@ -28,6 +28,8 @@ BEGIN_MESSAGE_MAP(CKLinePrintView, CView)
 	ON_WM_KEYDOWN()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDBLCLK()
+	ON_WM_SIZE()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // CKLinePrintView 构造/析构
@@ -59,57 +61,11 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-	CRect rc, rc1, rc2, rc3;
-	KLineRenderer klr;
-
+	CRect rc;
 	GetClientRect(&rc);
 
-	CDC MemDC; //首先定义一个显示设备对象
-	CBitmap MemBitmap;//定义一个位图对象
-	//随后建立与屏幕显示兼容的内存显示设备
-	MemDC.CreateCompatibleDC(NULL);
-	//这时还不能绘图，因为没有地方画 ^_^
-	//下面建立一个与屏幕显示兼容的位图，至于位图的大小嘛，可以用窗口的大小，也可以自己定义（如：有滚动条时就要大于当前窗口的大小，在BitBlt时决定拷贝内存的哪部分到屏幕上）
-	MemBitmap.CreateCompatibleBitmap(pDC,rc.Width(),rc.Height());
-
-	//将位图选入到内存显示设备中
-	//只有选入了位图的内存显示设备才有地方绘图，画到指定的位图上
-	CBitmap *pOldBit=MemDC.SelectObject(&MemBitmap);
-	//先用背景色将位图清除干净，这里我用的是白色作为背景
-	//你也可以用自己应该用的颜色
-	MemDC.FillSolidRect(0,0,rc.Width(),rc.Height(),RGB(255,255,255));
-	//绘图
-
-	rc1 = rc;
-	rc1.bottom /= 2;
-
-	rc2 = rc;
-	rc2.top = rc.bottom /2;
-	rc2.right = rc.right / 2;
-
-	rc3 = rc;
-	rc3.top = rc.bottom / 2;
-	rc3.left = rc.right / 2;
-
-	klr.Render(&MemDC, rc1, pDoc->klc15s);
-	klr.Render(&MemDC, rc2, pDoc->klc1min);
-	klr.Render(&MemDC, rc3, pDoc->klc1min);
-
-	if(m_bDrawTrackingCrossLine)
-	{
-		MemDC.MoveTo(rc.left, cp.y);
-		MemDC.LineTo(rc.right, cp.y);
-
-		MemDC.MoveTo(cp.x, rc.top);
-		MemDC.LineTo(cp.x, rc.bottom);
-	}
-
 	//将内存中的图拷贝到屏幕上进行显示
-	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&MemDC,0,0,SRCCOPY);
-
-	//绘图完成后的清理
-	MemBitmap.DeleteObject();
-	MemDC.DeleteDC();
+	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);
 }
 
 
@@ -193,25 +149,33 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(nChar == VK_UP)
 	{
-		pDoc->klc15s.Inflate();
+		klr_1min.ZoomIn();
+		klr_day.ZoomIn();
+		klr_5sec.ZoomIn();
 	}
 
 	if(nChar == VK_DOWN)
 	{
-		pDoc->klc15s.Deflate();
+		klr_1min.ZoomOut();
+		klr_day.ZoomOut();
+		klr_5sec.ZoomOut();
 	}
 
 	if(nChar == VK_LEFT)
 	{
-		pDoc->klc15s.MovePrev();
+		klr_1min.MovePrev();
+		klr_day.MovePrev();
+		klr_5sec.MovePrev();
 	}
 
 	if(nChar == VK_RIGHT)
 	{
-		pDoc->klc15s.MoveNext();
+		klr_1min.MoveNext();
+		klr_day.MoveNext();
+		klr_5sec.MoveNext();
 	}
 
-	Invalidate(FALSE);
+	Render();
 
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
 }
@@ -221,7 +185,7 @@ void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 	if(m_bDrawTrackingCrossLine)
 	{
 		cp = point;
-		Invalidate(FALSE);
+		Render();
 	}
 
 	CView::OnMouseMove(nFlags, point);
@@ -231,6 +195,76 @@ void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	m_bDrawTrackingCrossLine = !m_bDrawTrackingCrossLine;
 	cp = point;
-	Invalidate(FALSE);
+	Render();
 	CView::OnLButtonDblClk(nFlags, point);
+}
+
+void CKLinePrintView::Render()
+{
+	CRect rc;
+	GetClientRect(&rc);
+
+	klr_1min.Render(&m_MemDC);
+	klr_day.Render(&m_MemDC);
+	klr_5sec.Render(&m_MemDC);
+
+	if(m_bDrawTrackingCrossLine)
+	{
+		m_MemDC.MoveTo(rc.left, cp.y);
+		m_MemDC.LineTo(rc.right, cp.y);
+
+		m_MemDC.MoveTo(cp.x, rc.top);
+		m_MemDC.LineTo(cp.x, rc.bottom);
+	}
+
+	Invalidate(FALSE);
+}
+
+void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
+{
+	//	重建MEMDC
+
+	CRect rc, rc1, rc2, rc3;
+	GetClientRect(&rc);
+
+	//绘图
+
+	rc1 = rc;
+	rc1.bottom /= 2;
+
+	rc2 = rc;
+	rc2.top = rc.bottom /2;
+	rc2.right = rc.right / 2;
+
+	rc3 = rc;
+	rc3.top = rc.bottom / 2;
+	rc3.left = rc.right / 2;
+
+	m_MemBitmap.DeleteObject();
+	m_MemDC.DeleteDC();
+
+	m_MemDC.CreateCompatibleDC(GetDC());
+	m_MemBitmap.CreateCompatibleBitmap(GetDC(),cx,cy);
+
+	m_MemDC.SelectObject(&m_MemBitmap);
+	m_MemDC.FillSolidRect(&rc,RGB(255,255,255));
+
+	klr_1min.SetRect(rc1);
+	klr_day.SetRect(rc2);
+	klr_5sec.SetRect(rc3);
+	
+	Render();
+
+	CView::OnSize(nType, cx, cy);
+}
+
+void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	klr_1min.Select(point);
+	klr_day.Select(point);
+	klr_5sec.Select(point);
+
+	Render();
+
+	CView::OnLButtonDown(nFlags, point);
 }

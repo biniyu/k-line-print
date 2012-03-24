@@ -2,28 +2,123 @@
 #include "KLineRenderer.h"
 #include "KLineCollection.h"
 
+#define ZOOM_STEP 20
+
 KLineRenderer::KLineRenderer(void)
 {
+	m_nKVolRatio = 3;						//	K图与成交量图的高度为3:1
+	m_nKSpace = 2;							//	K线间的像素数
+	m_bShowVol = true;
+	m_pKLines = NULL;
+	m_bSelected = false;
 }
 
 KLineRenderer::~KLineRenderer(void)
 {
 }
 
-void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
+void KLineRenderer::Select(CPoint pt)
 {
-	int kVolRatio = 3;						//	K图与成交量图的高度为3:1
+	if(m_Rect.PtInRect(pt))
+		m_bSelected = true;
+	else
+		m_bSelected = false;
+
+	// TODO : 选中K线
+
+	if(m_bSelected)
+	{
+		//	计算K线的宽度
+		float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
+			/(float)(m_nEndIdx - m_nStartIdx + 1);
+
+		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace);
+	}
+}
+
+void KLineRenderer::SetKLineData(KLineCollection* pKLines)
+{ 
+	m_pKLines = pKLines; 
+	m_nStartIdx = 0;
+	m_nEndIdx = pKLines->size() - 1;
+	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
+}
+
+void KLineRenderer::ZoomIn()
+{
+	if(!m_pKLines || !m_bSelected) return;
+
+	int s1 = m_nCurIdx - m_nStartIdx;
+	int s2 = m_nEndIdx - m_nCurIdx;
+
+	m_nStartIdx += ZOOM_STEP * s1 / (float) (s1+s2);
+	m_nEndIdx -= ZOOM_STEP * s2 / (float) (s1+s2);
+
+	if(m_nStartIdx < 0) m_nStartIdx = 0;
+	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+}
+
+void KLineRenderer::ZoomOut()
+{
+	if(!m_pKLines || !m_bSelected) return;
+
+	int s1 = m_nCurIdx - m_nStartIdx;
+	int s2 = m_nEndIdx - m_nCurIdx;
+
+	m_nStartIdx -= ZOOM_STEP * s1 / (float) (s1+s2);
+	m_nEndIdx += ZOOM_STEP * s2 / (float) (s1+s2);
+
+	if(m_nStartIdx < 0) m_nStartIdx = 0;
+	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+}
+
+void KLineRenderer::MovePrev()
+{
+	if(!m_pKLines || !m_bSelected) return;
+
+	if(m_nCurIdx > 0)
+		m_nCurIdx--;
+
+	if(m_nCurIdx < m_nStartIdx)
+	{
+		m_nEndIdx -= ( m_nStartIdx - m_nCurIdx);
+		m_nStartIdx = m_nCurIdx;
+	}
+}
+
+void KLineRenderer::MoveNext()
+{
+	if(!m_pKLines || !m_bSelected) return;
+
+	if(m_nCurIdx < m_pKLines->size() - 1)
+		m_nCurIdx++;
+
+	if(m_nCurIdx > m_nEndIdx)
+	{
+		m_nStartIdx += ( m_nCurIdx - m_nEndIdx);
+		m_nEndIdx = m_nCurIdx;
+	}
+}
+
+void KLineRenderer::Render(CDC* pDC)
+{
+	//	日图 ： 高低点
+	//	1分图： 开盘价轴，均量图
+	//	5秒图： 高低点，均量图	
+
+	if(m_bSelected)
+		pDC->FillSolidRect(&m_Rect,RGB(220,220,220));
+	else
+		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
 
 	int kHighPrice, kLowPrice, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
-	int kSpace = 2;							//	K线间的像素数
-
-	if(klines.size() <= 1) return;
+	if(!m_pKLines || m_pKLines->size() <= 1) return;
 
 	//	当日的开盘价和最高最低价
-	int open = klines[1].open;		//	
-	int min = klines.low;
-	int max = klines.high;
+	int open = (*m_pKLines)[1].open;		//	
+	int min = m_pKLines->low;
+	int max = m_pKLines->high;
 
 	// 以开盘为中轴价
 	kAxisPrice = open;
@@ -56,14 +151,14 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 	}
 
 	//	计算一个价格对应多少像素
-	float pixelPerPrice = (float)rect.Height() * kVolRatio / (kVolRatio + 1) / (kHighPrice - kLowPrice);
+	float pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (kHighPrice - kLowPrice);
 
 	//	计算单位成交量对应多少像素
-	float pixelPerVol = ((float)rect.Height()) / (kVolRatio + 1) / klines.maxvol;
+	float pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / m_pKLines->maxvol;
 
 	//	计算K线的宽度
-	float kWidth = (rect.Width() - (klines.endidx - klines.startidx + 2) * kSpace)
-		/(float)(klines.endidx - klines.startidx + 1);
+	float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
+		/(float)(m_nEndIdx - m_nStartIdx + 1);
 
 	CPen penRed, penGreen, penWhite, penGreyDotted, *pOldPen;
 
@@ -72,24 +167,24 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
     penWhite.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
     penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
 
-	float timeLinePos = rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
-	float axleLinePos = rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
+	float timeLinePos = m_Rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
+	float axleLinePos = m_Rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
 
 	//	绘制分割线
-	pDC->MoveTo(rect.left, timeLinePos);
-	pDC->LineTo(rect.right, timeLinePos);
+	pDC->MoveTo(m_Rect.left, timeLinePos);
+	pDC->LineTo(m_Rect.right, timeLinePos);
 
 	//	绘制时间线
-	pDC->MoveTo(rect.left, rect.bottom);
-	pDC->LineTo(rect.right, rect.bottom);
+	pDC->MoveTo(m_Rect.left, m_Rect.bottom);
+	pDC->LineTo(m_Rect.right, m_Rect.bottom);
 
 	//	绘制中轴线
-	pDC->MoveTo(rect.left, axleLinePos);
-	pDC->LineTo(rect.right, axleLinePos);
+	pDC->MoveTo(m_Rect.left, axleLinePos);
+	pDC->LineTo(m_Rect.right, axleLinePos);
 
 	//	绘制价格线
-	pDC->MoveTo(rect.left + 1, rect.top);
-	pDC->LineTo(rect.left + 1, rect.bottom);
+	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
+	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
 
 	CString strPercent;
 
@@ -100,20 +195,20 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 	float kLastAvgPos = 0;
 	float kLastMiddle = 0;
 
-	for(int i = klines.startidx; i <= klines.endidx; i++)
+	for(int i = m_nStartIdx; i <= m_nEndIdx; i++)
 	{
 		/* 计算左右方向 */
-		float kLeft = rect.left + (i - klines.startidx + 1) * kSpace + kWidth * (i - klines.startidx);
+		float kLeft = m_Rect.left + (i - m_nStartIdx + 1) * m_nKSpace + kWidth * (i - m_nStartIdx);
 		float kMiddle = kLeft + kWidth / 2;
 		float kRight = kLeft + kWidth;
 
-		KLine kline = klines[i];
+		KLine kline = (*m_pKLines)[i];
 
-		float kHighPos = rect.top + (kHighPrice - kline.high) * pixelPerPrice;
-		float kLowPos = rect.top + (kHighPrice - kline.low) * pixelPerPrice;
-		float kOpenPos = rect.top + (kHighPrice - kline.open) * pixelPerPrice;
-		float kClosePos = rect.top + (kHighPrice - kline.close) * pixelPerPrice;
-		float kAvgPos = rect.top + (kHighPrice - kline.avg) * pixelPerPrice;
+		float kHighPos = m_Rect.top + (kHighPrice - kline.high) * pixelPerPrice;
+		float kLowPos = m_Rect.top + (kHighPrice - kline.low) * pixelPerPrice;
+		float kOpenPos = m_Rect.top + (kHighPrice - kline.open) * pixelPerPrice;
+		float kClosePos = m_Rect.top + (kHighPrice - kline.close) * pixelPerPrice;
+		float kAvgPos = m_Rect.top + (kHighPrice - kline.avg) * pixelPerPrice;
 
 		/* 绘制均价线 */
 		if(i > 0) 
@@ -158,22 +253,22 @@ void KLineRenderer::Render(CDC* pDC, CRect rect, KLineCollection& klines)
 
 		//	成交量线
 
-		float kVolPos = rect.bottom - kline.vol * pixelPerVol;
+		float kVolPos = m_Rect.bottom - kline.vol * pixelPerVol;
 
-		pDC->MoveTo(kLeft, rect.bottom);
+		pDC->MoveTo(kLeft, m_Rect.bottom);
 		pDC->LineTo(kLeft, kVolPos);
 		pDC->LineTo(kRight, kVolPos);
-		pDC->LineTo(kRight, rect.bottom);
+		pDC->LineTo(kRight, m_Rect.bottom);
 
 		//	
-		if(i == klines.curidx)
+		if(i == m_nCurIdx)
 		{
 			pDC->SelectObject(&penGreyDotted);
-			pDC->MoveTo(rect.left, kClosePos);
-			pDC->LineTo(rect.right, kClosePos);
+			pDC->MoveTo(m_Rect.left, kClosePos);
+			pDC->LineTo(m_Rect.right, kClosePos);
 
-			pDC->MoveTo(kMiddle, rect.top);
-			pDC->LineTo(kMiddle, rect.bottom);
+			pDC->MoveTo(kMiddle, m_Rect.top);
+			pDC->LineTo(kMiddle, m_Rect.bottom);
 		}
 
 		pDC->SelectObject(pOldPen);
