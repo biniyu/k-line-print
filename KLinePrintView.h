@@ -27,19 +27,16 @@ public:
 	void Set5SecData(KLineCollection* pData) 
 	{ 
 		klr_5sec.SetKLineData(pData); 
-		Render();
 	}
 
 	void Set1MinData(KLineCollection* pData) 
 	{ 
 		klr_1min.SetKLineData(pData); 
-		Render();
 	}
 
 	void SetDayData(KLineCollection* pData)  
 	{ 
 		klr_day.SetKLineData(pData); 
-		Render();
 	}
 
 // ÖØÐ´

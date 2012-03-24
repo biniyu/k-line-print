@@ -2,7 +2,8 @@
 #include "KLineRenderer.h"
 #include "KLineCollection.h"
 
-#define ZOOM_STEP 20
+#define ZOOM_STEP				20
+#define NEIGHBOR_KLINE_COUNT	80
 
 KLineRenderer::KLineRenderer(void)
 {
@@ -11,10 +12,38 @@ KLineRenderer::KLineRenderer(void)
 	m_bShowVol = true;
 	m_pKLines = NULL;
 	m_bSelected = false;
+
+	m_enRenderMode = enHighLowMode;
 }
 
 KLineRenderer::~KLineRenderer(void)
 {
+}
+
+int KLineRenderer::GetCurTime()
+{
+	if(!m_pKLines) return 0;
+	return (*m_pKLines)[m_nCurIdx].time;
+}
+
+void KLineRenderer::SelectByTime(int nTime)
+{
+	if(!m_pKLines) return;
+
+	for(int i = 0; i < m_pKLines->size(); i++)
+	{
+		if((*m_pKLines)[i].time > nTime) 
+		{
+			m_nCurIdx = i;
+			break;
+		}
+	}
+
+	m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
+	m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
+
+	if(m_nStartIdx < 0) m_nStartIdx = 0;
+	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
 }
 
 void KLineRenderer::Select(CPoint pt)
@@ -32,7 +61,7 @@ void KLineRenderer::Select(CPoint pt)
 		float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
 			/(float)(m_nEndIdx - m_nStartIdx + 1);
 
-		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace);
+		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nStartIdx;
 	}
 }
 
@@ -100,61 +129,82 @@ void KLineRenderer::MoveNext()
 	}
 }
 
+void KLineRenderer::SwitchMode()
+{
+	if(!m_bSelected) return;
+
+	if(m_enRenderMode == enHighLowMode)
+	{
+		m_enRenderMode = enAxisMode;
+	}
+	else if(m_enRenderMode == enAxisMode)
+	{
+		m_enRenderMode = enHighLowMode;
+	}
+}
+
 void KLineRenderer::Render(CDC* pDC)
 {
 	//	日图 ： 高低点
 	//	1分图： 开盘价轴，均量图
 	//	5秒图： 高低点，均量图	
 
+	float fPricePercentage;
+
+	if(!m_pKLines || m_pKLines->size() <= 1) return;
+
 	if(m_bSelected)
 		pDC->FillSolidRect(&m_Rect,RGB(220,220,220));
 	else
 		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
 
-	int kHighPrice, kLowPrice, kAxisPrice;	//	图上显示的高/低价范围，中轴价
+	int kHighPrice, kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
-	if(!m_pKLines || m_pKLines->size() <= 1) return;
-
-	//	当日的开盘价和最高最低价
-	int open = (*m_pKLines)[1].open;		//	
-	int min = m_pKLines->low;
-	int max = m_pKLines->high;
-
-	// 以开盘为中轴价
-	kAxisPrice = open;
-
-	if(max - open > open - min)
+	if(m_enRenderMode == enHighLowMode)
 	{
-		kHighPrice = kAxisPrice + (max - open);
-		kLowPrice = kAxisPrice - (max - open);
+		m_pKLines->GetPriceVolRange(m_nStartIdx, m_nEndIdx, 
+								kHighPrice, kLowPrice, volMax);
+
+		//	高低点间的波动幅度
+		fPricePercentage = (kHighPrice - kLowPrice) /((kHighPrice + kLowPrice) / 2.0f);
 	}
-	else
+	else if(m_enRenderMode == enAxisMode)
 	{
-		kHighPrice = kAxisPrice + (open - min);
-		kLowPrice = kAxisPrice - (open - min);
-	}
+		m_pKLines->GetPriceVolRange(1, m_pKLines->size() - 1, 
+								kHighPrice, kLowPrice, volMax);	
 
-	float fPricePercentage = (kHighPrice - kAxisPrice)/(float)kAxisPrice;
-	float fGraphPercentage;
+		// 以开盘为中轴价
+		kAxisPrice = (*m_pKLines)[1].open;
+		int min = kLowPrice;
+		int max = kHighPrice;
 
-	if( fPricePercentage < 0.02)
-	{
-		//	波动过小则统一使用 2% 的涨跌幅比例
-		kHighPrice = kAxisPrice * 1.02;
-		kLowPrice = kAxisPrice * 0.98;
-		fGraphPercentage = 0.02;
-	}
-	else
-	{
-		// 如果幅度高于2%，按照实际幅度
-		fGraphPercentage = fPricePercentage;
+		if(max - kAxisPrice > kAxisPrice - min)
+		{
+			kHighPrice = kAxisPrice + (max - kAxisPrice);
+			kLowPrice = kAxisPrice - (max - kAxisPrice);
+		}
+		else
+		{
+			kHighPrice = kAxisPrice + (kAxisPrice - min);
+			kLowPrice = kAxisPrice - (kAxisPrice - min);
+		}
+
+		fPricePercentage = (kHighPrice - kAxisPrice)/(float)kAxisPrice;
+
+		if( fPricePercentage < 0.02)
+		{
+			//	波动过小则统一使用 2% 的涨跌幅比例
+			kHighPrice = kAxisPrice * 1.02;
+			kLowPrice = kAxisPrice * 0.98;
+			fPricePercentage = 0.02;
+		}
 	}
 
 	//	计算一个价格对应多少像素
 	float pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (kHighPrice - kLowPrice);
 
 	//	计算单位成交量对应多少像素
-	float pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / m_pKLines->maxvol;
+	float pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / volMax;
 
 	//	计算K线的宽度
 	float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
@@ -168,7 +218,6 @@ void KLineRenderer::Render(CDC* pDC)
     penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
 
 	float timeLinePos = m_Rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
-	float axleLinePos = m_Rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
 
 	//	绘制分割线
 	pDC->MoveTo(m_Rect.left, timeLinePos);
@@ -179,8 +228,12 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->LineTo(m_Rect.right, m_Rect.bottom);
 
 	//	绘制中轴线
-	pDC->MoveTo(m_Rect.left, axleLinePos);
-	pDC->LineTo(m_Rect.right, axleLinePos);
+	if(m_enRenderMode == enAxisMode)
+	{
+		float axleLinePos = m_Rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
+		pDC->MoveTo(m_Rect.left, axleLinePos);
+		pDC->LineTo(m_Rect.right, axleLinePos);
+	}
 
 	//	绘制价格线
 	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
@@ -188,9 +241,9 @@ void KLineRenderer::Render(CDC* pDC)
 
 	CString strPercent;
 
-	strPercent.Format(_T("%f"), (fGraphPercentage / 0.01));
+	strPercent.Format(_T("%f"), (fPricePercentage / 0.01));
 
-	pDC->TextOutW(1,1,strPercent);
+	pDC->TextOutW(m_Rect.left + 1, m_Rect.top + 1, strPercent);
 
 	float kLastAvgPos = 0;
 	float kLastMiddle = 0;

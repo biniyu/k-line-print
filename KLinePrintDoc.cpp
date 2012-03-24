@@ -132,6 +132,8 @@ void CKLinePrintDoc::OnFileOpen()
 		pView->Set1MinData(&klc1min);
 		pView->Set5SecData(&klc15s);
 
+		pView->Render();
+
 		this->SetTitle(CString(m_CurCsvFile.c_str()));
 		
 		this->UpdateAllViews(0);

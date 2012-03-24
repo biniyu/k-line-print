@@ -13,33 +13,35 @@ KLineCollection::~KLineCollection(void)
 
 }
 
-void KLineCollection::GetHighLowPrice()
+void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol)
 {
-	for(int i = startidx; i <= endidx; i++)
+	int high, low, maxvol;
+
+	for(int i = nStartIdx; i <= nEndIdx; i++)
 	{
-		KLine kline = (*this)[startidx];
+		KLine kline = (*this)[i];
 		
-		if(i == startidx)
+		if(i == nStartIdx)
 		{
 			high = kline.high;
 			low = kline.low;
+			maxvol = kline.vol;
 		}
 		else
 		{
 			if(kline.high > high) high = kline.high;
 			if(kline.low < low) low = kline.low;
+			if(kline.vol > maxvol) maxvol = kline.vol;
 		}
 	}
+
+	nHighPr = high;
+	nLowPr = low;
+	nMaxVol = maxvol;
 }
 
 void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDayLine)
 {
-	//	当日高低点
-	maxvol = 0;
-
-	high = ticks.high;
-	low = ticks.low;
-
 	int nLastSecond;
 
 	/* 分钟K线的数值 */
@@ -76,9 +78,6 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 			kline.close = kClose;
 			kline.vol = kVol;
 
-			if(kVol > maxvol)
-				maxvol = kVol;
-
 			//	计算均价线
 			kline.avg = totalPrice / totalVol;
 
@@ -100,6 +99,4 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 
 		nLastSecond = nCurSecond;		
 	}
-
-	avgvol = totalVol/(float)kCount;
 }

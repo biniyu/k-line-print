@@ -4,7 +4,17 @@ class KLineCollection;
 
 class KLineRenderer
 {
+public:
+
+	enum RenderMode
+	{
+		enHighLowMode,
+		enAxisMode
+	};
+
 private:
+
+	RenderMode m_enRenderMode;
 
 	//	开始显示的K线索引
 	int m_nStartIdx;
@@ -50,6 +60,8 @@ public:
 	KLineRenderer(void);
 	~KLineRenderer(void);
 
+	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
+
 	//	设置K线数据
 	void SetKLineData(KLineCollection* pKLines);
 
@@ -61,4 +73,12 @@ public:
 
 	//	绘制K线
 	void Render(CDC* pDC);
+
+	bool IsSelected() { return m_bSelected; }
+
+	int GetCurTime();
+
+	void SelectByTime(int nTime);
+
+	void SwitchMode();
 };

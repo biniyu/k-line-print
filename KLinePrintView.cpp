@@ -175,6 +175,18 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_5sec.MoveNext();
 	}
 
+	if(nChar == VK_END)
+	{
+		klr_1min.SwitchMode();
+		klr_day.SwitchMode();
+		klr_5sec.SwitchMode();
+	}
+
+	if(klr_1min.IsSelected())
+	{
+		klr_5sec.SelectByTime(klr_1min.GetCurTime());
+	}
+
 	Render();
 
 	CView::OnKeyDown(nChar, nRepCnt, nFlags);
@@ -261,8 +273,14 @@ void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
 void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	klr_1min.Select(point);
-	klr_day.Select(point);
+
+	if(klr_1min.IsSelected())
+	{
+		klr_5sec.SelectByTime(klr_1min.GetCurTime());
+	}
+
 	klr_5sec.Select(point);
+	klr_day.Select(point);
 
 	Render();
 
