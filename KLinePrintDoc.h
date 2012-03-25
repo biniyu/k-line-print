@@ -19,6 +19,7 @@ public:
 
 	KLineCollection klc15s;
 	KLineCollection klc1min;
+	KLineCollection klcday;
 
 // ²Ù×÷
 public:
@@ -37,6 +38,7 @@ public:
 #endif
 
 	string m_CurCsvFile;
+	string m_CurDayFile;
 	string GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi = FALSE);
 	void ViewNeighborDate(BOOL bPrev);
 

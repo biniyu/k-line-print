@@ -34,9 +34,10 @@ public:
 		klr_1min.SetKLineData(pData); 
 	}
 
-	void SetDayData(KLineCollection* pData)  
+	void SetDayData(KLineCollection* pData, int nDate)  
 	{ 
-		klr_day.SetKLineData(pData); 
+		klr_day.SetKLineData(pData);
+		klr_day.SelectByTime(nDate);
 	}
 
 // ÖØÐ´

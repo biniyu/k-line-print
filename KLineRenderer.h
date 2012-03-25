@@ -60,10 +60,12 @@ public:
 	KLineRenderer(void);
 	~KLineRenderer(void);
 
+	void AdjustIndex();
+
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 
 	//	设置K线数据
-	void SetKLineData(KLineCollection* pKLines);
+	void SetKLineData(KLineCollection* pKLines, int nRecentKLineCount = -1);
 
 	//	设置绘制范围
 	void SetRect(CRect rect) { m_Rect = rect; }
