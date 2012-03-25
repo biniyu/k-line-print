@@ -89,6 +89,9 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 
 void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 {
+	// 只考虑主力合约
+	targetCsvFile = DataRepoUtil::GetMajorContractPath(targetCsvFile);
+
 	if(targetCsvFile == m_CurCsvFile) return;
 
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
