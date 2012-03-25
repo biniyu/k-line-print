@@ -13,6 +13,18 @@ KLineCollection::~KLineCollection(void)
 
 }
 
+KLine KLineCollection::GetKLineByTime(int nTime)
+{
+	return (*this)[m_mapTime2Idx[nTime]];
+}
+
+//	统一接口用于创建索引
+void KLineCollection::AddToTail(KLine kline)
+{
+	m_mapTime2Idx[kline.time] = this->size();
+	push_back(kline);
+}
+
 void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol)
 {
 	int high = 0, low = 0, maxvol = 0;
@@ -49,7 +61,7 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 	float totalPrice = 0, totalVol = 0, kCount = 0;
 
 	/* 昨天本合约的日K */
-	push_back(prevDayLine);
+	AddToTail(prevDayLine);
 
 	kOpen = kClose = kHigh = kLow = ticks[0].price;
 	nLastSecond = ticks[0].time;
@@ -81,7 +93,7 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 			//	计算均价线
 			kline.avg = totalPrice / totalVol;
 
-			push_back(kline);
+			AddToTail(kline);
 
 			kCount++;
 

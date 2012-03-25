@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include <map>
 using namespace std;
 
 class TickCollection;
@@ -20,9 +20,20 @@ public:
 
 class KLineCollection : public vector<KLine>
 {
+private:
+
+	//	根据时间建立索引，用于快速查找
+	map<int, int> m_mapTime2Idx;
+	
 public:
 	KLineCollection(void);
 	~KLineCollection(void);
+
+	//	获取指定时间/日期的K线数据
+	KLine GetKLineByTime(int nTime);
+
+	//	统一接口用于创建索引
+	void AddToTail(KLine kline);
 
 	void GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol);
 

@@ -18,6 +18,7 @@
 #define new DEBUG_NEW
 #endif
 
+#define CALENDAR ((CKLinePrintApp*)AfxGetApp())->cal
 
 // CKLinePrintDoc
 
@@ -86,24 +87,65 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 
 // CKLinePrintDoc 命令
 
-void CKLinePrintDoc::OnFileOpen()
+void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 {
+	if(targetCsvFile == m_CurCsvFile) return;
+
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
+	//	当前日期
+	int nDate = DataRepoUtil::GetDateByPath(targetCsvFile);
+	
+	//	先加载日线数据(提供前一日的日K数据)
+	KLineReader klReader;
+
+	string dayLineFile = DataRepoUtil::GetDayLinePath(targetCsvFile);
+	if(dayLineFile != m_CurDayFile)
+	{
+		// 读取相应的日线数据
+		klReader.Read(dayLineFile, klcday);
+		m_CurDayFile = dayLineFile;
+		pView->SetDayData(&klcday, nDate);	
+	}
+
+	//  获取前一交易日日K线
+	KLine prevDayKLine;
+
+	prevDayKLine = klcday.GetKLineByTime(CALENDAR.GetPrev(nDate));
+
+	//	不关注前日的开盘价
+	prevDayKLine.open = prevDayKLine.close;
+	prevDayKLine.time = 0;
+
+	klc15s.clear();
+	klc1min.clear();
+
+	TickReader tr;
+	TickCollection tc;
+
+	tr.Read(targetCsvFile, tc);
+
+	klc15s.Generate(tc, 15, prevDayKLine);
+	klc1min.Generate(tc, 60, prevDayKLine);
+
+	pView->Set1MinData(&klc1min);
+	pView->Set5SecData(&klc15s);
+
+	pView->Render();
+
+	m_CurCsvFile = targetCsvFile;
+
+	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
+	
+	this->UpdateAllViews(0);
+}
+
+void CKLinePrintDoc::OnFileOpen()
+{
 	CFileDialog dlg(TRUE); ///TRUE为OPEN对话框，FALSE为SAVE AS对话框
 	if(dlg.DoModal() == IDOK)
 	{
 		CString FilePathName = dlg.GetPathName(); 
-
-		klc15s.clear();
-		klc1min.clear();
-
-		TickReader tr;
-
-		TickCollection tcPrev;
-
-		TickCollection tc;
-
 		char InfoString[256];    
 		  
 		// 转换后的数据存放在InfoString数组中   
@@ -112,88 +154,14 @@ void CKLinePrintDoc::OnFileOpen()
 			return;    
 		} 
 
-		m_CurCsvFile = InfoString;
-
-		tr.Read(InfoString, tc);
-
-		tr.Read(GetNeighborCsvFile(InfoString, TRUE, FALSE), tcPrev);
-
-		KLine kline;
-
-		kline.close = tcPrev.close;
-		kline.open = tcPrev.close;
-		kline.high = tcPrev.high;
-		kline.low = tcPrev.low;
-		kline.vol = tcPrev.avgvol;
-	
-		klc15s.Generate(tc, 15, kline);
-		klc1min.Generate(tc, 60, kline);
-
-		KLineReader klReader;
-
-		string dayLineFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
-
-		if(dayLineFile != m_CurDayFile)
-		{
-			// 读取相应的日线数据
-			klReader.Read(dayLineFile, klcday);
-			m_CurDayFile = dayLineFile;
-			pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(m_CurCsvFile));	
-		}
-
-		pView->Set1MinData(&klc1min);
-		pView->Set5SecData(&klc15s);
-
-		pView->Render();
-
-		this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-		
-		this->UpdateAllViews(0);
+		LoadKLineGroup(InfoString);
 	}
 }
 
 void CKLinePrintDoc::ReloadByDate(int nDate)
 {
-	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
-
-	//	当前合约，指定日期的分钟线
-	klc15s.clear();
-	klc1min.clear();
-
-	TickReader tr;
-	TickCollection tcPrev;
-	TickCollection tc;
-
 	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
-
-	if(tmp == m_CurCsvFile) return;
-
-	m_CurCsvFile = tmp;
-
-	tr.Read(m_CurCsvFile, tc);
-
-	tr.Read(GetNeighborCsvFile(m_CurCsvFile, TRUE, FALSE), tcPrev);
-
-	KLine kline;
-
-	kline.close = tcPrev.close;
-	kline.open = tcPrev.close;
-	kline.high = tcPrev.high;
-	kline.low = tcPrev.low;
-	kline.vol = tcPrev.avgvol;
-
-	klc15s.Generate(tc, 15, kline);
-	klc1min.Generate(tc, 60, kline);
-
-	pView->Set1MinData(&klc1min);
-	pView->Set5SecData(&klc15s);
-
-	pView->Render();
-
-	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-	
-	this->UpdateAllViews(0);
-
+	LoadKLineGroup(tmp);
 }
 
 string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
@@ -207,9 +175,9 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 	int nNeighDate;
 
 	if(bPrev)
-		nNeighDate = ((CKLinePrintApp*)AfxGetApp())->cal.GetPrev(date);
+		nNeighDate = CALENDAR.GetPrev(date);
 	else
-		nNeighDate = ((CKLinePrintApp*)AfxGetApp())->cal.GetNext(date); 
+		nNeighDate = CALENDAR.GetNext(date); 
 
 	sprintf(buf, "%s\\%s\\%s%d\\%d\\%s_%d.csv", 
 		rootdir.c_str(),
@@ -232,51 +200,6 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
-	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
-
-	klc15s.clear();
-
-	klc1min.clear();
-
-	TickReader tr;
-
-	TickCollection tcPrev;
-
-	TickCollection tc;
-
-	m_CurCsvFile = GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
-
-	tr.Read(m_CurCsvFile, tc);
-
-	tr.Read(GetNeighborCsvFile(m_CurCsvFile, TRUE, FALSE/* 必须是相同合约，保持连续 */), tcPrev);
-
-	KLine kline;
-
-	kline.close = tcPrev.close;
-	kline.open = tcPrev.close;
-	kline.high = tcPrev.high;
-	kline.low = tcPrev.low;
-	kline.vol = tcPrev.avgvol;
-
-	klc15s.Generate(tc, 15, kline);
-	klc1min.Generate(tc, 60, kline);
-
-	KLineReader klReader;
-
-	string dayLineFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
-
-	if(dayLineFile != m_CurDayFile)
-	{
-		// 读取相应的日线数据
-		klReader.Read(dayLineFile, klcday);
-		m_CurDayFile = dayLineFile;
-		pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(m_CurCsvFile));		
-	}
-
-	pView->Set1MinData(&klc1min);
-	pView->Set5SecData(&klc15s);
-
-	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-	
-	this->UpdateAllViews(0);	
+	string tmp = GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
+	LoadKLineGroup(tmp);
 }

@@ -43,6 +43,7 @@ public:
 	string GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi = FALSE);
 	void ViewNeighborDate(BOOL bPrev);
 	void ReloadByDate(int nDate);
+	void LoadKLineGroup(string targetCsvFile);
 
 // 生成的消息映射函数
 protected:
