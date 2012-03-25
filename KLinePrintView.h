@@ -32,6 +32,7 @@ public:
 	void Set1MinData(KLineCollection* pData) 
 	{ 
 		klr_1min.SetKLineData(pData); 
+		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 	}
 
 	void SetDayData(KLineCollection* pData, int nDate)  
