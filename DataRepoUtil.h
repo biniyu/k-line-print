@@ -20,4 +20,5 @@ public:
 	static string GetMajorContractPath(string path);
 	static string GetDayLinePath(string path);
 	static int GetDateByPath(string path);
+	static string GetPathByDate(string org_path, int date);
 };

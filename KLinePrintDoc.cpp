@@ -138,7 +138,7 @@ void CKLinePrintDoc::OnFileOpen()
 			// 读取相应的日线数据
 			klReader.Read(dayLineFile, klcday);
 			m_CurDayFile = dayLineFile;
-			pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(dayLineFile));		
+			pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(m_CurCsvFile));	
 		}
 
 		pView->Set1MinData(&klc1min);
@@ -150,6 +150,50 @@ void CKLinePrintDoc::OnFileOpen()
 		
 		this->UpdateAllViews(0);
 	}
+}
+
+void CKLinePrintDoc::ReloadByDate(int nDate)
+{
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
+	//	当前合约，指定日期的分钟线
+	klc15s.clear();
+	klc1min.clear();
+
+	TickReader tr;
+	TickCollection tcPrev;
+	TickCollection tc;
+
+	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
+
+	if(tmp == m_CurCsvFile) return;
+
+	m_CurCsvFile = tmp;
+
+	tr.Read(m_CurCsvFile, tc);
+
+	tr.Read(GetNeighborCsvFile(m_CurCsvFile, TRUE, FALSE), tcPrev);
+
+	KLine kline;
+
+	kline.close = tcPrev.close;
+	kline.open = tcPrev.close;
+	kline.high = tcPrev.high;
+	kline.low = tcPrev.low;
+	kline.vol = tcPrev.avgvol;
+
+	klc15s.Generate(tc, 15, kline);
+	klc1min.Generate(tc, 60, kline);
+
+	pView->Set1MinData(&klc1min);
+	pView->Set5SecData(&klc15s);
+
+	pView->Render();
+
+	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
+	
+	this->UpdateAllViews(0);
+
 }
 
 string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
@@ -226,7 +270,7 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 		// 读取相应的日线数据
 		klReader.Read(dayLineFile, klcday);
 		m_CurDayFile = dayLineFile;
-		pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(dayLineFile));		
+		pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(m_CurCsvFile));		
 	}
 
 	pView->Set1MinData(&klc1min);

@@ -39,8 +39,10 @@ public:
 
 	string m_CurCsvFile;
 	string m_CurDayFile;
+
 	string GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi = FALSE);
 	void ViewNeighborDate(BOOL bPrev);
+	void ReloadByDate(int nDate);
 
 // 生成的消息映射函数
 protected:
