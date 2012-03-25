@@ -176,3 +176,23 @@ int DataRepoUtil::GetDateByPath(string path)
 	GetInfoByPath(path, rootdir, market, contract, date);
 	return date;
 }
+
+string DataRepoUtil::GetPathByDate(string org_path, int date)
+{
+	char buf[512];
+	int tmp;
+	string rootdir, contract, market;
+
+	GetInfoByPath(org_path, rootdir, market, contract, tmp);
+
+	sprintf(buf, "%s\\%s\\%s%d\\%d\\%s_%d.csv",
+		rootdir.c_str(),
+		market.c_str(),
+		market.c_str(),
+		date/100,
+		date,
+		contract.c_str(),
+		date);
+
+	return string(buf);
+}
