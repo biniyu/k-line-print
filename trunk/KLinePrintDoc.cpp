@@ -106,10 +106,12 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	if(dayLineFile != m_CurDayFile)
 	{
 		// 读取相应的日线数据
+		klcday.clear();
 		klReader.Read(dayLineFile, klcday);
 		m_CurDayFile = dayLineFile;
-		pView->SetDayData(&klcday, nDate);	
 	}
+
+	pView->SetDayData(&klcday, nDate);
 
 	//  获取前一交易日日K线
 	KLine prevDayKLine;
