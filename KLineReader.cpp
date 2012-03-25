@@ -31,6 +31,6 @@ void KLineReader::Read(string path, KLineCollection& klines)
 
 		kline.time = year*10000 + month*100 + day;
 
-		klines.push_back(kline);
+		klines.AddToTail(kline);
 	}	
 }
