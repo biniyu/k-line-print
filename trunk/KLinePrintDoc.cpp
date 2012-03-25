@@ -11,8 +11,8 @@
 #include "TickReader.h"
 #include "KLineCollection.h"
 #include "CalendarGenerator.h"
-#include "direct.h"
-#include "io.h"
+#include "KLineReader.h"
+#include "DataRepoUtil.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -129,68 +129,36 @@ void CKLinePrintDoc::OnFileOpen()
 		klc15s.Generate(tc, 15, kline);
 		klc1min.Generate(tc, 60, kline);
 
+		KLineReader klReader;
+
+		string dayLineFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
+
+		if(dayLineFile != m_CurDayFile)
+		{
+			// 读取相应的日线数据
+			klReader.Read(dayLineFile, klcday);
+			m_CurDayFile = dayLineFile;
+			pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(dayLineFile));		
+		}
+
 		pView->Set1MinData(&klc1min);
 		pView->Set5SecData(&klc15s);
 
 		pView->Render();
 
-		this->SetTitle(CString(m_CurCsvFile.c_str()));
+		this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
 		
 		this->UpdateAllViews(0);
 	}
 }
 
-int GetFileSize(string dir, string filename)
-{
-	vector<string> vecFiles;
-	
-	if(_chdir(dir.c_str())) return 0;
-	else
-	{
-		long hFile;
-		_finddata_t fileinfo;
-		
-		if((hFile = _findfirst(filename.c_str(), &fileinfo))!= -1)
-		{
-			_findclose(hFile);
-			return fileinfo.size;			
-		}
-
-		return 0;
-	}
-}
-
 string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 {
-	//	从文件名获取品种，合约与日期
 	int date;
 	char buf[512];
-	string contract, var, market, final;
+	string rootdir, contract, market;
 
-	size_t posDot = path.find_last_of('.');
-	size_t posBackSlash = path.find_last_of('\\');
-
-	string filename = path.substr(posBackSlash+1, posDot - posBackSlash - 1);
-
-	string sub1 = path.substr(0, posBackSlash);
-	posBackSlash = sub1.find_last_of('\\');
-
-	string sub2 = sub1.substr(0, posBackSlash);
-	posBackSlash = sub2.find_last_of('\\');
-	
-	string sub3 = sub2.substr(0, posBackSlash);
-	posBackSlash = sub3.find_last_of('\\');
-
-	market = sub3.substr(sub3.size()-2, 2);
-
-	string rootDir = sub3.substr(0, posBackSlash);
-
-	size_t posUnderScore = filename.find_last_of('_');
-
-	string dateTmp = filename.substr(posUnderScore + 1);
-
-	date = atoi(dateTmp.c_str());
-	contract = filename.substr(0, posUnderScore);
+	DataRepoUtil::GetInfoByPath(path, rootdir, market, contract, date);
 
 	int nNeighDate;
 
@@ -199,61 +167,8 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 	else
 		nNeighDate = ((CKLinePrintApp*)AfxGetApp())->cal.GetNext(date); 
 
-	if(bZhuLi) /* 搜索主力合约 */
-	{
-		//	合约最后两位是月份
-		var = contract.substr(0, contract.size() - 2);
-
-		//	处理跨年合约
-		if(var[var.size() - 1] == 'X'
-			|| var[var.size() - 1] == 'Y')
-		{
-			var = var.substr(0, var.size() - 1);
-		}
-
-		// 在该目录搜索最大的文件(需要过滤掉MI,PI,VI文件)
-		vector<string> vecFiles;
-
-		sprintf(buf, "%s\\%s\\%s%d\\%d\\",
-			rootDir.c_str(),
-			market.c_str(),
-			market.c_str(),
-			nNeighDate/100,
-			nNeighDate);
-
-		string dir = buf;
-
-		sprintf(buf, "%s*_%d.csv",
-			var.c_str(),
-			nNeighDate);
-
-		vecFiles = GetFiles(dir, buf, false);
-
-		int nMaxFileSize = 0;
-		int nMaxFileIndex = -1;
-
-		for(int i = 0; i < vecFiles.size(); i++)
-		{
-			// 过滤PI/MI/VI文件
-
-			if((vecFiles[i].find("PI_") != string::npos)
-			|| (vecFiles[i].find("MI_") != string::npos)
-			|| (vecFiles[i].find("VI_") != string::npos)) continue;
-
-			int nFileSize = GetFileSize(dir, vecFiles[i]);
-
-			if(nFileSize > nMaxFileSize)
-			{
-				nMaxFileSize = nFileSize;
-				nMaxFileIndex = i;
-			}	
-		}
-
-		return dir + vecFiles[nMaxFileIndex];
-	}
-
 	sprintf(buf, "%s\\%s\\%s%d\\%d\\%s_%d.csv", 
-		rootDir.c_str(),
+		rootdir.c_str(),
 		market.c_str(),
 		market.c_str(),
 		nNeighDate/100,
@@ -261,8 +176,14 @@ string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 		contract.c_str(),
 		nNeighDate);
 
-	return string(buf);
-
+	if(bZhuLi) /* 搜索主力合约 */
+	{
+		return DataRepoUtil::GetMajorContractPath(buf);
+	}
+	else
+	{
+		return string(buf);
+	}
 }
 
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
@@ -296,10 +217,22 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 	klc15s.Generate(tc, 15, kline);
 	klc1min.Generate(tc, 60, kline);
 
+	KLineReader klReader;
+
+	string dayLineFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
+
+	if(dayLineFile != m_CurDayFile)
+	{
+		// 读取相应的日线数据
+		klReader.Read(dayLineFile, klcday);
+		m_CurDayFile = dayLineFile;
+		pView->SetDayData(&klcday, DataRepoUtil::GetDateByPath(dayLineFile));		
+	}
+
 	pView->Set1MinData(&klc1min);
 	pView->Set5SecData(&klc15s);
 
-	this->SetTitle(CString(m_CurCsvFile.c_str()));
+	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
 	
 	this->UpdateAllViews(0);	
 }

@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataRepoUtil.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.cpp"
 				>
 			</File>
@@ -211,6 +215,10 @@
 			</File>
 			<File
 				RelativePath=".\KLinePrintView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\KLineReader.cpp"
 				>
 			</File>
 			<File
@@ -276,6 +284,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataRepoUtil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileView.h"
 				>
 			</File>
@@ -293,6 +305,10 @@
 			</File>
 			<File
 				RelativePath=".\KLinePrintView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KLineReader.h"
 				>
 			</File>
 			<File

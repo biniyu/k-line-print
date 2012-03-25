@@ -26,13 +26,19 @@ int KLineRenderer::GetCurTime()
 	return (*m_pKLines)[m_nCurIdx].time;
 }
 
+void KLineRenderer::AdjustIndex()
+{
+	if(m_nStartIdx < 0) m_nStartIdx = 0;
+	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+}
+
 void KLineRenderer::SelectByTime(int nTime)
 {
 	if(!m_pKLines) return;
 
 	for(int i = 0; i < m_pKLines->size(); i++)
 	{
-		if((*m_pKLines)[i].time > nTime) 
+		if((*m_pKLines)[i].time >= nTime) 
 		{
 			m_nCurIdx = i;
 			break;
@@ -42,8 +48,7 @@ void KLineRenderer::SelectByTime(int nTime)
 	m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
 	m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
 
-	if(m_nStartIdx < 0) m_nStartIdx = 0;
-	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+	AdjustIndex();
 }
 
 void KLineRenderer::Select(CPoint pt)
@@ -65,12 +70,24 @@ void KLineRenderer::Select(CPoint pt)
 	}
 }
 
-void KLineRenderer::SetKLineData(KLineCollection* pKLines)
+void KLineRenderer::SetKLineData(KLineCollection* pKLines, int nRecentKLineCount)
 { 
 	m_pKLines = pKLines; 
-	m_nStartIdx = 0;
-	m_nEndIdx = pKLines->size() - 1;
-	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
+
+	if(nRecentKLineCount == -1)
+	{
+		m_nStartIdx = 0;
+		m_nEndIdx = pKLines->size() - 1;
+		m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
+	}
+	else
+	{
+		m_nEndIdx = pKLines->size() - 1;
+		m_nStartIdx = m_nEndIdx - nRecentKLineCount;
+		m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
+	}
+
+	AdjustIndex();
 }
 
 void KLineRenderer::ZoomIn()
@@ -83,8 +100,7 @@ void KLineRenderer::ZoomIn()
 	m_nStartIdx += ZOOM_STEP * s1 / (float) (s1+s2);
 	m_nEndIdx -= ZOOM_STEP * s2 / (float) (s1+s2);
 
-	if(m_nStartIdx < 0) m_nStartIdx = 0;
-	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+	AdjustIndex();
 }
 
 void KLineRenderer::ZoomOut()
@@ -97,8 +113,7 @@ void KLineRenderer::ZoomOut()
 	m_nStartIdx -= ZOOM_STEP * s1 / (float) (s1+s2);
 	m_nEndIdx += ZOOM_STEP * s2 / (float) (s1+s2);
 
-	if(m_nStartIdx < 0) m_nStartIdx = 0;
-	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+	AdjustIndex();
 }
 
 void KLineRenderer::MovePrev()

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <map>
-#include <vector>
 #include <string>
 
 using namespace std;
@@ -12,8 +11,6 @@ public:
 	int GetPrev(int today);
 	int GetNext(int today);
 };
-
-vector<string> GetFiles(string dir, string filter, bool bDir);
 
 class CalendarGenerator
 {
