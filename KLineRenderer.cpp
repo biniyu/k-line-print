@@ -10,9 +10,9 @@ KLineRenderer::KLineRenderer(void)
 	m_nKVolRatio = 3;						//	K图与成交量图的高度为3:1
 	m_nKSpace = 2;							//	K线间的像素数
 	m_bShowVol = true;
+	m_bShowAvg = false;
 	m_pKLines = NULL;
 	m_bSelected = false;
-
 	m_enRenderMode = enHighLowMode;
 }
 
@@ -70,22 +70,13 @@ void KLineRenderer::Select(CPoint pt)
 	}
 }
 
-void KLineRenderer::SetKLineData(KLineCollection* pKLines, int nRecentKLineCount)
+void KLineRenderer::SetKLineData(KLineCollection* pKLines)
 { 
 	m_pKLines = pKLines; 
 
-	if(nRecentKLineCount == -1)
-	{
-		m_nStartIdx = 0;
-		m_nEndIdx = pKLines->size() - 1;
-		m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
-	}
-	else
-	{
-		m_nEndIdx = pKLines->size() - 1;
-		m_nStartIdx = m_nEndIdx - nRecentKLineCount;
-		m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
-	}
+	m_nStartIdx = 0;
+	m_nEndIdx = pKLines->size() - 1;
+	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
 
 	AdjustIndex();
 }
@@ -164,7 +155,7 @@ void KLineRenderer::Render(CDC* pDC)
 	//	1分图： 开盘价轴，均量图
 	//	5秒图： 高低点，均量图	
 
-	float fPricePercentage;
+	float fPricePercentage, pixelPerPrice, pixelPerVol;
 
 	if(!m_pKLines || m_pKLines->size() <= 1) return;
 
@@ -215,11 +206,19 @@ void KLineRenderer::Render(CDC* pDC)
 		}
 	}
 
-	//	计算一个价格对应多少像素
-	float pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (kHighPrice - kLowPrice);
-
-	//	计算单位成交量对应多少像素
-	float pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / volMax;
+	if(m_bShowVol)
+	{
+		//	计算一个价格对应多少像素
+		pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (kHighPrice - kLowPrice);
+		
+		//	计算单位成交量对应多少像素
+		pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / volMax;
+	}
+	else
+	{
+		pixelPerPrice = (float)m_Rect.Height() / (kHighPrice - kLowPrice);
+		pixelPerVol = 0;
+	}
 
 	//	计算K线的宽度
 	float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
@@ -279,10 +278,10 @@ void KLineRenderer::Render(CDC* pDC)
 		float kAvgPos = m_Rect.top + (kHighPrice - kline.avg) * pixelPerPrice;
 
 		/* 绘制均价线 */
-		if(i > 0) 
+		if(i > 0 && m_bShowAvg) 
 		{
-//			pDC->MoveTo(kLastMiddle, kLastAvgPos);
-//			pDC->LineTo(kMiddle, kAvgPos);
+			pDC->MoveTo(kLastMiddle, kLastAvgPos);
+			pDC->LineTo(kMiddle, kAvgPos);
 		}
 
 		kLastAvgPos = kAvgPos;
@@ -319,14 +318,15 @@ void KLineRenderer::Render(CDC* pDC)
 			pDC->LineTo(kMiddle, kLowPos);
 		}
 
-		//	成交量线
-
-		float kVolPos = m_Rect.bottom - kline.vol * pixelPerVol;
-
-		pDC->MoveTo(kLeft, m_Rect.bottom);
-		pDC->LineTo(kLeft, kVolPos);
-		pDC->LineTo(kRight, kVolPos);
-		pDC->LineTo(kRight, m_Rect.bottom);
+		if(m_bShowVol)
+		{
+			//	成交量线
+			float kVolPos = m_Rect.bottom - kline.vol * pixelPerVol;
+			pDC->MoveTo(kLeft, m_Rect.bottom);
+			pDC->LineTo(kLeft, kVolPos);
+			pDC->LineTo(kRight, kVolPos);
+			pDC->LineTo(kRight, m_Rect.bottom);
+		}
 
 		//	
 		if(i == m_nCurIdx)

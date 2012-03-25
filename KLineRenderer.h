@@ -34,6 +34,9 @@ private:
 	//	是否显示成交量
 	bool m_bShowVol;
 
+	//	是否显示均价线
+	bool m_bShowAvg;
+
 	//	K图与成交量图的高度比
 	int m_nKVolRatio;
 
@@ -62,10 +65,14 @@ public:
 
 	void AdjustIndex();
 
+	void SetShowVol(bool bShow) { m_bShowVol = bShow; }
+
+	void SetShowAvg(bool bShow) { m_bShowAvg = bShow; }
+
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 
 	//	设置K线数据
-	void SetKLineData(KLineCollection* pKLines, int nRecentKLineCount = -1);
+	void SetKLineData(KLineCollection* pKLines);
 
 	//	设置绘制范围
 	void SetRect(CRect rect) { m_Rect = rect; }

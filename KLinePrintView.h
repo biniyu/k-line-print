@@ -33,12 +33,14 @@ public:
 	{ 
 		klr_1min.SetKLineData(pData); 
 		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
+		klr_1min.SetShowAvg(true);
 	}
 
 	void SetDayData(KLineCollection* pData, int nDate)  
 	{ 
 		klr_day.SetKLineData(pData);
 		klr_day.SelectByTime(nDate);
+		klr_day.SetShowVol(false);
 	}
 
 // ÖØÐ´
