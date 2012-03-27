@@ -343,6 +343,17 @@ void KLineRenderer::Render(CDC* pDC)
 
 			pDC->MoveTo(kMiddle, kLowPos + 10);
 			pDC->LineTo(kMiddle, m_Rect.bottom);
+
+			// 显示时间和价格
+
+			CString strTime, strPrice;
+
+			strTime.Format(_T("%d"), kline.time);
+			strPrice.Format(_T("%d"), kline.close);
+
+			pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
+//			pDC->TextOutW(m_Rect.left + 1, kClosePos + 1, strPrice);
+
 		}
 
 		pDC->SelectObject(pOldPen);

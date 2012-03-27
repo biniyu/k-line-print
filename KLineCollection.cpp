@@ -83,7 +83,14 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 			/* K 已完成，写入文件 */ 
 			KLine kline;
 
-			kline.time = nCurSecond;
+			int tmphour, tmpmin, tmpsec;
+
+			//	还原时间
+			tmphour = nCurSecond / 3600;
+			tmpmin = nCurSecond % 3600 / 60;
+			tmpsec = nCurSecond % 3600 % 60;
+
+			kline.time = tmphour * 10000 + tmpmin * 100 + tmpsec;
 			kline.high = kHigh;
 			kline.low = kLow;
 			kline.open = kOpen;
