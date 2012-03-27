@@ -333,9 +333,15 @@ void KLineRenderer::Render(CDC* pDC)
 		{
 			pDC->SelectObject(&penGreyDotted);
 			pDC->MoveTo(m_Rect.left, kClosePos);
+			pDC->LineTo(kMiddle - kWidth * 2, kClosePos);
+
+			pDC->MoveTo(kMiddle + kWidth * 2, kClosePos);
 			pDC->LineTo(m_Rect.right, kClosePos);
 
 			pDC->MoveTo(kMiddle, m_Rect.top);
+			pDC->LineTo(kMiddle, kHighPos - 10);
+
+			pDC->MoveTo(kMiddle, kLowPos + 10);
 			pDC->LineTo(kMiddle, m_Rect.bottom);
 		}
 
