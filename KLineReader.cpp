@@ -18,6 +18,8 @@ void KLineReader::Read(string path, KLineCollection& klines)
 	char buf[SZ];
 	int year, month, day;
 
+	FastMovingAverageComputer fmac;
+
 	ifstream in (path.c_str());
 
 	while(in.getline(buf, SZ))
@@ -30,6 +32,13 @@ void KLineReader::Read(string path, KLineCollection& klines)
 			&year, &month, &day, &kline.open, &kline.high, &kline.low, &kline.close);
 
 		kline.time = year*10000 + month*100 + day;
+
+		fmac.PushNewData(kline.close);
+
+		kline.ma5 = fmac.GetMA5();
+		kline.ma10 = fmac.GetMA10();
+		kline.ma20 = fmac.GetMA20();
+		kline.ma60 = fmac.GetMA60();
 
 		klines.AddToTail(kline);
 	}	

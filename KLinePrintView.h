@@ -41,7 +41,12 @@ public:
 		klr_day.SetKLineData(pData);
 		klr_day.SelectByTime(nDate);
 		klr_day.SetShowVol(false);
+		klr_day.SetShowMA(true);
 	}
+
+private:
+
+	bool m_bLocked;		//	Áª¶¯
 
 // ÖØÐ´
 public:

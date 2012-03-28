@@ -15,7 +15,11 @@ public:
 	int open;
 	int close;
 	int vol;
-	int avg;	// 均价线
+	int avg;		// 均价线
+	double ma5;
+	double ma10;
+	double ma20;
+	double ma60;
 };
 
 class KLineCollection : public vector<KLine>

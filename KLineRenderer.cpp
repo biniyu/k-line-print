@@ -11,6 +11,7 @@ KLineRenderer::KLineRenderer(void)
 	m_nKSpace = 2;							//	K线间的像素数
 	m_bShowVol = true;
 	m_bShowAvg = false;
+	m_bShowMA = false;
 	m_pKLines = NULL;
 	m_bSelected = false;
 	m_enRenderMode = enHighLowMode;
@@ -260,6 +261,9 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->TextOutW(m_Rect.left + 1, m_Rect.top + 1, strPercent);
 
 	float kLastAvgPos = 0;
+	float kLastMA20Pos = 0;
+	float kLastMA60Pos = 0;
+
 	float kLastMiddle = 0;
 
 	for(int i = m_nStartIdx; i <= m_nEndIdx; i++)
@@ -275,7 +279,10 @@ void KLineRenderer::Render(CDC* pDC)
 		float kLowPos = m_Rect.top + (kHighPrice - kline.low) * pixelPerPrice;
 		float kOpenPos = m_Rect.top + (kHighPrice - kline.open) * pixelPerPrice;
 		float kClosePos = m_Rect.top + (kHighPrice - kline.close) * pixelPerPrice;
+		
 		float kAvgPos = m_Rect.top + (kHighPrice - kline.avg) * pixelPerPrice;
+		float kMA20Pos = m_Rect.top + (kHighPrice - kline.ma20) * pixelPerPrice;
+		float kMA60Pos = m_Rect.top + (kHighPrice - kline.ma60) * pixelPerPrice;
 
 		/* 绘制均价线 */
 		if(i > 0 && m_bShowAvg) 
@@ -284,7 +291,19 @@ void KLineRenderer::Render(CDC* pDC)
 			pDC->LineTo(kMiddle, kAvgPos);
 		}
 
+		if(m_bShowMA)
+		{
+			pDC->MoveTo(kLastMiddle, kLastMA20Pos);
+			pDC->LineTo(kMiddle, kMA20Pos);
+
+			pDC->MoveTo(kLastMiddle, kLastMA60Pos);
+			pDC->LineTo(kMiddle, kMA60Pos);
+		}
+
 		kLastAvgPos = kAvgPos;
+		kLastMA20Pos = kMA20Pos;
+		kLastMA60Pos = kMA60Pos;
+
 		kLastMiddle = kMiddle;
 
 		//	上涨红，下跌绿
