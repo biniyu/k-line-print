@@ -38,6 +38,7 @@ CKLinePrintView::CKLinePrintView()
 {
 	// TODO: 在此处添加构造代码
 	m_bDrawTrackingCrossLine = FALSE;
+	m_bLocked = TRUE;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -63,6 +64,11 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 
 	CRect rc;
 	GetClientRect(&rc);
+
+#define RADIUS 5
+
+	if(m_bLocked)
+		m_MemDC.Ellipse(rc.right - 2 * RADIUS, rc.top, rc.right, rc.top + 2*RADIUS);
 
 	//将内存中的图拷贝到屏幕上进行显示
 	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);
@@ -182,12 +188,17 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_5sec.SwitchMode();
 	}
 
-	if(klr_1min.IsSelected())
+	if(nChar == VK_SPACE)
+	{
+		m_bLocked = !m_bLocked;
+	}
+
+	if(klr_1min.IsSelected() && m_bLocked)
 	{
 		klr_5sec.SelectByTime(klr_1min.GetCurTime());
 	}
 
-	if(klr_day.IsSelected())
+	if(klr_day.IsSelected() && m_bLocked)
 	{
 		pDoc->ReloadByDate(klr_day.GetCurTime());
 	}
@@ -284,7 +295,7 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	klr_1min.Select(point);
 
-	if(klr_1min.IsSelected())
+	if(klr_1min.IsSelected() && m_bLocked)
 	{
 		klr_5sec.SelectByTime(klr_1min.GetCurTime());
 	}
@@ -293,7 +304,7 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 
 	klr_day.Select(point);
 
-	if(klr_day.IsSelected())
+	if(klr_day.IsSelected() && m_bLocked)
 	{
 		pDoc->ReloadByDate(klr_day.GetCurTime());
 	}

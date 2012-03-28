@@ -37,6 +37,9 @@ private:
 	//	是否显示均价线
 	bool m_bShowAvg;
 
+	//	是否显示均线
+	bool m_bShowMA;
+
 	//	K图与成交量图的高度比
 	int m_nKVolRatio;
 
@@ -66,8 +69,8 @@ public:
 	void AdjustIndex();
 
 	void SetShowVol(bool bShow) { m_bShowVol = bShow; }
-
 	void SetShowAvg(bool bShow) { m_bShowAvg = bShow; }
+	void SetShowMA(bool bShow) { m_bShowMA = bShow; }
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 
