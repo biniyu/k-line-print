@@ -49,6 +49,9 @@ private:
 	//	本区域是否被选中
 	bool m_bSelected;
 
+	//	显示选中K线的特定价格
+	int m_nSelectedPrice;
+
 public:
 
 	//	放大K线图
@@ -93,4 +96,8 @@ public:
 	void SelectByTime(int nTime);
 
 	void SwitchMode();
+
+	void SetSelectedPrice(int price);
+
+	int GetSelectedClosePrice();
 };

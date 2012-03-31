@@ -196,6 +196,13 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if(klr_1min.IsSelected() && m_bLocked)
 	{
 		klr_5sec.SelectByTime(klr_1min.GetCurTime());
+		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
+	}
+
+	if(klr_5sec.IsSelected() && m_bLocked)
+	{
+		klr_1min.SelectByTime(klr_5sec.GetCurTime());
+		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
 	if(klr_day.IsSelected() && m_bLocked)
@@ -294,16 +301,20 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 		return;
 
 	klr_1min.Select(point);
-
 	if(klr_1min.IsSelected() && m_bLocked)
 	{
 		klr_5sec.SelectByTime(klr_1min.GetCurTime());
+		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
 	}
 
 	klr_5sec.Select(point);
+	if(klr_5sec.IsSelected() && m_bLocked)
+	{
+		klr_1min.SelectByTime(klr_5sec.GetCurTime());
+		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
+	}
 
 	klr_day.Select(point);
-
 	if(klr_day.IsSelected() && m_bLocked)
 	{
 		pDoc->ReloadByDate(klr_day.GetCurTime());
