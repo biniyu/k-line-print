@@ -50,6 +50,8 @@ void KLineRenderer::SelectByTime(int nTime)
 	m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
 
 	AdjustIndex();
+
+	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 }
 
 void KLineRenderer::Select(CPoint pt)
@@ -68,6 +70,7 @@ void KLineRenderer::Select(CPoint pt)
 			/(float)(m_nEndIdx - m_nStartIdx + 1);
 
 		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nStartIdx;
+		m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 	}
 }
 
@@ -120,6 +123,8 @@ void KLineRenderer::MovePrev()
 		m_nEndIdx -= ( m_nStartIdx - m_nCurIdx);
 		m_nStartIdx = m_nCurIdx;
 	}
+
+	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 }
 
 void KLineRenderer::MoveNext()
@@ -134,6 +139,8 @@ void KLineRenderer::MoveNext()
 		m_nStartIdx += ( m_nCurIdx - m_nEndIdx);
 		m_nEndIdx = m_nCurIdx;
 	}
+
+	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 }
 
 void KLineRenderer::SwitchMode()
@@ -161,7 +168,7 @@ void KLineRenderer::Render(CDC* pDC)
 	if(!m_pKLines || m_pKLines->size() <= 1) return;
 
 	if(m_bSelected)
-		pDC->FillSolidRect(&m_Rect,RGB(220,220,220));
+		pDC->FillSolidRect(&m_Rect,RGB(240,240,240));
 	else
 		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
 
@@ -225,12 +232,18 @@ void KLineRenderer::Render(CDC* pDC)
 	float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
 		/(float)(m_nEndIdx - m_nStartIdx + 1);
 
-	CPen penRed, penGreen, penWhite, penGreyDotted, *pOldPen;
+	CPen penRed, penGreen, penWhite, penGreyDotted, *pOldPen = 0;
+	CPen penRedDotted, penGreenDotted, penBlueDotted;
 
     penRed.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
     penGreen.CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
     penWhite.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
-    penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
+
+	penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
+    
+	penRedDotted.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
+    penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 255, 0));
+    penBlueDotted.CreatePen(PS_DASH, 1, RGB(0, 0, 255));
 
 	float timeLinePos = m_Rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
 
@@ -285,13 +298,13 @@ void KLineRenderer::Render(CDC* pDC)
 		float kMA60Pos = m_Rect.top + (kHighPrice - kline.ma60) * pixelPerPrice;
 
 		/* 绘制均价线 */
-		if(i > 0 && m_bShowAvg) 
+		if(i > m_nStartIdx + 1 && m_bShowAvg) 
 		{
 			pDC->MoveTo(kLastMiddle, kLastAvgPos);
 			pDC->LineTo(kMiddle, kAvgPos);
 		}
 
-		if(m_bShowMA)
+		if(i > m_nStartIdx + 1 && m_bShowMA)
 		{
 			pDC->MoveTo(kLastMiddle, kLastMA20Pos);
 			pDC->LineTo(kMiddle, kMA20Pos);
@@ -306,13 +319,43 @@ void KLineRenderer::Render(CDC* pDC)
 
 		kLastMiddle = kMiddle;
 
+		/* 绘制15分钟，30分钟，60分钟时间线 */
+
+		int tmpHour = kline.time / 10000;
+		int tmpMinute =  kline.time % 10000 / 100;
+		int tmpSecond =  kline.time % 10000 % 100;
+		
+		int tmpTime = tmpHour * 60 + tmpMinute;
+
+		if(tmpTime % 30 == 0)
+		{
+			pOldPen = pDC->SelectObject(&penRedDotted);		
+		}
+		else if(tmpTime % 15 == 0)
+		{
+			pOldPen = pDC->SelectObject(&penBlueDotted);
+		}
+		else
+		{
+			pOldPen = pDC->SelectObject(&penBlueDotted);
+		}
+
+		if(tmpTime % 15 == 0)
+		{		
+			pDC->MoveTo(kMiddle, m_Rect.top);
+			pDC->LineTo(kMiddle, kHighPos - 10);
+
+			pDC->MoveTo(kMiddle, kLowPos + 10);
+			pDC->LineTo(kMiddle, timeLinePos);
+		}
+
 		//	上涨红，下跌绿
 		if(kline.open > kline.close)
-			pOldPen = pDC->SelectObject(&penGreen);
+			pDC->SelectObject(&penGreen);
 		else if(kline.open < kline.close)
-			pOldPen = pDC->SelectObject(&penRed);
+			pDC->SelectObject(&penRed);
 		else
-			pOldPen = pDC->SelectObject(&penWhite);
+			pDC->SelectObject(&penWhite);
 
 		//	实体线
 		pDC->MoveTo(kLeft, kOpenPos);
@@ -350,12 +393,14 @@ void KLineRenderer::Render(CDC* pDC)
 		//	
 		if(i == m_nCurIdx)
 		{
-			pDC->SelectObject(&penGreyDotted);
-			pDC->MoveTo(m_Rect.left, kClosePos);
-			pDC->LineTo(kMiddle - kWidth * 2, kClosePos);
+			float kCurPos = m_Rect.top + (kHighPrice - m_nSelectedPrice) * pixelPerPrice;
 
-			pDC->MoveTo(kMiddle + kWidth * 2, kClosePos);
-			pDC->LineTo(m_Rect.right, kClosePos);
+			pDC->SelectObject(&penGreyDotted);
+			pDC->MoveTo(m_Rect.left, kCurPos);
+			pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
+
+			pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
+			pDC->LineTo(m_Rect.right, kCurPos);
 
 			pDC->MoveTo(kMiddle, m_Rect.top);
 			pDC->LineTo(kMiddle, kHighPos - 10);
@@ -382,4 +427,19 @@ void KLineRenderer::Render(CDC* pDC)
     penRed.DeleteObject();
     penWhite.DeleteObject();
 	penGreyDotted.DeleteObject();
+
+	penRedDotted.DeleteObject();
+    penGreenDotted.DeleteObject();
+    penBlueDotted.DeleteObject();
+
+}
+
+void KLineRenderer::SetSelectedPrice(int price)
+{
+	m_nSelectedPrice = price;
+}
+
+int KLineRenderer::GetSelectedClosePrice()
+{
+	return (*m_pKLines)[m_nCurIdx].close;
 }
