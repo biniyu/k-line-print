@@ -193,8 +193,9 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_5sec.ToggleRenderMode();
 	}
 
-	if(klr_5sec.IsSelected())
+	if(klr_5sec.IsSelected() && nChar > '0' && nChar <'9')
 	{
+		int tmptime = klr_5sec.GetCurTime(); 
 		switch(nChar)
 		{
 		case '1':
@@ -207,6 +208,7 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			pDoc->ReloadDetailData(15);
 			break;
 		}
+		klr_5sec.SelectByTime(tmptime);
 	}
 
 	if(nChar == VK_SPACE)

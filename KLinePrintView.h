@@ -27,6 +27,7 @@ public:
 	void Set5SecData(KLineCollection* pData) 
 	{ 
 		klr_5sec.SetKLineData(pData); 
+		klr_5sec.SetOpenIndex(0);
 	}
 
 	void Set1MinData(KLineCollection* pData) 
@@ -35,6 +36,7 @@ public:
 		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 		klr_1min.SetShowAvg(true);
 		klr_1min.SetShowCriticalTime(true);
+		klr_1min.SetOpenIndex(1);
 	}
 
 	void SetDayData(KLineCollection* pData, int nDate)  
@@ -43,6 +45,7 @@ public:
 		klr_day.SelectByTime(nDate);
 		klr_day.SetShowVol(false);
 		klr_day.SetShowMA(true);
+		klr_day.SetOpenIndex(-1);
 	}
 
 private:

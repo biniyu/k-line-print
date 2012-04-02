@@ -17,6 +17,7 @@ KLineRenderer::KLineRenderer(void)
 	m_bSelected = false;
 	m_enRenderMode = enHighLowMode;
 	m_enTrackingMode = enCloseTMode;
+	m_nOpenIndex = -1;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -464,10 +465,41 @@ void KLineRenderer::Render(CDC* pDC)
 
 			// 显示时间和价格
 
-			CString strTime, strPrice;
+			CString strTime, strOpen, strCur;
 
-			strTime.Format(_T("%d"), kline.time);
-			strPrice.Format(_T("%d"), kline.close);
+			if(kline.open >= kline.close) /* 跌 */
+			{
+				strCur.Format(_T("-%d -%.2f%%"), 
+							kline.open - kline.close, 
+							100 * (kline.open - kline.close) / (float)kline.open);
+			}
+			else
+			{
+				strCur.Format(_T("+%d +%.2f%%"), 
+							kline.close - kline.open, 
+							100 * (kline.close - kline.open) / (float)kline.open);	
+			}
+
+			if(m_nOpenIndex >= 0)
+			{
+				KLine kopen = (*m_pKLines)[m_nOpenIndex];
+				
+				if(kline.close > kopen.open)
+				{
+					strOpen.Format(_T("+%d +%.2f%%"), 
+								kline.close - kopen.open, 
+								100 * (kline.close - kopen.open) / (float)kopen.open);	
+
+				}
+				else
+				{
+					strOpen.Format(_T("-%d -%.2f%%"), 
+								kopen.open - kline.close, 
+								100 * (kopen.open - kline.close) / (float)kopen.open);
+				}
+			}
+
+			strTime.Format(_T("%d [ %s ] %s"), kline.time, strOpen, strCur);
 
 			pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
 //			pDC->TextOutW(m_Rect.left + 1, kClosePos + 1, strPrice);
