@@ -73,6 +73,9 @@ private:
 	//	当前图显示的最高价
 	int m_kHighPrice;
 
+	//	设置开盘价索引 -1为无
+	int m_nOpenIndex;
+
 public:
 
 	//	放大K线图
@@ -129,4 +132,6 @@ public:
 	int GetMousePrice(CPoint pt);
 
 	TrackingMode GetTrackingMode() { return m_enTrackingMode; }
+
+	void SetOpenIndex(int nOpenIndex) { m_nOpenIndex = nOpenIndex; }
 };
