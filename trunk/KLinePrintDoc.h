@@ -3,6 +3,7 @@
 //
 #include <string>
 #include "KLineCollection.h"
+#include "TickReader.h"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ protected: // 仅从序列化创建
 // 属性
 public:
 
+	TickCollection tc;
 	KLineCollection klc15s;
 	KLineCollection klc1min;
 	KLineCollection klcday;
@@ -44,6 +46,7 @@ public:
 	void ViewNeighborDate(BOOL bPrev);
 	void ReloadByDate(int nDate);
 	void LoadKLineGroup(string targetCsvFile);
+	void ReloadDetailData(int second);
 
 // 生成的消息映射函数
 protected:

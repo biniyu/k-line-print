@@ -12,9 +12,18 @@ public:
 		enAxisMode
 	};
 
+	enum TrackingMode
+	{
+		enHighLowTMode,
+		enCloseTMode,
+		enMouseTMode
+	};
+
 private:
 
 	RenderMode m_enRenderMode;
+
+	TrackingMode m_enTrackingMode;
 
 	//	开始显示的K线索引
 	int m_nStartIdx;
@@ -40,6 +49,9 @@ private:
 	//	是否显示均线
 	bool m_bShowMA;
 
+	//	是否显示关键时间线
+	bool m_bShowCriticalTime;
+
 	//	K图与成交量图的高度比
 	int m_nKVolRatio;
 
@@ -51,6 +63,15 @@ private:
 
 	//	显示选中K线的特定价格
 	int m_nSelectedPrice;
+
+	//  鼠标所在的位置
+	CPoint m_cp;
+
+	//	每个价格单位对应的像素数
+	float m_pixelPerPrice;
+
+	//	当前图显示的最高价
+	int m_kHighPrice;
 
 public:
 
@@ -74,6 +95,7 @@ public:
 	void SetShowVol(bool bShow) { m_bShowVol = bShow; }
 	void SetShowAvg(bool bShow) { m_bShowAvg = bShow; }
 	void SetShowMA(bool bShow) { m_bShowMA = bShow; }
+	void SetShowCriticalTime(bool bShow) { m_bShowCriticalTime = bShow; }
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 
@@ -93,11 +115,18 @@ public:
 
 	int GetCurTime();
 
-	void SelectByTime(int nTime);
+	void SelectByTime(int nTime, bool bKeepScale = false);
 
-	void SwitchMode();
+	void ToggleRenderMode();
+
+	void ToggleTrackingMode();
 
 	void SetSelectedPrice(int price);
 
 	int GetSelectedClosePrice();
+
+	//	获取鼠标所在位置的价格
+	int GetMousePrice(CPoint pt);
+
+	TrackingMode GetTrackingMode() { return m_enTrackingMode; }
 };

@@ -34,6 +34,7 @@ public:
 		klr_1min.SetKLineData(pData); 
 		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 		klr_1min.SetShowAvg(true);
+		klr_1min.SetShowCriticalTime(true);
 	}
 
 	void SetDayData(KLineCollection* pData, int nDate)  
@@ -66,9 +67,6 @@ public:
 #endif
 
 protected:
-
-	CPoint cp;
-	BOOL m_bDrawTrackingCrossLine;
 
 	KLineRenderer klr_5sec;
 	KLineRenderer klr_1min;

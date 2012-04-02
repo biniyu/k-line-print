@@ -12,9 +12,11 @@ KLineRenderer::KLineRenderer(void)
 	m_bShowVol = true;
 	m_bShowAvg = false;
 	m_bShowMA = false;
+	m_bShowCriticalTime = false;
 	m_pKLines = NULL;
 	m_bSelected = false;
 	m_enRenderMode = enHighLowMode;
+	m_enTrackingMode = enCloseTMode;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -33,7 +35,7 @@ void KLineRenderer::AdjustIndex()
 	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
 }
 
-void KLineRenderer::SelectByTime(int nTime)
+void KLineRenderer::SelectByTime(int nTime, bool bKeepScale)
 {
 	if(!m_pKLines) return;
 
@@ -46,10 +48,13 @@ void KLineRenderer::SelectByTime(int nTime)
 		}
 	}
 
-	m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
-	m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
+	if(!bKeepScale)
+	{
+		m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
+		m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
 
-	AdjustIndex();
+		AdjustIndex();
+	}
 
 	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 }
@@ -143,7 +148,7 @@ void KLineRenderer::MoveNext()
 	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 }
 
-void KLineRenderer::SwitchMode()
+void KLineRenderer::ToggleRenderMode()
 {
 	if(!m_bSelected) return;
 
@@ -159,11 +164,8 @@ void KLineRenderer::SwitchMode()
 
 void KLineRenderer::Render(CDC* pDC)
 {
-	//	日图 ： 高低点
-	//	1分图： 开盘价轴，均量图
-	//	5秒图： 高低点，均量图	
-
-	float fPricePercentage, pixelPerPrice, pixelPerVol;
+	float fPricePercentage, pixelPerVol;
+	int kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
 	if(!m_pKLines || m_pKLines->size() <= 1) return;
 
@@ -172,43 +174,41 @@ void KLineRenderer::Render(CDC* pDC)
 	else
 		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
 
-	int kHighPrice, kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
-
 	if(m_enRenderMode == enHighLowMode)
 	{
 		m_pKLines->GetPriceVolRange(m_nStartIdx, m_nEndIdx, 
-								kHighPrice, kLowPrice, volMax);
+								m_kHighPrice, kLowPrice, volMax);
 
 		//	高低点间的波动幅度
-		fPricePercentage = (kHighPrice - kLowPrice) /((kHighPrice + kLowPrice) / 2.0f);
+		fPricePercentage = (m_kHighPrice - kLowPrice) /((m_kHighPrice + kLowPrice) / 2.0f);
 	}
 	else if(m_enRenderMode == enAxisMode)
 	{
 		m_pKLines->GetPriceVolRange(1, m_pKLines->size() - 1, 
-								kHighPrice, kLowPrice, volMax);	
+								m_kHighPrice, kLowPrice, volMax);	
 
 		// 以开盘为中轴价
 		kAxisPrice = (*m_pKLines)[1].open;
 		int min = kLowPrice;
-		int max = kHighPrice;
+		int max = m_kHighPrice;
 
 		if(max - kAxisPrice > kAxisPrice - min)
 		{
-			kHighPrice = kAxisPrice + (max - kAxisPrice);
+			m_kHighPrice = kAxisPrice + (max - kAxisPrice);
 			kLowPrice = kAxisPrice - (max - kAxisPrice);
 		}
 		else
 		{
-			kHighPrice = kAxisPrice + (kAxisPrice - min);
+			m_kHighPrice = kAxisPrice + (kAxisPrice - min);
 			kLowPrice = kAxisPrice - (kAxisPrice - min);
 		}
 
-		fPricePercentage = (kHighPrice - kAxisPrice)/(float)kAxisPrice;
+		fPricePercentage = (m_kHighPrice - kAxisPrice)/(float)kAxisPrice;
 
 		if( fPricePercentage < 0.02)
 		{
 			//	波动过小则统一使用 2% 的涨跌幅比例
-			kHighPrice = kAxisPrice * 1.02;
+			m_kHighPrice = kAxisPrice * 1.02;
 			kLowPrice = kAxisPrice * 0.98;
 			fPricePercentage = 0.02;
 		}
@@ -217,14 +217,14 @@ void KLineRenderer::Render(CDC* pDC)
 	if(m_bShowVol)
 	{
 		//	计算一个价格对应多少像素
-		pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (kHighPrice - kLowPrice);
+		m_pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (m_kHighPrice - kLowPrice);
 		
 		//	计算单位成交量对应多少像素
 		pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / volMax;
 	}
 	else
 	{
-		pixelPerPrice = (float)m_Rect.Height() / (kHighPrice - kLowPrice);
+		m_pixelPerPrice = (float)m_Rect.Height() / (m_kHighPrice - kLowPrice);
 		pixelPerVol = 0;
 	}
 
@@ -245,7 +245,7 @@ void KLineRenderer::Render(CDC* pDC)
     penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 255, 0));
     penBlueDotted.CreatePen(PS_DASH, 1, RGB(0, 0, 255));
 
-	float timeLinePos = m_Rect.top + (kHighPrice - kLowPrice) * pixelPerPrice;
+	float timeLinePos = m_Rect.top + (m_kHighPrice - kLowPrice) * m_pixelPerPrice;
 
 	//	绘制分割线
 	pDC->MoveTo(m_Rect.left, timeLinePos);
@@ -258,7 +258,7 @@ void KLineRenderer::Render(CDC* pDC)
 	//	绘制中轴线
 	if(m_enRenderMode == enAxisMode)
 	{
-		float axleLinePos = m_Rect.top + (kHighPrice - kAxisPrice) * pixelPerPrice;
+		float axleLinePos = m_Rect.top + (m_kHighPrice - kAxisPrice) * m_pixelPerPrice;
 		pDC->MoveTo(m_Rect.left, axleLinePos);
 		pDC->LineTo(m_Rect.right, axleLinePos);
 	}
@@ -288,14 +288,14 @@ void KLineRenderer::Render(CDC* pDC)
 
 		KLine kline = (*m_pKLines)[i];
 
-		float kHighPos = m_Rect.top + (kHighPrice - kline.high) * pixelPerPrice;
-		float kLowPos = m_Rect.top + (kHighPrice - kline.low) * pixelPerPrice;
-		float kOpenPos = m_Rect.top + (kHighPrice - kline.open) * pixelPerPrice;
-		float kClosePos = m_Rect.top + (kHighPrice - kline.close) * pixelPerPrice;
+		float kHighPos = m_Rect.top + (m_kHighPrice - kline.high) * m_pixelPerPrice;
+		float kLowPos = m_Rect.top + (m_kHighPrice - kline.low) * m_pixelPerPrice;
+		float kOpenPos = m_Rect.top + (m_kHighPrice - kline.open) * m_pixelPerPrice;
+		float kClosePos = m_Rect.top + (m_kHighPrice - kline.close) * m_pixelPerPrice;
 		
-		float kAvgPos = m_Rect.top + (kHighPrice - kline.avg) * pixelPerPrice;
-		float kMA20Pos = m_Rect.top + (kHighPrice - kline.ma20) * pixelPerPrice;
-		float kMA60Pos = m_Rect.top + (kHighPrice - kline.ma60) * pixelPerPrice;
+		float kAvgPos = m_Rect.top + (m_kHighPrice - kline.avg) * m_pixelPerPrice;
+		float kMA20Pos = m_Rect.top + (m_kHighPrice - kline.ma20) * m_pixelPerPrice;
+		float kMA60Pos = m_Rect.top + (m_kHighPrice - kline.ma60) * m_pixelPerPrice;
 
 		/* 绘制均价线 */
 		if(i > m_nStartIdx + 1 && m_bShowAvg) 
@@ -340,7 +340,7 @@ void KLineRenderer::Render(CDC* pDC)
 			pOldPen = pDC->SelectObject(&penBlueDotted);
 		}
 
-		if(tmpTime % 15 == 0)
+		if(tmpTime % 15 == 0 && m_bShowCriticalTime)
 		{		
 			pDC->MoveTo(kMiddle, m_Rect.top);
 			pDC->LineTo(kMiddle, kHighPos - 10);
@@ -393,20 +393,74 @@ void KLineRenderer::Render(CDC* pDC)
 		//	
 		if(i == m_nCurIdx)
 		{
-			float kCurPos = m_Rect.top + (kHighPrice - m_nSelectedPrice) * pixelPerPrice;
-
 			pDC->SelectObject(&penGreyDotted);
-			pDC->MoveTo(m_Rect.left, kCurPos);
-			pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
 
-			pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
-			pDC->LineTo(m_Rect.right, kCurPos);
+			if(!m_bSelected)	//	未选中
+			{
+				float kCurPos = m_Rect.top + (m_kHighPrice - m_nSelectedPrice) * m_pixelPerPrice;
 
-			pDC->MoveTo(kMiddle, m_Rect.top);
-			pDC->LineTo(kMiddle, kHighPos - 10);
+				pDC->MoveTo(m_Rect.left, kCurPos);
+				pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
 
-			pDC->MoveTo(kMiddle, kLowPos + 10);
-			pDC->LineTo(kMiddle, m_Rect.bottom);
+				pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
+				pDC->LineTo(m_Rect.right, kCurPos);
+
+				pDC->MoveTo(kMiddle, m_Rect.top);
+				pDC->LineTo(kMiddle, kHighPos - 10);
+
+				pDC->MoveTo(kMiddle, kLowPos + 10);
+				pDC->LineTo(kMiddle, m_Rect.bottom);
+			}
+			else	//	选中
+			{
+				if(m_enTrackingMode == enCloseTMode)
+				{
+					float kCurPos = m_Rect.top + (m_kHighPrice - kline.close) * m_pixelPerPrice;
+
+					pDC->MoveTo(m_Rect.left, kCurPos);
+					pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
+
+					pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
+					pDC->LineTo(m_Rect.right, kCurPos);
+
+					pDC->MoveTo(kMiddle, m_Rect.top);
+					pDC->LineTo(kMiddle, kHighPos - 10);
+
+					pDC->MoveTo(kMiddle, kLowPos + 10);
+					pDC->LineTo(kMiddle, m_Rect.bottom);
+				}
+				else if(m_enTrackingMode == enHighLowTMode)
+				{
+					float kCurHighPos = m_Rect.top + (m_kHighPrice - kline.high) * m_pixelPerPrice;
+					float kCurLowPos = m_Rect.top + (m_kHighPrice - kline.low) * m_pixelPerPrice;
+
+					pDC->MoveTo(m_Rect.left, kCurHighPos);
+					pDC->LineTo(kMiddle - kWidth * 2, kCurHighPos);
+					pDC->MoveTo(kMiddle + kWidth * 2, kCurHighPos);
+					pDC->LineTo(m_Rect.right, kCurHighPos);
+
+					pDC->MoveTo(m_Rect.left, kCurLowPos);
+					pDC->LineTo(kMiddle - kWidth * 2, kCurLowPos);
+					pDC->MoveTo(kMiddle + kWidth * 2, kCurLowPos);
+					pDC->LineTo(m_Rect.right, kCurLowPos);
+
+					pDC->MoveTo(kMiddle, m_Rect.top);
+					pDC->LineTo(kMiddle, kHighPos - 10);
+					pDC->MoveTo(kMiddle, kLowPos + 10);
+					pDC->LineTo(kMiddle, m_Rect.bottom);
+				}
+				else if(m_enTrackingMode == enMouseTMode)
+				{
+					//	绘制当前鼠标所在位置的跟踪线
+					pDC->MoveTo(m_Rect.left, m_cp.y);
+					pDC->LineTo(m_Rect.right, m_cp.y);
+
+					pDC->MoveTo(kMiddle, m_Rect.top);
+					pDC->LineTo(kMiddle, kHighPos - 10);
+					pDC->MoveTo(kMiddle, kLowPos + 10);
+					pDC->LineTo(kMiddle, m_Rect.bottom);
+				}
+			}
 
 			// 显示时间和价格
 
@@ -443,3 +497,32 @@ int KLineRenderer::GetSelectedClosePrice()
 {
 	return (*m_pKLines)[m_nCurIdx].close;
 }
+
+int KLineRenderer::GetMousePrice(CPoint pt)
+{
+	if(!m_bSelected) return 0;
+	if(!m_Rect.PtInRect(pt)) return 0;
+
+	m_cp = pt;
+
+	return (m_kHighPrice - (pt.y - m_Rect.top) / m_pixelPerPrice);
+}
+
+void KLineRenderer::ToggleTrackingMode()
+{
+	if(!m_bSelected) return;
+
+	if(m_enTrackingMode == enHighLowTMode)
+	{
+		m_enTrackingMode = enCloseTMode;
+	}
+	else if(m_enTrackingMode == enCloseTMode)
+	{
+		m_enTrackingMode = enMouseTMode;
+	}
+	else if(m_enTrackingMode == enMouseTMode)
+	{
+		m_enTrackingMode = enHighLowTMode;
+	}
+}
+

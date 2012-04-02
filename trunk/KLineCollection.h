@@ -42,5 +42,8 @@ public:
 	void GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol);
 
 	//	从分笔数据生成指定周期(以秒为单位)的K线数据
+	void Generate(TickCollection& ticks, int seconds);
+
+	//	从分笔数据生成指定周期(以秒为单位)的K线数据
 	void Generate(TickCollection& ticks, int seconds, KLine prevDayLine);
 };
