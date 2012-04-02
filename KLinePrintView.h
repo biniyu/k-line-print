@@ -46,6 +46,7 @@ public:
 		klr_day.SetShowVol(false);
 		klr_day.SetShowMA(true);
 		klr_day.SetOpenIndex(-1);
+		klr_day.SetShowDate(true);
 	}
 
 private:
