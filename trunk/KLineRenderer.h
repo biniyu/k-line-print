@@ -76,6 +76,9 @@ private:
 	//	设置开盘价索引 -1为无
 	int m_nOpenIndex;
 
+	//	显示为日期(星期几)
+	bool m_bShowDate;
+
 public:
 
 	//	放大K线图
@@ -99,6 +102,7 @@ public:
 	void SetShowAvg(bool bShow) { m_bShowAvg = bShow; }
 	void SetShowMA(bool bShow) { m_bShowMA = bShow; }
 	void SetShowCriticalTime(bool bShow) { m_bShowCriticalTime = bShow; }
+	void SetShowDate(bool bShow) { m_bShowDate = bShow; }
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 

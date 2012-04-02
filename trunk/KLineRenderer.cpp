@@ -18,6 +18,7 @@ KLineRenderer::KLineRenderer(void)
 	m_enRenderMode = enHighLowMode;
 	m_enTrackingMode = enCloseTMode;
 	m_nOpenIndex = -1;
+	m_bShowDate = false;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -171,7 +172,7 @@ void KLineRenderer::Render(CDC* pDC)
 	if(!m_pKLines || m_pKLines->size() <= 1) return;
 
 	if(m_bSelected)
-		pDC->FillSolidRect(&m_Rect,RGB(240,240,240));
+		pDC->FillSolidRect(&m_Rect,RGB(230,230,230));
 	else
 		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
 
@@ -499,11 +500,30 @@ void KLineRenderer::Render(CDC* pDC)
 				}
 			}
 
-			strTime.Format(_T("%d [ %s ] %s"), kline.time, strOpen, strCur);
+			if(m_bShowDate)/* 显示星期几 */
+			{
+				// w=y+[y/4]+[c/4]-2c+[26(m+1)/10]+d-1
+				int orgdate = kline.time;
+				int c = orgdate / 1000000;
+				int y = orgdate % 1000000 / 10000;
+				int m = orgdate % 1000000 % 10000 / 100;
+				int d = orgdate % 1000000 % 10000 % 100;
+
+				if(m <= 2)
+				{
+					m += 12;
+					y -= 1;
+				}
+
+				int weekday = (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
+				strTime.Format(_T("%d - 星期%d - %s"), kline.time, weekday, strCur);				
+			}
+			else
+			{
+				strTime.Format(_T("%d [ %s ] %s"), kline.time, strOpen, strCur);
+			}
 
 			pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
-//			pDC->TextOutW(m_Rect.left + 1, kClosePos + 1, strPrice);
-
 		}
 
 		pDC->SelectObject(pOldPen);
