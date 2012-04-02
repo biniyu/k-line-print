@@ -122,15 +122,15 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	prevDayKLine.open = prevDayKLine.close;
 	prevDayKLine.time = 0;
 
+	tc.clear();
 	klc15s.clear();
 	klc1min.clear();
 
 	TickReader tr;
-	TickCollection tc;
 
 	tr.Read(targetCsvFile, tc);
 
-	klc15s.Generate(tc, 15, prevDayKLine);
+	klc15s.Generate(tc, 15);
 	klc1min.Generate(tc, 60, prevDayKLine);
 
 	pView->Set1MinData(&klc1min);
@@ -167,6 +167,17 @@ void CKLinePrintDoc::ReloadByDate(int nDate)
 {
 	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
 	LoadKLineGroup(tmp);
+}
+
+void CKLinePrintDoc::ReloadDetailData(int second)
+{
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
+	klc15s.clear();
+	klc15s.Generate(tc, second);
+	pView->Set5SecData(&klc15s);
+	pView->Render();
+	this->UpdateAllViews(0);
 }
 
 string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)

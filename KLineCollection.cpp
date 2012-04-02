@@ -52,16 +52,13 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 	nMaxVol = maxvol;
 }
 
-void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDayLine)
+void KLineCollection::Generate(TickCollection& ticks, int seconds)
 {
 	int nLastSecond;
 
 	/* 分钟K线的数值 */
 	int kOpen, kClose, kHigh, kLow, kVol;
 	float totalPrice = 0, totalVol = 0, kCount = 0;
-
-	/* 昨天本合约的日K */
-	AddToTail(prevDayLine);
 
 	kOpen = kClose = kHigh = kLow = ticks[0].price;
 	nLastSecond = ticks[0].time;
@@ -118,4 +115,11 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDay
 
 		nLastSecond = nCurSecond;		
 	}
+}
+
+void KLineCollection::Generate(TickCollection& ticks, int seconds, KLine prevDayLine)
+{
+	/* 昨天本合约的日K */
+	AddToTail(prevDayLine);
+	Generate(ticks, seconds);
 }

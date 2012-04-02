@@ -36,8 +36,6 @@ END_MESSAGE_MAP()
 
 CKLinePrintView::CKLinePrintView()
 {
-	// TODO: 在此处添加构造代码
-	m_bDrawTrackingCrossLine = FALSE;
 	m_bLocked = TRUE;
 }
 
@@ -181,11 +179,34 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_5sec.MoveNext();
 	}
 
+	if(nChar == VK_HOME)
+	{
+		klr_1min.ToggleTrackingMode();
+		klr_day.ToggleTrackingMode();
+		klr_5sec.ToggleTrackingMode();
+	}
+
 	if(nChar == VK_END)
 	{
-		klr_1min.SwitchMode();
-		klr_day.SwitchMode();
-		klr_5sec.SwitchMode();
+		klr_1min.ToggleRenderMode();
+		klr_day.ToggleRenderMode();
+		klr_5sec.ToggleRenderMode();
+	}
+
+	if(klr_5sec.IsSelected())
+	{
+		switch(nChar)
+		{
+		case '1':
+			pDoc->ReloadDetailData(1);
+			break;
+		case '2':
+			pDoc->ReloadDetailData(5);
+			break;
+		case '3':
+			pDoc->ReloadDetailData(15);
+			break;
+		}
 	}
 
 	if(nChar == VK_SPACE)
@@ -201,7 +222,7 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(klr_5sec.IsSelected() && m_bLocked)
 	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime());
+		klr_1min.SelectByTime(klr_5sec.GetCurTime(), true);
 		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
@@ -217,9 +238,18 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if(m_bDrawTrackingCrossLine)
+	// 如果1min图处于Mouse跟踪模式，获取Mouse所在的价格，在其他图上选择该价格
+
+	if(klr_1min.GetTrackingMode() == KLineRenderer::enMouseTMode)
 	{
-		cp = point;
+		int price = klr_1min.GetMousePrice(point);
+
+		if(price)
+		{
+			klr_day.SetSelectedPrice(price);
+			klr_5sec.SetSelectedPrice(price);
+		}
+
 		Render();
 	}
 
@@ -228,30 +258,14 @@ void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 
 void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	m_bDrawTrackingCrossLine = !m_bDrawTrackingCrossLine;
-	cp = point;
-	Render();
 	CView::OnLButtonDblClk(nFlags, point);
 }
 
 void CKLinePrintView::Render()
 {
-	CRect rc;
-	GetClientRect(&rc);
-
 	klr_1min.Render(&m_MemDC);
 	klr_day.Render(&m_MemDC);
 	klr_5sec.Render(&m_MemDC);
-
-	if(m_bDrawTrackingCrossLine)
-	{
-		m_MemDC.MoveTo(rc.left, cp.y);
-		m_MemDC.LineTo(rc.right, cp.y);
-
-		m_MemDC.MoveTo(cp.x, rc.top);
-		m_MemDC.LineTo(cp.x, rc.bottom);
-	}
-
 	Invalidate(FALSE);
 }
 
@@ -310,7 +324,7 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	klr_5sec.Select(point);
 	if(klr_5sec.IsSelected() && m_bLocked)
 	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime());
+		klr_1min.SelectByTime(klr_5sec.GetCurTime(), true);
 		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
