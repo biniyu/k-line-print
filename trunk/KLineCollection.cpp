@@ -15,7 +15,16 @@ KLineCollection::~KLineCollection(void)
 
 KLine KLineCollection::GetKLineByTime(int nTime)
 {
-	return (*this)[m_mapTime2Idx[nTime]];
+	if(m_mapTime2Idx.find(nTime) == m_mapTime2Idx.end())
+	{
+		KLine tmp;
+		memset(&tmp, 0, sizeof(tmp));
+		return tmp;
+	}
+	else
+	{
+		return (*this)[m_mapTime2Idx[nTime]];
+	}
 }
 
 //	统一接口用于创建索引

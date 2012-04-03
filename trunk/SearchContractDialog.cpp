@@ -5,6 +5,12 @@
 #include "KLinePrint.h"
 #include "SearchContractDialog.h"
 #include "MainFrm.h"
+#include "KLinePrintDoc.h"
+#include "VolatilityRanker.h"
+#include <vector>
+#include <string>
+
+using namespace std;
 
 // CSearchContractDialog 对话框
 
@@ -23,13 +29,14 @@ CSearchContractDialog::~CSearchContractDialog()
 void CSearchContractDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_COMBO_VAR_LIST, m_ComboVarList);
+	DDX_Control(pDX, IDC_COMBO1, m_comboResult);
 }
 
 
 BEGIN_MESSAGE_MAP(CSearchContractDialog, CDialog)
 	ON_WM_ACTIVATE()
 	ON_BN_CLICKED(IDOK, &CSearchContractDialog::OnBnClickedOk)
+	ON_CBN_SELCHANGE(IDC_COMBO1, &CSearchContractDialog::OnCbnSelchangeCombo1)
 END_MESSAGE_MAP()
 
 
@@ -39,19 +46,39 @@ END_MESSAGE_MAP()
 void CSearchContractDialog::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 {
 	CDialog::OnActivate(nState, pWndOther, bMinimized);
-
-	m_ComboVarList.AddString(CString("SR"));
-	m_ComboVarList.AddString(CString("TA"));
-	m_ComboVarList.AddString(CString("RU"));
-	m_ComboVarList.AddString(CString("CU"));
-	m_ComboVarList.AddString(CString("CF"));
 }
 
 void CSearchContractDialog::OnBnClickedOk()
 {
-	// 根据条件搜索合约，更新到Combo中
+	vector<string> result;
 
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
 
+	VolatilityRanker vr(pDoc->m_CurCsvFile);
 
-	OnOK();
+	result = vr.Rank();
+
+	for(int i = 0; i < result.size(); i++)
+	{
+		m_comboResult.AddString(CString(result[i].c_str()));
+	}
+}
+
+void CSearchContractDialog::OnCbnSelchangeCombo1()
+{
+	CString strCBText;
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+
+	int nIndex = m_comboResult.GetCurSel();	
+	m_comboResult.GetLBText(nIndex, strCBText);
+
+	char InfoString[256];    
+	  
+	// 转换后的数据存放在InfoString数组中   
+	if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(strCBText),-1,InfoString,100,NULL,NULL))    
+	{    
+		return;    
+	} 
+
+	pDoc->LoadKLineGroup(InfoString);
 }

@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "KLinePrint.h"
 #include "DataRepoUtil.h"
 #include "direct.h"
 #include "io.h"
@@ -149,7 +150,8 @@ string DataRepoUtil::GetMajorContractPath(string path)
 		}	
 	}
 
-	return dir + vecFiles[nMaxFileIndex];
+	if(nMaxFileIndex == -1) return "";
+	else return dir + vecFiles[nMaxFileIndex];
 }
 
 string DataRepoUtil::GetDayLinePath(string path)
@@ -195,4 +197,40 @@ string DataRepoUtil::GetPathByDate(string org_path, int date)
 		date);
 
 	return string(buf);
+}
+
+string DataRepoUtil::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
+{
+	int date;
+	char buf[512];
+	string rootdir, contract, market;
+
+	DataRepoUtil::GetInfoByPath(path, rootdir, market, contract, date);
+
+	int nNeighDate;
+
+	if(bPrev)
+		nNeighDate = CALENDAR.GetPrev(date);
+	else
+		nNeighDate = CALENDAR.GetNext(date); 
+
+	if(nNeighDate < 0) return "";
+
+	sprintf(buf, "%s\\%s\\%s%d\\%d\\%s_%d.csv", 
+		rootdir.c_str(),
+		market.c_str(),
+		market.c_str(),
+		nNeighDate/100,
+		nNeighDate,
+		contract.c_str(),
+		nNeighDate);
+
+	if(bZhuLi) /* 搜索主力合约 */
+	{
+		return DataRepoUtil::GetMajorContractPath(buf);
+	}
+	else
+	{
+		return string(buf);
+	}
 }
