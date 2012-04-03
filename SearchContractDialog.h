@@ -25,4 +25,6 @@ public:
 	afx_msg void OnBnClickedOk();
 	CComboBox m_comboResult;
 	afx_msg void OnCbnSelchangeCombo1();
+	CButton m_chkHighLowMode;
+	CButton m_chkOpenCloseMode;
 };

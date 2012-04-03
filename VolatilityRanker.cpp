@@ -21,7 +21,10 @@ vector<string> VolatilityRanker::Rank()
 	KLineCollection& klcday = GetDayLineData(dayLineFile);
 	KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
-	AddToRankList(kline.high - kline.low, curFile);
+	if(m_enRankMode == en_RankModeHighLow)
+		AddToRankList(kline.high - kline.low, curFile);
+	else
+		AddToRankList(abs(kline.open - kline.close), curFile);
 
 	//	向后处理
 	while(1)
@@ -33,7 +36,10 @@ vector<string> VolatilityRanker::Rank()
 		KLineCollection& klcday = GetDayLineData(dayLineFile);
 		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
-		AddToRankList(kline.high - kline.low, curFile);
+		if(m_enRankMode == en_RankModeHighLow)
+			AddToRankList(kline.high - kline.low, curFile);
+		else
+			AddToRankList(abs(kline.open - kline.close), curFile);
 	}
 
 	curFile = DataRepoUtil::GetMajorContractPath(m_strFileName);
@@ -48,7 +54,10 @@ vector<string> VolatilityRanker::Rank()
 		KLineCollection& klcday = GetDayLineData(dayLineFile);
 		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
-		AddToRankList(kline.high - kline.low, curFile);
+		if(m_enRankMode == en_RankModeHighLow)
+			AddToRankList(kline.high - kline.low, curFile);
+		else
+			AddToRankList(abs(kline.open - kline.close), curFile);
 	}
 
 	multimap <int, string>::reverse_iterator rit;
