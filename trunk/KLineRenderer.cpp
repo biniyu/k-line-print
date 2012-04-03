@@ -19,6 +19,7 @@ KLineRenderer::KLineRenderer(void)
 	m_enTrackingMode = enCloseTMode;
 	m_nOpenIndex = -1;
 	m_bShowDate = false;
+	m_nStartIdx = m_nCurIdx = m_nEndIdx = 0;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -214,6 +215,12 @@ void KLineRenderer::Render(CDC* pDC)
 			kLowPrice = kAxisPrice * 0.98;
 			fPricePercentage = 0.02;
 		}
+		else // 将幅度调的稍大，以便看到附近的均线 
+		{
+			fPricePercentage += 0.003;
+			m_kHighPrice = kAxisPrice * ( 1 + fPricePercentage);
+			kLowPrice = kAxisPrice * ( 1 - fPricePercentage);
+		}
 	}
 
 	if(m_bShowVol)
@@ -238,13 +245,13 @@ void KLineRenderer::Render(CDC* pDC)
 	CPen penRedDotted, penGreenDotted, penBlueDotted;
 
     penRed.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-    penGreen.CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+    penGreen.CreatePen(PS_SOLID, 1, RGB(0, 180, 0));
     penWhite.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
 
 	penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
     
 	penRedDotted.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
-    penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 255, 0));
+    penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 180, 0));
     penBlueDotted.CreatePen(PS_DASH, 1, RGB(0, 0, 255));
 
 	float timeLinePos = m_Rect.top + (m_kHighPrice - kLowPrice) * m_pixelPerPrice;
@@ -268,6 +275,28 @@ void KLineRenderer::Render(CDC* pDC)
 	//	绘制价格线
 	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
 	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
+
+	//	绘制关键价格线
+	map<int, string>::iterator itKeyPrice;
+	map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
+
+	pOldPen = pDC->SelectObject(&penGreenDotted);
+
+	for(itKeyPrice = keyPrices.begin(); itKeyPrice != keyPrices.end(); itKeyPrice++)
+	{
+		if(itKeyPrice->first > m_kHighPrice || itKeyPrice->first < kLowPrice) 
+			continue;
+
+		float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
+
+		pDC->MoveTo(m_Rect.left, keyPricePos);
+		pDC->LineTo(m_Rect.right, keyPricePos);	
+		pDC->TextOutW(m_Rect.left + 10, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
+	}
+
+	pDC->SelectObject(pOldPen);
+
+	//////////////////////////////////////////////////////////////////////////////////
 
 	CString strPercent;
 
@@ -308,11 +337,17 @@ void KLineRenderer::Render(CDC* pDC)
 
 		if(i > m_nStartIdx + 1 && m_bShowMA)
 		{
-			pDC->MoveTo(kLastMiddle, kLastMA20Pos);
-			pDC->LineTo(kMiddle, kMA20Pos);
+			if(kLastMA20Pos > m_Rect.top && kLastMA20Pos < m_Rect.bottom)
+			{
+				pDC->MoveTo(kLastMiddle, kLastMA20Pos);
+				pDC->LineTo(kMiddle, kMA20Pos);
+			}
 
-			pDC->MoveTo(kLastMiddle, kLastMA60Pos);
-			pDC->LineTo(kMiddle, kMA60Pos);
+			if(kLastMA60Pos > m_Rect.top && kLastMA60Pos < m_Rect.bottom)
+			{
+				pDC->MoveTo(kLastMiddle, kLastMA60Pos);
+				pDC->LineTo(kMiddle, kMA60Pos);
+			}
 		}
 
 		kLastAvgPos = kAvgPos;
