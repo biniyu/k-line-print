@@ -30,6 +30,8 @@ void CSearchContractDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_comboResult);
+	DDX_Control(pDX, IDC_CHECK_HIGH_LOW_RANGE, m_chkHighLowMode);
+	DDX_Control(pDX, IDC_CHECK_OPEN_CLOSE_RANGE, m_chkOpenCloseMode);
 }
 
 
@@ -56,7 +58,18 @@ void CSearchContractDialog::OnBnClickedOk()
 
 	VolatilityRanker vr(pDoc->m_CurCsvFile);
 
+	if(!m_chkOpenCloseMode.GetCheck())
+	{
+		vr.SetRankMode(VolatilityRanker::en_RankModeHighLow);
+	}
+	else
+	{
+		vr.SetRankMode(VolatilityRanker::en_RankModeOpenClose);
+	}
+
 	result = vr.Rank();
+
+	m_comboResult.Clear();
 
 	for(int i = 0; i < result.size(); i++)
 	{
