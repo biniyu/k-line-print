@@ -27,7 +27,10 @@ class KLineCollection : public vector<KLine>
 private:
 
 	//	根据时间建立索引，用于快速查找
-	map<int, int> m_mapTime2Idx;
+	map<int, int>		m_mapTime2Idx;
+
+	//	用于在分钟图上显示日线MA
+	map<int, string>	m_mapKeyPrice;
 	
 public:
 	KLineCollection(void);
@@ -46,4 +49,11 @@ public:
 
 	//	从分笔数据生成指定周期(以秒为单位)的K线数据
 	void Generate(TickCollection& ticks, int seconds, KLine prevDayLine);
+
+	//	添加关键价格
+	void AddKeyPrice(int price, string desc) { m_mapKeyPrice.insert(pair<int,string>(price, desc)); }
+
+	map<int, string>& GetKeyPrices() { return m_mapKeyPrice; }
+
+	void Clear();
 };

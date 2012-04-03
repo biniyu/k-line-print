@@ -39,6 +39,8 @@ BEGIN_MESSAGE_MAP(CSearchContractDialog, CDialog)
 	ON_WM_ACTIVATE()
 	ON_BN_CLICKED(IDOK, &CSearchContractDialog::OnBnClickedOk)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CSearchContractDialog::OnCbnSelchangeCombo1)
+	ON_WM_DESTROY()
+	ON_BN_CLICKED(IDCANCEL, &CSearchContractDialog::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -94,4 +96,16 @@ void CSearchContractDialog::OnCbnSelchangeCombo1()
 	} 
 
 	pDoc->LoadKLineGroup(InfoString);
+}
+
+void CSearchContractDialog::OnDestroy()
+{
+	CDialog::OnDestroy();
+	delete this;
+}
+
+void CSearchContractDialog::OnBnClickedCancel()
+{
+	OnCancel();
+	DestroyWindow(); 
 }

@@ -104,7 +104,7 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	if(dayLineFile != m_CurDayFile)
 	{
 		// 读取相应的日线数据
-		klcday.clear();
+		klcday.Clear();
 		klReader.Read(dayLineFile, klcday);
 		m_CurDayFile = dayLineFile;
 	}
@@ -121,8 +121,8 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	prevDayKLine.time = 0;
 
 	tc.clear();
-	klc15s.clear();
-	klc1min.clear();
+	klc15s.Clear();
+	klc1min.Clear();
 
 	TickReader tr;
 
@@ -131,7 +131,16 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	klc15s.Generate(tc, 15);
 	klc1min.Generate(tc, 60, prevDayKLine);
 
+	klc1min.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	klc1min.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
 	pView->Set1MinData(&klc1min);
+
+	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
 	pView->Set5SecData(&klc15s);
 
 	pView->Render();
@@ -171,7 +180,7 @@ void CKLinePrintDoc::ReloadDetailData(int second)
 {
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-	klc15s.clear();
+	klc15s.Clear();
 	klc15s.Generate(tc, second);
 	pView->Set5SecData(&klc15s);
 	pView->Render();

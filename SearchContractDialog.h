@@ -27,4 +27,6 @@ public:
 	afx_msg void OnCbnSelchangeCombo1();
 	CButton m_chkHighLowMode;
 	CButton m_chkOpenCloseMode;
+	afx_msg void OnDestroy();
+	afx_msg void OnBnClickedCancel();
 };

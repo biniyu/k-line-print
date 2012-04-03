@@ -394,9 +394,12 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 
 void CMainFrame::OnSearchContract()
 {
-	CSearchContractDialog scd;
+//	CSearchContractDialog scd;
+//	scd.DoModal();
 
-	scd.DoModal();
+	CSearchContractDialog* dlg = new CSearchContractDialog;
+	dlg->Create(IDD_SEARCH_CONTRACT,NULL);
+	dlg->ShowWindow(SW_SHOW); 
 }
 
 void CMainFrame::OnGenCal()
