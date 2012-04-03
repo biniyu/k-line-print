@@ -21,7 +21,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	CComboBox m_ComboVarList;
 	afx_msg void OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized);
 	afx_msg void OnBnClickedOk();
+	CComboBox m_comboResult;
+	afx_msg void OnCbnSelchangeCombo1();
 };

@@ -269,6 +269,10 @@
 				RelativePath=".\ViewTree.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\VolatilityRanker.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -349,6 +353,10 @@
 			</File>
 			<File
 				RelativePath=".\ViewTree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VolatilityRanker.h"
 				>
 			</File>
 		</Filter>

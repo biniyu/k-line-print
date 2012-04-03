@@ -18,8 +18,6 @@
 #define new DEBUG_NEW
 #endif
 
-#define CALENDAR ((CKLinePrintApp*)AfxGetApp())->cal
-
 // CKLinePrintDoc
 
 IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
@@ -180,42 +178,8 @@ void CKLinePrintDoc::ReloadDetailData(int second)
 	this->UpdateAllViews(0);
 }
 
-string CKLinePrintDoc::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
-{
-	int date;
-	char buf[512];
-	string rootdir, contract, market;
-
-	DataRepoUtil::GetInfoByPath(path, rootdir, market, contract, date);
-
-	int nNeighDate;
-
-	if(bPrev)
-		nNeighDate = CALENDAR.GetPrev(date);
-	else
-		nNeighDate = CALENDAR.GetNext(date); 
-
-	sprintf(buf, "%s\\%s\\%s%d\\%d\\%s_%d.csv", 
-		rootdir.c_str(),
-		market.c_str(),
-		market.c_str(),
-		nNeighDate/100,
-		nNeighDate,
-		contract.c_str(),
-		nNeighDate);
-
-	if(bZhuLi) /* 搜索主力合约 */
-	{
-		return DataRepoUtil::GetMajorContractPath(buf);
-	}
-	else
-	{
-		return string(buf);
-	}
-}
-
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
-	string tmp = GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
+	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
 	LoadKLineGroup(tmp);
 }

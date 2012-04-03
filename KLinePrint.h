@@ -40,3 +40,6 @@ public:
 };
 
 extern CKLinePrintApp theApp;
+
+#define CALENDAR ((CKLinePrintApp*)AfxGetApp())->cal
+
