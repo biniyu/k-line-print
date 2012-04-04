@@ -14,7 +14,8 @@ public:
 	enum RankMode
 	{
 		en_RankModeHighLow,
-		en_RankModeOpenClose
+		en_RankModeOpenClose,
+		en_RankModeGap
 	};
 
 private:
