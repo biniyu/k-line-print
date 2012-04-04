@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "VolatilityRanker.h"
 #include "DataRepoUtil.h"
-#include "CalendarGenerator.h"
+#include "KLinePrint.h"
 #include "KLineCollection.h"
 #include "KLineReader.h"
 
@@ -22,9 +22,18 @@ vector<string> VolatilityRanker::Rank()
 	KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
 	if(m_enRankMode == en_RankModeHighLow)
+	{
 		AddToRankList(kline.high - kline.low, curFile);
-	else
+	}
+	else if(m_enRankMode == en_RankModeOpenClose)
+	{
 		AddToRankList(abs(kline.open - kline.close), curFile);
+	}
+	else if(m_enRankMode == en_RankModeGap)
+	{
+		KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+		if(prev.open) AddToRankList(abs(prev.close - kline.open), curFile);	
+	}
 
 	//	向后处理
 	while(1)
@@ -37,9 +46,18 @@ vector<string> VolatilityRanker::Rank()
 		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
 		if(m_enRankMode == en_RankModeHighLow)
+		{
 			AddToRankList(kline.high - kline.low, curFile);
-		else
+		}
+		else if(m_enRankMode == en_RankModeOpenClose)
+		{
 			AddToRankList(abs(kline.open - kline.close), curFile);
+		}
+		else if(m_enRankMode == en_RankModeGap)
+		{
+			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+			if(prev.open)AddToRankList(abs(prev.close - kline.open), curFile);	
+		}
 	}
 
 	curFile = DataRepoUtil::GetMajorContractPath(m_strFileName);
@@ -55,9 +73,18 @@ vector<string> VolatilityRanker::Rank()
 		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
 
 		if(m_enRankMode == en_RankModeHighLow)
+		{
 			AddToRankList(kline.high - kline.low, curFile);
-		else
+		}
+		else if(m_enRankMode == en_RankModeOpenClose)
+		{
 			AddToRankList(abs(kline.open - kline.close), curFile);
+		}
+		else if(m_enRankMode == en_RankModeGap)
+		{
+			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+			if(prev.open)AddToRankList(abs(prev.close - kline.open), curFile);	
+		}
 	}
 
 	multimap <int, string>::reverse_iterator rit;

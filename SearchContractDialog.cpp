@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "KLinePrint.h"
+#include "CalendarGenerator.h"
 #include "SearchContractDialog.h"
 #include "MainFrm.h"
 #include "KLinePrintDoc.h"
@@ -32,6 +33,7 @@ void CSearchContractDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COMBO1, m_comboResult);
 	DDX_Control(pDX, IDC_CHECK_HIGH_LOW_RANGE, m_chkHighLowMode);
 	DDX_Control(pDX, IDC_CHECK_OPEN_CLOSE_RANGE, m_chkOpenCloseMode);
+	DDX_Control(pDX, IDC_CHECK_GAP_RANGE, m_chkGapMode);
 }
 
 
@@ -60,13 +62,22 @@ void CSearchContractDialog::OnBnClickedOk()
 
 	VolatilityRanker vr(pDoc->m_CurCsvFile);
 
-	if(!m_chkOpenCloseMode.GetCheck())
+	if(m_chkHighLowMode.GetCheck())
 	{
 		vr.SetRankMode(VolatilityRanker::en_RankModeHighLow);
 	}
-	else
+	else if(m_chkOpenCloseMode.GetCheck())
 	{
 		vr.SetRankMode(VolatilityRanker::en_RankModeOpenClose);
+	}
+	else if(m_chkGapMode.GetCheck())
+	{
+		vr.SetRankMode(VolatilityRanker::en_RankModeGap);
+	}
+	else
+	{
+//		AfxMessageBox("«Î—°‘Ò≈≈–Úƒ£ Ω.", MB_OK);
+		return;
 	}
 
 	result = vr.Rank();

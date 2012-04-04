@@ -29,4 +29,5 @@ public:
 	CButton m_chkOpenCloseMode;
 	afx_msg void OnDestroy();
 	afx_msg void OnBnClickedCancel();
+	CButton m_chkGapMode;
 };
