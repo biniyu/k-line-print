@@ -14,8 +14,9 @@ public:
 	int low;
 	int open;
 	int close;
-	int vol;
-	int avg;		// 均价线
+	int vol;		//	当前K线的成交量
+	int vol_acc;	//	累积成交量
+	int avg;		//	均价线
 	double ma5;
 	double ma10;
 	double ma20;

@@ -226,6 +226,7 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		klr_1min.SelectByTime(klr_5sec.GetCurTime(), true);
 		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
+		klr_day.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
 	if(klr_day.IsSelected() && m_bLocked)
