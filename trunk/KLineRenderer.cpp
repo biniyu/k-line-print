@@ -36,6 +36,9 @@ void KLineRenderer::AdjustIndex()
 {
 	if(m_nStartIdx < 0) m_nStartIdx = 0;
 	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+
+	if(m_nCurIdx < m_nStartIdx) m_nCurIdx = m_nStartIdx;
+	if(m_nCurIdx > m_nEndIdx) m_nCurIdx = m_nEndIdx;
 }
 
 void KLineRenderer::SelectByTime(int nTime, bool bKeepScale)
@@ -88,7 +91,7 @@ void KLineRenderer::SetKLineData(KLineCollection* pKLines)
 
 	m_nStartIdx = 0;
 	m_nEndIdx = pKLines->size() - 1;
-	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
+//	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
 
 	AdjustIndex();
 }
@@ -555,7 +558,9 @@ void KLineRenderer::Render(CDC* pDC)
 			}
 			else
 			{
-				strTime.Format(_T("%d [ %s ] %s"), kline.time, strOpen, strCur);
+				strTime.Format(_T("%d [%s] %s vol:%d vol_acc:%d"), 
+							kline.time, strOpen, strCur, 
+							kline.vol, kline.vol_acc);
 			}
 
 			pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);

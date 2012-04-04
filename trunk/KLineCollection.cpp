@@ -78,7 +78,9 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds)
 
 	kOpen = kClose = kHigh = kLow = ticks[0].price;
 	nLastSecond = ticks[0].time;
-	kVol = 0;
+	kVol = ticks[0].vol;
+	totalVol = kVol;
+	totalPrice = kClose * kVol;
 
 	// 首K线是前日的日K，不能计算进总成交量
 
@@ -109,6 +111,7 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds)
 			kline.open = kOpen;
 			kline.close = kClose;
 			kline.vol = kVol;
+			kline.vol_acc = totalVol;
 
 			//	计算均价线
 			kline.avg = totalPrice / totalVol;

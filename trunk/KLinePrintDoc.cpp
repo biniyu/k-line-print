@@ -119,6 +119,7 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	//	不关注前日的开盘价
 	prevDayKLine.open = prevDayKLine.close;
 	prevDayKLine.time = 0;
+	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
 	tc.clear();
 	klc15s.Clear();
