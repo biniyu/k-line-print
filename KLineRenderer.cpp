@@ -81,6 +81,9 @@ void KLineRenderer::Select(CPoint pt)
 			/(float)(m_nEndIdx - m_nStartIdx + 1);
 
 		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nStartIdx;
+
+		AdjustIndex();
+
 		m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
 	}
 }
