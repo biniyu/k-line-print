@@ -1,10 +1,9 @@
 #pragma once
 
+#include "TickReader.h"
 #include <vector>
 #include <map>
 using namespace std;
-
-class TickCollection;
 
 class KLine
 {
@@ -32,6 +31,9 @@ private:
 
 	//	用于在分钟图上显示日线MA
 	map<int, string>	m_mapKeyPrice;
+
+	//	K线周期(以秒为单位, -1为日线)
+	int					m_nKLinePeriod;
 	
 public:
 	KLineCollection(void);
@@ -40,10 +42,23 @@ public:
 	//	获取指定时间/日期的K线数据
 	KLine GetKLineByTime(int nTime);
 
+	//	设置K线周期(以秒为单位, -1为日线)
+	void SetPeriod(int nPeriod) { m_nKLinePeriod = nPeriod; }
+
 	//	统一接口用于创建索引
 	void AddToTail(KLine kline);
 
+	//	获取价格和成交量的最大最小值
 	void GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol);
+
+	//	开始接收分笔数据
+	void StartQuote(Tick tick);
+
+	//	接收分笔数据
+	void Quote(Tick tick);
+
+	//	结束接收分笔数据
+	void EndQuote(Tick tick);
 
 	//	从分笔数据生成指定周期(以秒为单位)的K线数据
 	void Generate(TickCollection& ticks, int seconds);

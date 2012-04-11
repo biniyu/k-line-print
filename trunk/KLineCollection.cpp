@@ -1,7 +1,5 @@
 #include "StdAfx.h"
 #include "KLineCollection.h"
-#include "TickReader.h"
-
 
 KLineCollection::KLineCollection(void)
 {
@@ -66,6 +64,60 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 	nHighPr = high;
 	nLowPr = low;
 	nMaxVol = maxvol;
+}
+
+//	开始接收分笔数据
+void KLineCollection::StartQuote(Tick tick)
+{
+	KLine tmp;
+
+	tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
+	tmp.vol = tick.vol;
+	tmp.time = tick.time;
+
+	AddToTail(tmp);
+}
+
+//	接收分笔数据
+void KLineCollection::Quote(Tick tick)
+{
+	KLine& curKLine = (*this)[this->size() - 1];
+
+	if((tick.time / m_nKLinePeriod) != (curKLine.time / m_nKLinePeriod))
+	{
+		int tmphour, tmpmin, tmpsec;
+
+		//	还原时间
+		tmphour = tick.time / 3600;
+		tmpmin = tick.time % 3600 / 60;
+		tmpsec = tick.time % 3600 % 60;
+
+		curKLine.time = tmphour * 10000 + tmpmin * 100 + tmpsec;
+
+		/* 新起K线 */
+		KLine tmp;
+		tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
+		tmp.vol = tick.vol;
+		tmp.time = tick.time;
+		AddToTail(tmp);
+	}
+	else
+	{
+		if(tick.price > curKLine.high) 
+			curKLine.high = tick.price;
+
+		if(tick.price < curKLine.low) 
+			curKLine.low = tick.price;
+
+		curKLine.close = tick.price;
+		curKLine.vol += tick.vol;
+	}
+}
+
+//	结束接收分笔数据
+void KLineCollection::EndQuote(Tick tick)
+{
+
 }
 
 void KLineCollection::Generate(TickCollection& ticks, int seconds)
