@@ -19,7 +19,7 @@ KLineRenderer::KLineRenderer(void)
 	m_enTrackingMode = enCloseTMode;
 	m_nOpenIndex = -1;
 	m_bShowDate = false;
-	m_nStartIdx = m_nCurIdx = m_nEndIdx = 0;
+	m_nDisplayKLineCount = m_nFirstDisplayedIndex = m_nSelectedIndex = 0;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -29,16 +29,16 @@ KLineRenderer::~KLineRenderer(void)
 int KLineRenderer::GetCurTime()
 {
 	if(!m_pKLines) return 0;
-	return (*m_pKLines)[m_nCurIdx].time;
+	return (*m_pKLines)[m_nSelectedIndex].time;
 }
 
 void KLineRenderer::AdjustIndex()
 {
-	if(m_nStartIdx < 0) m_nStartIdx = 0;
-	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
+//	if(m_nStartIdx < 0) m_nStartIdx = 0;
+//	if(m_nEndIdx > m_pKLines->size() - 1) m_nEndIdx = m_pKLines->size() - 1;
 
-	if(m_nCurIdx < m_nStartIdx) m_nCurIdx = m_nStartIdx;
-	if(m_nCurIdx > m_nEndIdx) m_nCurIdx = m_nEndIdx;
+//	if(m_nCurIdx < m_nStartIdx) m_nCurIdx = m_nStartIdx;
+//	if(m_nCurIdx > m_nEndIdx) m_nCurIdx = m_nEndIdx;
 }
 
 void KLineRenderer::SelectByTime(int nTime, bool bKeepScale)
@@ -49,20 +49,20 @@ void KLineRenderer::SelectByTime(int nTime, bool bKeepScale)
 	{
 		if((*m_pKLines)[i].time >= nTime) 
 		{
-			m_nCurIdx = i;
+			m_nSelectedIndex = i;
 			break;
 		}
 	}
 
-	if(!bKeepScale)
-	{
-		m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
-		m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
+//	if(!bKeepScale)
+//	{
+//		m_nStartIdx = m_nCurIdx - NEIGHBOR_KLINE_COUNT;
+//		m_nEndIdx = m_nCurIdx + NEIGHBOR_KLINE_COUNT;
+//
+///		AdjustIndex();
+//	}
 
-		AdjustIndex();
-	}
-
-	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
+	m_nSelectedPrice = (*m_pKLines)[m_nSelectedIndex].close;
 }
 
 void KLineRenderer::Select(CPoint pt)
@@ -72,89 +72,103 @@ void KLineRenderer::Select(CPoint pt)
 	else
 		m_bSelected = false;
 
-	// TODO : 选中K线
-
 	if(m_bSelected)
 	{
 		//	计算K线的宽度
-		float kWidth = (m_Rect.Width() - (m_nEndIdx - m_nStartIdx + 2) * m_nKSpace)
-			/(float)(m_nEndIdx - m_nStartIdx + 1);
+		float kWidth = (m_Rect.Width() - (m_nDisplayKLineCount + 1) * m_nKSpace)
+			/(float)m_nDisplayKLineCount;
 
-		m_nCurIdx = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nStartIdx;
+		m_nSelectedIndex = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nFirstDisplayedIndex;
 
-		AdjustIndex();
+//		AdjustIndex();
 
-		m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
+		m_nSelectedPrice = (*m_pKLines)[m_nSelectedIndex].close;
 	}
 }
 
-void KLineRenderer::SetKLineData(KLineCollection* pKLines)
+void KLineRenderer::SetKLineData(KLineCollection* pKLines, int nDispKLineCount)
 { 
 	m_pKLines = pKLines; 
 
-	m_nStartIdx = 0;
-	m_nEndIdx = pKLines->size() - 1;
+	m_nDisplayKLineCount = nDispKLineCount;
+
+	//	如果K线数据小于可显示的数量，则从头开始显示，选中最后K线
+	if(pKLines->size() <= m_nDisplayKLineCount)
+	{
+		m_nFirstDisplayedIndex = 0;
+		m_nSelectedIndex = pKLines->size() - 1;
+	}
+	//	如果K线数据大于可显示的数量，则从最后的K线与区域右端对齐 
+	else
+	{
+		m_nFirstDisplayedIndex = pKLines->size() - m_nDisplayKLineCount;
+		m_nSelectedIndex = pKLines->size() - 1;
+	}
+
+//	m_nStartIdx = 0;
+//	m_nEndIdx = pKLines->size() - 1;
 //	m_nCurIdx = (m_nStartIdx + m_nEndIdx) /2;
 
-	AdjustIndex();
+//	AdjustIndex();
 }
 
 void KLineRenderer::ZoomIn()
 {
 	if(!m_pKLines || !m_bSelected) return;
 
-	int s1 = m_nCurIdx - m_nStartIdx;
-	int s2 = m_nEndIdx - m_nCurIdx;
+	if(m_nDisplayKLineCount - ZOOM_STEP > 0)
+		m_nDisplayKLineCount -= ZOOM_STEP;
 
-	m_nStartIdx += ZOOM_STEP * s1 / (float) (s1+s2);
-	m_nEndIdx -= ZOOM_STEP * s2 / (float) (s1+s2);
+	// TODO : 保证选中的K线位置基本不变？ 
 
-	AdjustIndex();
+//	int s1 = m_nCurIdx - m_nStartIdx;
+//	int s2 = m_nEndIdx - m_nCurIdx;
+
+//	m_nStartIdx += ZOOM_STEP * s1 / (float) (s1+s2);
+//	m_nEndIdx -= ZOOM_STEP * s2 / (float) (s1+s2);
+
+//	AdjustIndex();
 }
 
 void KLineRenderer::ZoomOut()
 {
 	if(!m_pKLines || !m_bSelected) return;
 
-	int s1 = m_nCurIdx - m_nStartIdx;
-	int s2 = m_nEndIdx - m_nCurIdx;
+	m_nDisplayKLineCount += ZOOM_STEP;
 
-	m_nStartIdx -= ZOOM_STEP * s1 / (float) (s1+s2);
-	m_nEndIdx += ZOOM_STEP * s2 / (float) (s1+s2);
+//	int s1 = m_nCurIdx - m_nStartIdx;
+//	int s2 = m_nEndIdx - m_nCurIdx;
 
-	AdjustIndex();
+//	m_nStartIdx -= ZOOM_STEP * s1 / (float) (s1+s2);
+//	m_nEndIdx += ZOOM_STEP * s2 / (float) (s1+s2);
+
+//	AdjustIndex();
 }
 
 void KLineRenderer::MovePrev()
 {
 	if(!m_pKLines || !m_bSelected) return;
 
-	if(m_nCurIdx > 0)
-		m_nCurIdx--;
+	if(m_nSelectedIndex > 0)
+		m_nSelectedIndex--;
 
-	if(m_nCurIdx < m_nStartIdx)
-	{
-		m_nEndIdx -= ( m_nStartIdx - m_nCurIdx);
-		m_nStartIdx = m_nCurIdx;
-	}
+	if(m_nSelectedIndex < m_nFirstDisplayedIndex)
+		m_nFirstDisplayedIndex = m_nSelectedIndex;
 
-	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
+	m_nSelectedPrice = (*m_pKLines)[m_nSelectedIndex].close;
 }
 
 void KLineRenderer::MoveNext()
 {
 	if(!m_pKLines || !m_bSelected) return;
 
-	if(m_nCurIdx < m_pKLines->size() - 1)
-		m_nCurIdx++;
+	if(m_nSelectedIndex < m_pKLines->size() - 1)
+		m_nSelectedIndex++;
 
-	if(m_nCurIdx > m_nEndIdx)
-	{
-		m_nStartIdx += ( m_nCurIdx - m_nEndIdx);
-		m_nEndIdx = m_nCurIdx;
-	}
+	if(m_nSelectedIndex > m_nFirstDisplayedIndex + m_nDisplayKLineCount)
+		m_nFirstDisplayedIndex = m_nSelectedIndex - m_nDisplayKLineCount;
 
-	m_nSelectedPrice = (*m_pKLines)[m_nCurIdx].close;
+	m_nSelectedPrice = (*m_pKLines)[m_nSelectedIndex].close;
 }
 
 void KLineRenderer::ToggleRenderMode()

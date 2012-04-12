@@ -25,14 +25,29 @@ private:
 
 	TrackingMode m_enTrackingMode;
 
-	//	开始显示的K线索引
-	int m_nStartIdx;
+//=================================================//
 
-	//	结束显示的K线索引
-	int m_nEndIdx;
+	//	视图显示的K线数量
+	int m_nDisplayKLineCount;
+
+	//	视图显示的首K线在K线数据中的索引
+	int m_nFirstDisplayedIndex;
 
 	//	选中的K线索引
-	int m_nCurIdx;
+	int m_nSelectedIndex;
+
+//=================================================//
+
+	//	开始显示的K线索引
+//	int m_nStartIdx;
+
+	//	结束显示的K线索引
+//	int m_nEndIdx;
+
+	//	选中的K线索引
+//	int m_nCurIdx;
+
+//=================================================//
 
 	//	K线数据
 	KLineCollection* m_pKLines;
@@ -106,8 +121,8 @@ public:
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 
-	//	设置K线数据
-	void SetKLineData(KLineCollection* pKLines);
+	//	设置K线数据(包括默认显示多少K线位置)
+	void SetKLineData(KLineCollection* pKLines, int nDispKLineCount = -1);
 
 	//	设置绘制范围
 	void SetRect(CRect rect) { m_Rect = rect; }
