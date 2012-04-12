@@ -36,19 +36,6 @@ private:
 	//	选中的K线索引
 	int m_nSelectedIndex;
 
-//=================================================//
-
-	//	开始显示的K线索引
-//	int m_nStartIdx;
-
-	//	结束显示的K线索引
-//	int m_nEndIdx;
-
-	//	选中的K线索引
-//	int m_nCurIdx;
-
-//=================================================//
-
 	//	K线数据
 	KLineCollection* m_pKLines;
 
@@ -137,7 +124,7 @@ public:
 
 	int GetCurTime();
 
-	void SelectByTime(int nTime, bool bKeepScale = false);
+	void SelectByTime(int nTime);
 
 	void ToggleRenderMode();
 

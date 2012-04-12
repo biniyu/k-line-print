@@ -45,6 +45,8 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 
 	for(int i = nStartIdx; i <= nEndIdx; i++)
 	{
+		if(i >= this->size()) continue;
+
 		KLine kline = (*this)[i];
 		
 		if(i == nStartIdx)
