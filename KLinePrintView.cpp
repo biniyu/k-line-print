@@ -224,7 +224,7 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(klr_5sec.IsSelected() && m_bLocked)
 	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime(), true);
+		klr_1min.SelectByTime(klr_5sec.GetCurTime());
 		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 		klr_day.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
@@ -327,7 +327,7 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	klr_5sec.Select(point);
 	if(klr_5sec.IsSelected() && m_bLocked)
 	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime(), true);
+		klr_1min.SelectByTime(klr_5sec.GetCurTime());
 		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
