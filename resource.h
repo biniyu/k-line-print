@@ -85,6 +85,7 @@
 #define IDS_EDIT_MENU                   306
 #define IDD_SEARCH_CONTRACT             310
 #define IDR_HTML_SEARCHCONTRACTDIALOG   311
+#define IDR_PLAYBACK                    312
 #define IDC_COMBO_VAR_LIST              1000
 #define IDC_EDIT_MORE_THAN              1001
 #define IDC_CHECK_MORE_THAN             1002
@@ -108,7 +109,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        311
+#define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32779
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           312
