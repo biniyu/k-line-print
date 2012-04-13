@@ -439,6 +439,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\Playback.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\properties.bmp"
 				>
 			</File>

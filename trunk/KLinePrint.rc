@@ -103,11 +103,23 @@ IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 IDB_MENU_IMAGES_24      BITMAP                  "res\\menuimages_hc.bmp"
 IDR_PROPERTIES          BITMAP                  "res\\properties.bmp"
 IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
+IDR_PLAYBACK            BITMAP                  "res\\Playback.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
 //
+
+IDR_PLAYBACK TOOLBAR  16, 16
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    BUTTON      ID_FILE_PRINT
+END
 
 IDR_MAINFRAME TOOLBAR  16, 16
 BEGIN
@@ -168,6 +180,7 @@ BEGIN
     BUTTON      ID_PROPERTIES1
     BUTTON      ID_PROPERTIES2
 END
+
 
 
 /////////////////////////////////////////////////////////////////////////////
