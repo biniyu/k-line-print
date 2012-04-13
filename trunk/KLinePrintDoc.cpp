@@ -216,6 +216,9 @@ BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 
 		m_nCurrentTickIdx++;
 
+		if(m_nCurrentTickIdx >= tc.size()) 
+			break;
+
 		if(tc[m_nCurrentTickIdx].time > nTillTime)
 			break;
 	}
