@@ -52,6 +52,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnFileOpen();
+	afx_msg void OnPlaybackBegin();
+	afx_msg void OnPlaybackEnd();
+	afx_msg void OnPlaybackFastfw();
+	afx_msg void OnPlaybackFastrev();
+	afx_msg void OnPlaybackForward();
+	afx_msg void OnPlaybackPause();
+	afx_msg void OnPlaybackRev();
 };
 
 

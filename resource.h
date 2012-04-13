@@ -104,13 +104,20 @@
 #define ID_GEN_CAL                      32776
 #define ID_LOAD_CAL                     32777
 #define ID_GEN_DAYLINE                  32778
+#define ID_PLAYBACK_BEGIN               32779
+#define ID_PLAYBACK_REV                 32780
+#define ID_PLAYBACK_FASTREV             32781
+#define ID_PLAYBACK_PAUSE               32782
+#define ID_PLAYBACK_FORWARD             32783
+#define ID_PLAYBACK_FASTFW              32784
+#define ID_PLAYBACK_END                 32785
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32779
+#define _APS_NEXT_COMMAND_VALUE         32786
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
