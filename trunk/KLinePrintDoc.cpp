@@ -24,6 +24,13 @@ IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CKLinePrintDoc, CDocument)
 	ON_COMMAND(ID_FILE_OPEN, &CKLinePrintDoc::OnFileOpen)
+	ON_COMMAND(ID_PLAYBACK_BEGIN, &CKLinePrintDoc::OnPlaybackBegin)
+	ON_COMMAND(ID_PLAYBACK_END, &CKLinePrintDoc::OnPlaybackEnd)
+	ON_COMMAND(ID_PLAYBACK_FASTFW, &CKLinePrintDoc::OnPlaybackFastfw)
+	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintDoc::OnPlaybackFastrev)
+	ON_COMMAND(ID_PLAYBACK_FORWARD, &CKLinePrintDoc::OnPlaybackForward)
+	ON_COMMAND(ID_PLAYBACK_PAUSE, &CKLinePrintDoc::OnPlaybackPause)
+	ON_COMMAND(ID_PLAYBACK_REV, &CKLinePrintDoc::OnPlaybackRev)
 END_MESSAGE_MAP()
 
 
@@ -192,4 +199,39 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
 	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
 	LoadKLineGroup(tmp);
+}
+
+void CKLinePrintDoc::OnPlaybackBegin()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackEnd()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackFastfw()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackFastrev()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackForward()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackPause()
+{
+	// TODO: 在此添加命令处理程序代码
+}
+
+void CKLinePrintDoc::OnPlaybackRev()
+{
+	// TODO: 在此添加命令处理程序代码
 }

@@ -112,13 +112,13 @@ IDR_PLAYBACK            BITMAP                  "res\\Playback.bmp"
 
 IDR_PLAYBACK TOOLBAR  16, 16
 BEGIN
-    BUTTON      ID_FILE_NEW
-    BUTTON      ID_FILE_OPEN
-    BUTTON      ID_FILE_SAVE
-    BUTTON      ID_EDIT_CUT
-    BUTTON      ID_EDIT_COPY
-    BUTTON      ID_EDIT_PASTE
-    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_PLAYBACK_BEGIN
+    BUTTON      ID_PLAYBACK_FASTREV
+    BUTTON      ID_PLAYBACK_REV
+    BUTTON      ID_PLAYBACK_PAUSE
+    BUTTON      ID_PLAYBACK_FORWARD
+    BUTTON      ID_PLAYBACK_FASTFW
+    BUTTON      ID_PLAYBACK_END
 END
 
 IDR_MAINFRAME TOOLBAR  16, 16
@@ -182,7 +182,6 @@ BEGIN
 END
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
@@ -212,6 +211,16 @@ BEGIN
         MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
         MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
         MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
+    END
+    POPUP "回放(&P)"
+    BEGIN
+        MENUITEM "至起始处",                        ID_PLAYBACK_BEGIN
+        MENUITEM "播放",                          ID_PLAYBACK_FORWARD
+        MENUITEM "暂停",                          ID_PLAYBACK_PAUSE
+        MENUITEM "快进",                          ID_PLAYBACK_FASTFW
+        MENUITEM "回退",                          ID_PLAYBACK_REV
+        MENUITEM "快退",                          ID_PLAYBACK_FASTREV
+        MENUITEM "至结束处",                        ID_PLAYBACK_END
     END
     POPUP "合约(&C)"
     BEGIN
