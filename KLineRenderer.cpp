@@ -28,11 +28,30 @@ KLineRenderer::~KLineRenderer(void)
 int KLineRenderer::GetCurTime()
 {
 	if(!m_pKLines) return 0;
+
+	AdjustIndex();
+
 	return (*m_pKLines)[m_nSelectedIndex].time;
 }
 
 void KLineRenderer::AdjustIndex()
 {
+	if(m_nSelectedIndex > m_pKLines->size() - 1)
+	{
+		//	如果K线数据小于可显示的数量，则从头开始显示，选中最后K线
+		if(m_pKLines->size() <= m_nDisplayKLineCount)
+		{
+			m_nFirstDisplayedIndex = 0;
+			m_nSelectedIndex = m_pKLines->size() - 1;
+		}
+		//	如果K线数据大于可显示的数量，则从最后的K线与区域右端对齐 
+		else
+		{
+			m_nFirstDisplayedIndex = m_pKLines->size() - m_nDisplayKLineCount;
+			m_nSelectedIndex = m_pKLines->size() - 1;
+		}		
+	}
+
 	//	如果选中的K线不在可是范围内
 	if((m_nSelectedIndex < m_nFirstDisplayedIndex)
 	  || (m_nSelectedIndex > m_nFirstDisplayedIndex + m_nDisplayKLineCount))
@@ -184,7 +203,7 @@ void KLineRenderer::Render(CDC* pDC)
 	float fPricePercentage, pixelPerVol;
 	int kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
-	if(!m_pKLines || m_pKLines->size() <= 1) return;
+	if(!m_pKLines || !m_pKLines->size()) return;
 
 	if(m_bSelected)
 		pDC->FillSolidRect(&m_Rect,RGB(230,230,230));

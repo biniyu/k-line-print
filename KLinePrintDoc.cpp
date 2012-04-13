@@ -24,13 +24,6 @@ IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CKLinePrintDoc, CDocument)
 	ON_COMMAND(ID_FILE_OPEN, &CKLinePrintDoc::OnFileOpen)
-	ON_COMMAND(ID_PLAYBACK_BEGIN, &CKLinePrintDoc::OnPlaybackBegin)
-	ON_COMMAND(ID_PLAYBACK_END, &CKLinePrintDoc::OnPlaybackEnd)
-	ON_COMMAND(ID_PLAYBACK_FASTFW, &CKLinePrintDoc::OnPlaybackFastfw)
-	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintDoc::OnPlaybackFastrev)
-	ON_COMMAND(ID_PLAYBACK_FORWARD, &CKLinePrintDoc::OnPlaybackForward)
-	ON_COMMAND(ID_PLAYBACK_PAUSE, &CKLinePrintDoc::OnPlaybackPause)
-	ON_COMMAND(ID_PLAYBACK_REV, &CKLinePrintDoc::OnPlaybackRev)
 END_MESSAGE_MAP()
 
 
@@ -38,8 +31,6 @@ END_MESSAGE_MAP()
 
 CKLinePrintDoc::CKLinePrintDoc()
 {
-	// TODO: 在此添加一次性构造代码
-
 }
 
 CKLinePrintDoc::~CKLinePrintDoc()
@@ -201,37 +192,116 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 	LoadKLineGroup(tmp);
 }
 
-void CKLinePrintDoc::OnPlaybackBegin()
+int CKLinePrintDoc::GetCurrentTickTime()
 {
-	// TODO: 在此添加命令处理程序代码
+	if(m_nCurrentTickIdx >= tc.size()) return 0;
+	else return tc[m_nCurrentTickIdx].time;
 }
 
-void CKLinePrintDoc::OnPlaybackEnd()
+BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 {
-	// TODO: 在此添加命令处理程序代码
+	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
+
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
+	while(m_nCurrentTickIdx < tc.size())
+	{
+		// 需要override时间
+		Tick tmp = tc[m_nCurrentTickIdx];
+		tmp.time = nDate;
+
+		klcday.Quote(tmp);
+		klc1min.Quote(tc[m_nCurrentTickIdx]);
+		klc15s.Quote(tc[m_nCurrentTickIdx]);
+
+		m_nCurrentTickIdx++;
+
+		if(tc[m_nCurrentTickIdx].time > nTillTime)
+			break;
+	}
+
+	pView->Render();	
+	this->UpdateAllViews(0);
+
+	if(m_nCurrentTickIdx == tc.size()) 
+		return FALSE;
+	else 
+		return TRUE;
 }
 
-void CKLinePrintDoc::OnPlaybackFastfw()
+void CKLinePrintDoc::DisplayTillTime(int nTillTime)
 {
-	// TODO: 在此添加命令处理程序代码
-}
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-void CKLinePrintDoc::OnPlaybackFastrev()
-{
-	// TODO: 在此添加命令处理程序代码
-}
+	klcday.Clear();
 
-void CKLinePrintDoc::OnPlaybackForward()
-{
-	// TODO: 在此添加命令处理程序代码
-}
+	//	当前日期
+	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
 
-void CKLinePrintDoc::OnPlaybackPause()
-{
-	// TODO: 在此添加命令处理程序代码
-}
+	//	当日的日线不读入	
+	KLineReader klReader;
+	klReader.Read(m_CurDayFile, klcday, nDate/**/);
 
-void CKLinePrintDoc::OnPlaybackRev()
-{
-	// TODO: 在此添加命令处理程序代码
+	//  获取前一交易日日K线
+	KLine prevDayKLine;
+	prevDayKLine = klcday.GetKLineByTime(CALENDAR.GetPrev(nDate));
+
+	//	不关注前日的开盘价
+	prevDayKLine.open = prevDayKLine.close;
+	prevDayKLine.time = 0;
+	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
+
+	klc15s.Clear();
+	klc1min.Clear();
+
+	klc1min.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	klc1min.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
+
+	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
+
+	/* 前日日K */
+	klc1min.AddToTail(prevDayKLine);
+	
+	m_nCurrentTickIdx = 0;
+
+	klcday.SetPeriod(36000);
+	klc1min.SetPeriod(60);
+	klc15s.SetPeriod(15);
+
+	while(m_nCurrentTickIdx < tc.size())
+	{
+		// 需要override时间
+		Tick tmp = tc[m_nCurrentTickIdx];
+		tmp.time = nDate;
+
+		if(0 == m_nCurrentTickIdx)
+		{
+			klcday.StartQuote(tmp);
+			klc1min.StartQuote(tc[m_nCurrentTickIdx]);
+			klc15s.StartQuote(tc[m_nCurrentTickIdx]);
+		}
+		else
+		{
+			klcday.Quote(tmp);
+			klc1min.Quote(tc[m_nCurrentTickIdx]);
+			klc15s.Quote(tc[m_nCurrentTickIdx]);
+		}
+
+		m_nCurrentTickIdx++;
+
+		if(nTillTime == 0 && m_nCurrentTickIdx == 1) 
+			break;
+
+		if(nTillTime != -1 && tc[m_nCurrentTickIdx].time > nTillTime)
+			break;
+
+	}
+
+	pView->Render();	
+	this->UpdateAllViews(0);
 }

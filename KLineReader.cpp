@@ -13,7 +13,7 @@ KLineReader::~KLineReader(void)
 {
 }
 
-void KLineReader::Read(string path, KLineCollection& klines)
+void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 {
 	char buf[SZ];
 	int year, month, day;
@@ -32,6 +32,8 @@ void KLineReader::Read(string path, KLineCollection& klines)
 			&year, &month, &day, &kline.open, &kline.high, &kline.low, &kline.close);
 
 		kline.time = year*10000 + month*100 + day;
+
+		if(nTillDate == kline.time) break;
 
 		fmac.PushNewData(kline.close);
 

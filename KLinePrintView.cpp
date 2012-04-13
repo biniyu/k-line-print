@@ -30,6 +30,13 @@ BEGIN_MESSAGE_MAP(CKLinePrintView, CView)
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_SIZE()
 	ON_WM_LBUTTONDOWN()
+	ON_COMMAND(ID_PLAYBACK_BEGIN, &CKLinePrintView::OnPlaybackBegin)
+	ON_COMMAND(ID_PLAYBACK_END, &CKLinePrintView::OnPlaybackEnd)
+	ON_COMMAND(ID_PLAYBACK_FORWARD, &CKLinePrintView::OnPlaybackForward)
+	ON_WM_TIMER()
+	ON_COMMAND(ID_PLAYBACK_PAUSE, &CKLinePrintView::OnPlaybackPause)
+	ON_COMMAND(ID_PLAYBACK_FASTFW, &CKLinePrintView::OnPlaybackFastfw)
+	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintView::OnPlaybackFastrev)
 END_MESSAGE_MAP()
 
 // CKLinePrintView ¹¹Ôì/Îö¹¹
@@ -340,4 +347,70 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	Render();
 
 	CView::OnLButtonDown(nFlags, point);
+}
+
+void CKLinePrintView::OnPlaybackBegin()
+{
+	KillTimer(1);
+
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	pDoc->DisplayTillTime(0);
+}
+
+void CKLinePrintView::OnPlaybackEnd()
+{
+	KillTimer(1);
+
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	pDoc->DisplayTillTime(-1);
+}
+
+void CKLinePrintView::OnPlaybackForward()
+{
+	m_nPlaybackSpeed = 1;
+	SetTimer(1,1000,NULL); 
+}
+
+void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
+{
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	int time = pDoc->GetCurrentTickTime();
+
+	if(!time) 
+		KillTimer(1);
+	else
+		pDoc->PlayTillTime(pDoc->GetCurrentTickTime() + m_nPlaybackSpeed);
+
+	CView::OnTimer(nIDEvent);
+}
+
+void CKLinePrintView::OnPlaybackPause()
+{
+	KillTimer(1);
+}
+
+void CKLinePrintView::OnPlaybackFastfw()
+{
+	m_nPlaybackSpeed += 30;
+}
+
+void CKLinePrintView::OnPlaybackFastrev()
+{
+	if(m_nPlaybackSpeed - 30 > 1)
+		m_nPlaybackSpeed -= 30;
+
+	else
+		m_nPlaybackSpeed = 1;
 }
