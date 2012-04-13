@@ -98,5 +98,5 @@ public:
 	KLineReader(void);
 	~KLineReader(void);
 
-	void Read(string path, KLineCollection& klines);
+	void Read(string path, KLineCollection& klines, int nTillDate = -1);
 };

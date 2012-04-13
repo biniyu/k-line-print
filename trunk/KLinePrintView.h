@@ -51,7 +51,8 @@ public:
 
 private:
 
-	bool m_bLocked;		//	联动
+	bool m_bLocked;				//	联动
+	int	 m_nPlaybackSpeed;		//	放映速度	 
 
 // 重写
 public:
@@ -91,6 +92,13 @@ public:
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnPlaybackBegin();
+	afx_msg void OnPlaybackEnd();
+	afx_msg void OnPlaybackForward();
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnPlaybackPause();
+	afx_msg void OnPlaybackFastfw();
+	afx_msg void OnPlaybackFastrev();
 };
 
 #ifndef _DEBUG  // KLinePrintView.cpp 中的调试版本
