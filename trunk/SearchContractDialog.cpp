@@ -107,6 +107,7 @@ void CSearchContractDialog::OnCbnSelchangeCombo1()
 	} 
 
 	pDoc->LoadKLineGroup(InfoString);
+	pDoc->DisplayTill(-1, -1);
 }
 
 void CSearchContractDialog::OnDestroy()

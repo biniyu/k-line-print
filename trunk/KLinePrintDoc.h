@@ -51,6 +51,9 @@ public:
 	void LoadKLineGroup(string targetCsvFile);
 	void ReloadDetailData(int second);
 
+	//  加载下一日数据准备播放
+	BOOL LoadNextDay();
+
 	/* 显示至某个时点 */
 
 	/* nTillTime		:	-1是播放所有，0是播放首tick，其他是播放至目标时间 */
