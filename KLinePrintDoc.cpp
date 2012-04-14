@@ -98,9 +98,6 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 
 	//	更新标题
 	SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-
-	//	显示K线
-	DisplayTill(-1, -1);
 }
 
 void CKLinePrintDoc::OnFileOpen()
@@ -118,6 +115,9 @@ void CKLinePrintDoc::OnFileOpen()
 		} 
 
 		LoadKLineGroup(InfoString);
+
+		//	显示所有
+		DisplayTill(-1, -1);
 	}
 }
 
@@ -125,6 +125,7 @@ void CKLinePrintDoc::ReloadByDate(int nDate)
 {
 	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
 	LoadKLineGroup(tmp);
+	DisplayTill(-1, -1);
 }
 
 void CKLinePrintDoc::ReloadDetailData(int second)
@@ -142,6 +143,16 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
 	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
 	LoadKLineGroup(tmp);
+	DisplayTill(-1, -1);
+}
+
+BOOL CKLinePrintDoc::LoadNextDay()
+{
+	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, FALSE, TRUE/* 必须是主力合约 */);
+	LoadKLineGroup(tmp);
+	int nDate = DataRepoUtil::GetDateByPath(tmp);
+	DisplayTill(0, nDate);
+	return TRUE;
 }
 
 int CKLinePrintDoc::GetCurrentTickTime()
@@ -226,6 +237,19 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
 	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
+
+	klc15s.AddKeyPrice(prevDayKLine.high, "HIGH1");
+	klc15s.AddKeyPrice(prevDayKLine.high5, "HIGH5");
+	klc15s.AddKeyPrice(prevDayKLine.high10, "HIGH10");
+	klc15s.AddKeyPrice(prevDayKLine.high20, "HIGH20");
+	klc15s.AddKeyPrice(prevDayKLine.high60, "HIGH60");
+
+	klc15s.AddKeyPrice(prevDayKLine.low, "LOW1");
+	klc15s.AddKeyPrice(prevDayKLine.low5, "LOW5");
+	klc15s.AddKeyPrice(prevDayKLine.low10, "LOW10");
+	klc15s.AddKeyPrice(prevDayKLine.low20, "LOW20");
+	klc15s.AddKeyPrice(prevDayKLine.low60, "LOW60");
+
 
 	/* 前日日K */
 	klc1min.AddToTail(prevDayKLine);

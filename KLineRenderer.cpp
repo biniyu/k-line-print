@@ -209,10 +209,14 @@ void KLineRenderer::ToggleRenderMode()
 
 void KLineRenderer::Render(CDC* pDC)
 {
+	CFont font;
 	float fPricePercentage, pixelPerVol;
 	int kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
 	if(!m_pKLines || !m_pKLines->size()) return;
+
+	font.CreatePointFont(100, CString("Tahoma"));
+	pDC->SelectObject(&font);
 
 	if(m_bSelected)
 		pDC->FillSolidRect(&m_Rect,RGB(230,230,230));
@@ -321,31 +325,11 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
 	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
 
-	//	绘制关键价格线
-	map<int, string>::iterator itKeyPrice;
-	map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
-
-	pOldPen = pDC->SelectObject(&penGreenDotted);
-
-	for(itKeyPrice = keyPrices.begin(); itKeyPrice != keyPrices.end(); itKeyPrice++)
-	{
-		if(itKeyPrice->first > m_kHighPrice || itKeyPrice->first < kLowPrice) 
-			continue;
-
-		float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
-
-		pDC->MoveTo(m_Rect.left, keyPricePos);
-		pDC->LineTo(m_Rect.right, keyPricePos);	
-		pDC->TextOutW(m_Rect.left + 10, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
-	}
-
-	pDC->SelectObject(pOldPen);
-
 	//////////////////////////////////////////////////////////////////////////////////
 
 	CString strPercent;
 
-	strPercent.Format(_T("%f"), (fPricePercentage / 0.01));
+	strPercent.Format(_T("  %.2f  "), (fPricePercentage / 0.01));
 
 	pDC->TextOutW(m_Rect.left + 1, m_Rect.top + 1, strPercent);
 
@@ -609,11 +593,40 @@ void KLineRenderer::Render(CDC* pDC)
 							kline.vol, kline.vol_acc);
 			}
 
-			pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
+			CSize sz = pDC->GetTextExtent(strTime);
+
+			if(kMiddle + 1 + sz.cx > m_Rect.right)
+			{
+				pDC->TextOutW(kMiddle - sz.cx, m_Rect.top + 1, strTime);
+			}
+			else
+			{
+				pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
+			}
 		}
 
 		pDC->SelectObject(pOldPen);
 	}
+
+	//	绘制关键价格线
+	map<int, string>::iterator itKeyPrice;
+	map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
+
+	pOldPen = pDC->SelectObject(&penGreenDotted);
+
+	for(itKeyPrice = keyPrices.begin(); itKeyPrice != keyPrices.end(); itKeyPrice++)
+	{
+		if(itKeyPrice->first > m_kHighPrice || itKeyPrice->first < kLowPrice) 
+			continue;
+
+		float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
+
+		pDC->MoveTo(m_Rect.left, keyPricePos);
+		pDC->LineTo(m_Rect.right, keyPricePos);	
+		pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
+	}
+
+	pDC->SelectObject(pOldPen);
 
     penGreen.DeleteObject();
     penRed.DeleteObject();
@@ -623,7 +636,7 @@ void KLineRenderer::Render(CDC* pDC)
 	penRedDotted.DeleteObject();
     penGreenDotted.DeleteObject();
     penBlueDotted.DeleteObject();
-
+	font.DeleteObject();
 }
 
 void KLineRenderer::SetSelectedPrice(int price)

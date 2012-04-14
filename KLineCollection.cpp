@@ -76,6 +76,7 @@ void KLineCollection::StartQuote(Tick tick)
 	tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
 	tmp.vol = tick.vol;
 	tmp.time = tick.time;
+	tmp.vol_acc = tick.vol;
 
 	AddToTail(tmp);
 }
@@ -98,9 +99,12 @@ void KLineCollection::Quote(Tick tick)
 
 		/* ÐÂÆðKÏß */
 		KLine tmp;
+		
 		tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
 		tmp.vol = tick.vol;
 		tmp.time = tick.time;
+		tmp.vol_acc = curKLine.vol_acc + tick.vol;
+
 		AddToTail(tmp);
 	}
 	else
@@ -113,6 +117,7 @@ void KLineCollection::Quote(Tick tick)
 
 		curKLine.close = tick.price;
 		curKLine.vol += tick.vol;
+		curKLine.vol_acc += tick.vol;
 	}
 }
 

@@ -391,8 +391,13 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 
 	int time = pDoc->GetCurrentTickTime();
 
-	if(!time) 
+	if(!time)
+	{
 		KillTimer(1);
+		//  加载次日的数据
+		if(pDoc->LoadNextDay())
+			SetTimer(1,1000,NULL); 
+	}
 	else
 	{
 		int nTillTime = pDoc->GetCurrentTickTime() + m_nPlaybackSpeed;
