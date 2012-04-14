@@ -77,6 +77,7 @@ void KLineCollection::StartQuote(Tick tick)
 	tmp.vol = tick.vol;
 	tmp.time = tick.time;
 	tmp.vol_acc = tick.vol;
+	tmp.price_acc = tick.vol * tick.price;
 
 	AddToTail(tmp);
 }
@@ -96,6 +97,7 @@ void KLineCollection::Quote(Tick tick)
 		tmpsec = tick.time % 3600 % 60;
 
 		curKLine.time = tmphour * 10000 + tmpmin * 100 + tmpsec;
+		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
 
 		/* 新起K线 */
 		KLine tmp;
@@ -104,6 +106,8 @@ void KLineCollection::Quote(Tick tick)
 		tmp.vol = tick.vol;
 		tmp.time = tick.time;
 		tmp.vol_acc = curKLine.vol_acc + tick.vol;
+		tmp.price_acc = curKLine.price_acc + tick.vol * tick.price;
+		tmp.avg = tmp.price_acc / (float) tmp.vol_acc;
 
 		AddToTail(tmp);
 	}
@@ -118,13 +122,9 @@ void KLineCollection::Quote(Tick tick)
 		curKLine.close = tick.price;
 		curKLine.vol += tick.vol;
 		curKLine.vol_acc += tick.vol;
+		curKLine.price_acc += tick.vol * tick.price;
+		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
 	}
-}
-
-//	结束接收分笔数据
-void KLineCollection::EndQuote(Tick tick)
-{
-
 }
 
 void KLineCollection::Generate(TickCollection& ticks, int seconds)

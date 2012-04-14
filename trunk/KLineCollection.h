@@ -14,7 +14,8 @@ public:
 	int open;
 	int close;
 	int vol;		//	当前K线的成交量
-	int vol_acc;	//	累积成交量
+	float vol_acc;	//	累积成交量
+	double price_acc;	//	累积成交价格
 	int avg;		//	均价线
 	
 	//	均线
@@ -69,9 +70,6 @@ public:
 
 	//	接收分笔数据
 	void Quote(Tick tick);
-
-	//	结束接收分笔数据
-	void EndQuote(Tick tick);
 
 	//	从分笔数据生成指定周期(以秒为单位)的K线数据
 	void Generate(TickCollection& ticks, int seconds);
