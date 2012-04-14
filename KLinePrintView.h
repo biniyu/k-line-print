@@ -45,6 +45,7 @@ public:
 		klr_day.SelectByTime(nDate);
 		klr_day.SetShowVol(false);
 		klr_day.SetShowMA(true);
+		klr_day.SetShowHighLow(true);
 		klr_day.SetOpenIndex(-1);
 		klr_day.SetShowDate(true);
 	}

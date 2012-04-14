@@ -3,6 +3,7 @@
 #include "KLineCollection.h"
 
 #define ZOOM_STEP				20
+#define LEFT_MARGIN				40
 
 KLineRenderer::KLineRenderer(void)
 {
@@ -11,6 +12,7 @@ KLineRenderer::KLineRenderer(void)
 	m_bShowVol = true;
 	m_bShowAvg = false;
 	m_bShowMA = false;
+	m_bShowHighLow = false;
 	m_bShowCriticalTime = false;
 	m_pKLines = NULL;
 	m_bSelected = false;
@@ -99,10 +101,10 @@ void KLineRenderer::Select(CPoint pt)
 	if(m_bSelected)
 	{
 		//	计算K线的宽度
-		float kWidth = (m_Rect.Width() - (m_nDisplayKLineCount + 1) * m_nKSpace)
+		float kWidth = (m_Rect.Width() - LEFT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
 			/(float)m_nDisplayKLineCount;
 
-		m_nSelectedIndex = (pt.x - m_Rect.left) / (kWidth + m_nKSpace) + m_nFirstDisplayedIndex;
+		m_nSelectedIndex = (pt.x - (m_Rect.left + LEFT_MARGIN)) / (kWidth + m_nKSpace) + m_nFirstDisplayedIndex;
 
 		AdjustIndex();
 
@@ -287,7 +289,7 @@ void KLineRenderer::Render(CDC* pDC)
 	}
 
 	//	计算K线的宽度
-	float kWidth = (m_Rect.Width() - (m_nDisplayKLineCount + 1) * m_nKSpace)
+	float kWidth = (m_Rect.Width() - LEFT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
 		/(float)m_nDisplayKLineCount;
 
 	CPen penRed, penGreen, penWhite, penGreyDotted, *pOldPen = 0;
@@ -306,18 +308,18 @@ void KLineRenderer::Render(CDC* pDC)
 	float timeLinePos = m_Rect.top + (m_kHighPrice - kLowPrice) * m_pixelPerPrice;
 
 	//	绘制分割线
-	pDC->MoveTo(m_Rect.left, timeLinePos);
+	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, timeLinePos);
 	pDC->LineTo(m_Rect.right, timeLinePos);
 
 	//	绘制时间线
-	pDC->MoveTo(m_Rect.left, m_Rect.bottom);
-	pDC->LineTo(m_Rect.right, m_Rect.bottom);
+	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
+	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
 
 	//	绘制中轴线
 	if(m_enRenderMode == enAxisMode)
 	{
 		float axleLinePos = m_Rect.top + (m_kHighPrice - kAxisPrice) * m_pixelPerPrice;
-		pDC->MoveTo(m_Rect.left, axleLinePos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, axleLinePos);
 		pDC->LineTo(m_Rect.right, axleLinePos);
 	}
 
@@ -325,13 +327,16 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
 	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
 
+	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, m_Rect.top);
+	pDC->LineTo(m_Rect.left + LEFT_MARGIN, m_Rect.bottom);
+
 	//////////////////////////////////////////////////////////////////////////////////
 
 	CString strPercent;
 
-	strPercent.Format(_T("  %.2f  "), (fPricePercentage / 0.01));
+	strPercent.Format(_T("%.2f"), (fPricePercentage / 0.01));
 
-	pDC->TextOutW(m_Rect.left + 1, m_Rect.top + 1, strPercent);
+	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
 
 	float kLastAvgPos = 0;
 	float kLastMA20Pos = 0;
@@ -344,7 +349,7 @@ void KLineRenderer::Render(CDC* pDC)
 		if( i >= m_pKLines->size()) break;
 
 		/* 计算左右方向 */
-		float kLeft = m_Rect.left + (i - m_nFirstDisplayedIndex + 1) * m_nKSpace
+		float kLeft = m_Rect.left + LEFT_MARGIN + (i - m_nFirstDisplayedIndex + 1) * m_nKSpace
 								+ kWidth * (i - m_nFirstDisplayedIndex);
 
 		float kMiddle = kLeft + kWidth / 2;
@@ -360,6 +365,46 @@ void KLineRenderer::Render(CDC* pDC)
 		float kAvgPos = m_Rect.top + (m_kHighPrice - kline.avg) * m_pixelPerPrice;
 		float kMA20Pos = m_Rect.top + (m_kHighPrice - kline.ma20) * m_pixelPerPrice;
 		float kMA60Pos = m_Rect.top + (m_kHighPrice - kline.ma60) * m_pixelPerPrice;
+
+		float kH20Pos = m_Rect.top + (m_kHighPrice - kline.high20) * m_pixelPerPrice;
+		float kH60Pos = m_Rect.top + (m_kHighPrice - kline.high60) * m_pixelPerPrice;
+
+		float kL20Pos = m_Rect.top + (m_kHighPrice - kline.low20) * m_pixelPerPrice;
+		float kL60Pos = m_Rect.top + (m_kHighPrice - kline.low60) * m_pixelPerPrice;
+
+		//	绘制20/60日高低点
+		if(m_bShowHighLow)
+		{
+			pOldPen = pDC->SelectObject(&penWhite);
+
+			if(kH20Pos < m_Rect.bottom && kH20Pos > m_Rect.top)
+			{
+				pDC->MoveTo(kLeft - m_nKSpace / 2, kH20Pos);
+				pDC->LineTo(kRight + m_nKSpace / 2, kH20Pos);
+			}
+
+			if(kL20Pos < m_Rect.bottom && kL20Pos > m_Rect.top)
+			{
+				pDC->MoveTo(kLeft - m_nKSpace / 2, kL20Pos);
+				pDC->LineTo(kRight + m_nKSpace / 2, kL20Pos);
+			}
+
+			pDC->SelectObject(&penRed);
+
+			if(kH60Pos < m_Rect.bottom && kH60Pos > m_Rect.top)
+			{
+				pDC->MoveTo(kLeft  - m_nKSpace / 2, kH60Pos);
+				pDC->LineTo(kRight + m_nKSpace / 2, kH60Pos);
+			}
+
+			if(kL60Pos < m_Rect.bottom && kL60Pos > m_Rect.top)
+			{
+				pDC->MoveTo(kLeft  - m_nKSpace / 2, kL60Pos);
+				pDC->LineTo(kRight + m_nKSpace / 2, kL60Pos);
+			}
+
+			pDC->SelectObject(pOldPen);
+		}
 
 		/* 绘制均价线 */
 		if(i > m_nFirstDisplayedIndex + 1 && m_bShowAvg) 
@@ -469,7 +514,7 @@ void KLineRenderer::Render(CDC* pDC)
 			{
 				float kCurPos = m_Rect.top + (m_kHighPrice - m_nSelectedPrice) * m_pixelPerPrice;
 
-				pDC->MoveTo(m_Rect.left, kCurPos);
+				pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurPos);
 				pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
 
 				pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
@@ -487,7 +532,7 @@ void KLineRenderer::Render(CDC* pDC)
 				{
 					float kCurPos = m_Rect.top + (m_kHighPrice - kline.close) * m_pixelPerPrice;
 
-					pDC->MoveTo(m_Rect.left, kCurPos);
+					pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurPos);
 					pDC->LineTo(kMiddle - kWidth * 2, kCurPos);
 
 					pDC->MoveTo(kMiddle + kWidth * 2, kCurPos);
@@ -504,12 +549,12 @@ void KLineRenderer::Render(CDC* pDC)
 					float kCurHighPos = m_Rect.top + (m_kHighPrice - kline.high) * m_pixelPerPrice;
 					float kCurLowPos = m_Rect.top + (m_kHighPrice - kline.low) * m_pixelPerPrice;
 
-					pDC->MoveTo(m_Rect.left, kCurHighPos);
+					pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurHighPos);
 					pDC->LineTo(kMiddle - kWidth * 2, kCurHighPos);
 					pDC->MoveTo(kMiddle + kWidth * 2, kCurHighPos);
 					pDC->LineTo(m_Rect.right, kCurHighPos);
 
-					pDC->MoveTo(m_Rect.left, kCurLowPos);
+					pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurLowPos);
 					pDC->LineTo(kMiddle - kWidth * 2, kCurLowPos);
 					pDC->MoveTo(kMiddle + kWidth * 2, kCurLowPos);
 					pDC->LineTo(m_Rect.right, kCurLowPos);
@@ -522,7 +567,7 @@ void KLineRenderer::Render(CDC* pDC)
 				else if(m_enTrackingMode == enMouseTMode)
 				{
 					//	绘制当前鼠标所在位置的跟踪线
-					pDC->MoveTo(m_Rect.left, m_cp.y);
+					pDC->MoveTo(m_Rect.left + LEFT_MARGIN, m_cp.y);
 					pDC->LineTo(m_Rect.right, m_cp.y);
 
 					pDC->MoveTo(kMiddle, m_Rect.top);
@@ -621,7 +666,7 @@ void KLineRenderer::Render(CDC* pDC)
 
 		float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
 
-		pDC->MoveTo(m_Rect.left, keyPricePos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, keyPricePos);
 		pDC->LineTo(m_Rect.right, keyPricePos);	
 		pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
 	}
