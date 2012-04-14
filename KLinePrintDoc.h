@@ -51,8 +51,12 @@ public:
 	void LoadKLineGroup(string targetCsvFile);
 	void ReloadDetailData(int second);
 
-	/* 显示至某个时点 (-1是播放所有， 0是播放首tick，其他是播放至目标时间)*/
-	void DisplayTillTime(int nTillTime = -1);
+	/* 显示至某个时点 */
+
+	/* nTillTime		:	-1是播放所有，0是播放首tick，其他是播放至目标时间 */
+	/* nTillDate(日线)	:	-1是播放所有日期，其他是播放至目标日期 */
+
+	void DisplayTill(int nTillTime = -1, int nTillDate = -1);
 
 	/* 播放至某个时点 */
 	BOOL PlayTillTime(int nTillTime);

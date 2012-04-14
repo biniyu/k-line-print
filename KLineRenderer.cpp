@@ -27,9 +27,11 @@ KLineRenderer::~KLineRenderer(void)
 
 int KLineRenderer::GetCurTime()
 {
-	if(!m_pKLines) return 0;
+	if(!m_pKLines || !m_pKLines->size()) return 0;
 
 	AdjustIndex();
+
+	if(m_nSelectedIndex < 0 || m_nSelectedIndex > (int)(m_pKLines->size()) - 1) return 0;
 
 	return (*m_pKLines)[m_nSelectedIndex].time;
 }
@@ -63,9 +65,15 @@ void KLineRenderer::AdjustIndex()
 	}
 }
 
+void KLineRenderer::SelectLastK()
+{
+	m_nSelectedIndex = m_pKLines->size() - 1;
+	AdjustIndex();
+}
+
 void KLineRenderer::SelectByTime(int nTime)
 {
-	if(!m_pKLines) return;
+	if(!m_pKLines || !m_pKLines->size()) return;
 
 	for(int i = 0; i < m_pKLines->size(); i++)
 	{
@@ -98,6 +106,8 @@ void KLineRenderer::Select(CPoint pt)
 
 		AdjustIndex();
 
+		if(m_nSelectedIndex < 0 || m_nSelectedIndex > (int)(m_pKLines->size()) - 1) return;
+
 		m_nSelectedPrice = (*m_pKLines)[m_nSelectedIndex].close;
 	}
 }
@@ -125,7 +135,6 @@ void KLineRenderer::SetKLineData(KLineCollection* pKLines, int nDispKLineCount)
 void KLineRenderer::ZoomIn()
 {
 	if(!m_pKLines || !m_bSelected) return;
-
 
 	if(m_nDisplayKLineCount - ZOOM_STEP > 0)
 	{
@@ -221,11 +230,13 @@ void KLineRenderer::Render(CDC* pDC)
 	}
 	else if(m_enRenderMode == enAxisMode)
 	{
+		if(m_nOpenIndex > m_pKLines->size() - 1) return;
+
 		m_pKLines->GetPriceVolRange(1, m_pKLines->size() - 1, 
 								m_kHighPrice, kLowPrice, volMax);	
 
 		// 以开盘为中轴价
-		kAxisPrice = (*m_pKLines)[1].open;
+		kAxisPrice = (*m_pKLines)[m_nOpenIndex].open;
 		int min = kLowPrice;
 		int max = m_kHighPrice;
 
@@ -622,6 +633,10 @@ void KLineRenderer::SetSelectedPrice(int price)
 
 int KLineRenderer::GetSelectedClosePrice()
 {
+	if(!m_pKLines || !m_pKLines->size()) return 0;
+
+	if(m_nSelectedIndex < 0 || m_nSelectedIndex > (int)(m_pKLines->size()) - 1) return 0;
+
 	return (*m_pKLines)[m_nSelectedIndex].close;
 }
 

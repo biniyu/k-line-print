@@ -115,6 +115,7 @@ BEGIN
     BUTTON      ID_PLAYBACK_BEGIN
     BUTTON      ID_PLAYBACK_FASTREV
     BUTTON      ID_PLAYBACK_REV
+    BUTTON      ID_PLAYBACK_STOP
     BUTTON      ID_PLAYBACK_PAUSE
     BUTTON      ID_PLAYBACK_FORWARD
     BUTTON      ID_PLAYBACK_FASTFW
@@ -221,6 +222,7 @@ BEGIN
         MENUITEM "回退",                          ID_PLAYBACK_REV
         MENUITEM "快退",                          ID_PLAYBACK_FASTREV
         MENUITEM "至结束处",                        ID_PLAYBACK_END
+        MENUITEM "停止",                          ID_PLAYBACK_STOP
     END
     POPUP "合约(&C)"
     BEGIN
