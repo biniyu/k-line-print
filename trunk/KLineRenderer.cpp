@@ -315,12 +315,22 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
 	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
 
+	CString strPercent;
+
 	//	绘制中轴线
 	if(m_enRenderMode == enAxisMode)
 	{
 		float axleLinePos = m_Rect.top + (m_kHighPrice - kAxisPrice) * m_pixelPerPrice;
 		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, axleLinePos);
 		pDC->LineTo(m_Rect.right, axleLinePos);
+
+		//	显示跳空幅度
+		float todayOpen = (*m_pKLines)[m_nOpenIndex].open;
+		float prevClose = (*m_pKLines)[0].close;
+		float gap = (todayOpen - prevClose) / prevClose * 100;
+
+		strPercent.Format(_T("图%.2f%% 跳%.2f%%"), (fPricePercentage / 0.01), gap);
+		pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
 	}
 
 	//	绘制价格线
@@ -331,11 +341,7 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->LineTo(m_Rect.left + LEFT_MARGIN, m_Rect.bottom);
 
 	//////////////////////////////////////////////////////////////////////////////////
-
-	CString strPercent;
-
 	strPercent.Format(_T("%.2f"), (fPricePercentage / 0.01));
-
 	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
 
 	float kLastAvgPos = 0;
@@ -642,11 +648,11 @@ void KLineRenderer::Render(CDC* pDC)
 
 			if(kMiddle + 1 + sz.cx > m_Rect.right)
 			{
-				pDC->TextOutW(kMiddle - sz.cx, m_Rect.top + 1, strTime);
+				pDC->TextOutW(kMiddle - sz.cx - 5, m_Rect.top + 1, strTime);
 			}
 			else
 			{
-				pDC->TextOutW(kMiddle + 1, m_Rect.top + 1, strTime);
+				pDC->TextOutW(kMiddle + 5, m_Rect.top + 1, strTime);
 			}
 		}
 
