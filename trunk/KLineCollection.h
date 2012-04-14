@@ -80,7 +80,7 @@ public:
 	void Generate(TickCollection& ticks, int seconds, KLine prevDayLine);
 
 	//	添加关键价格
-	void AddKeyPrice(int price, string desc) { m_mapKeyPrice.insert(pair<int,string>(price, desc)); }
+	void AddKeyPrice(int price, string desc) { m_mapKeyPrice[price] = desc; }
 
 	map<int, string>& GetKeyPrices() { return m_mapKeyPrice; }
 

@@ -51,6 +51,9 @@ private:
 	//	是否显示均线
 	bool m_bShowMA;
 
+	//	是否显示高低点
+	bool m_bShowHighLow;
+
 	//	是否显示关键时间线
 	bool m_bShowCriticalTime;
 
@@ -105,6 +108,7 @@ public:
 	void SetShowMA(bool bShow) { m_bShowMA = bShow; }
 	void SetShowCriticalTime(bool bShow) { m_bShowCriticalTime = bShow; }
 	void SetShowDate(bool bShow) { m_bShowDate = bShow; }
+	void SetShowHighLow(bool bShow) { m_bShowHighLow = bShow; }
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 

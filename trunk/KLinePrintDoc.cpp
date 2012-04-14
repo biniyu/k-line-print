@@ -221,34 +221,34 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
 	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	klc1min.AddKeyPrice(prevDayKLine.high, "HIGH1");
-	klc1min.AddKeyPrice(prevDayKLine.high5, "HIGH5");
-	klc1min.AddKeyPrice(prevDayKLine.high10, "HIGH10");
-	klc1min.AddKeyPrice(prevDayKLine.high20, "HIGH20");
-	klc1min.AddKeyPrice(prevDayKLine.high60, "HIGH60");
+	klc1min.AddKeyPrice(prevDayKLine.high, "H1");
+	klc1min.AddKeyPrice(prevDayKLine.high5, "H5");
+	klc1min.AddKeyPrice(prevDayKLine.high10, "H10");
+	klc1min.AddKeyPrice(prevDayKLine.high20, "H20");
+	klc1min.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	klc1min.AddKeyPrice(prevDayKLine.low, "LOW1");
-	klc1min.AddKeyPrice(prevDayKLine.low5, "LOW5");
-	klc1min.AddKeyPrice(prevDayKLine.low10, "LOW10");
-	klc1min.AddKeyPrice(prevDayKLine.low20, "LOW20");
-	klc1min.AddKeyPrice(prevDayKLine.low60, "LOW60");
+	klc1min.AddKeyPrice(prevDayKLine.low, "L1");
+	klc1min.AddKeyPrice(prevDayKLine.low5, "L5");
+	klc1min.AddKeyPrice(prevDayKLine.low10, "L10");
+	klc1min.AddKeyPrice(prevDayKLine.low20, "L20");
+	klc1min.AddKeyPrice(prevDayKLine.low60, "L60");
 
 	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
 	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	klc15s.AddKeyPrice(prevDayKLine.high, "HIGH1");
-	klc15s.AddKeyPrice(prevDayKLine.high5, "HIGH5");
-	klc15s.AddKeyPrice(prevDayKLine.high10, "HIGH10");
-	klc15s.AddKeyPrice(prevDayKLine.high20, "HIGH20");
-	klc15s.AddKeyPrice(prevDayKLine.high60, "HIGH60");
+	klc15s.AddKeyPrice(prevDayKLine.high, "H1");
+	klc15s.AddKeyPrice(prevDayKLine.high5, "H5");
+	klc15s.AddKeyPrice(prevDayKLine.high10, "H10");
+	klc15s.AddKeyPrice(prevDayKLine.high20, "H20");
+	klc15s.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	klc15s.AddKeyPrice(prevDayKLine.low, "LOW1");
-	klc15s.AddKeyPrice(prevDayKLine.low5, "LOW5");
-	klc15s.AddKeyPrice(prevDayKLine.low10, "LOW10");
-	klc15s.AddKeyPrice(prevDayKLine.low20, "LOW20");
-	klc15s.AddKeyPrice(prevDayKLine.low60, "LOW60");
+	klc15s.AddKeyPrice(prevDayKLine.low, "L1");
+	klc15s.AddKeyPrice(prevDayKLine.low5, "L5");
+	klc15s.AddKeyPrice(prevDayKLine.low10, "L10");
+	klc15s.AddKeyPrice(prevDayKLine.low20, "L20");
+	klc15s.AddKeyPrice(prevDayKLine.low60, "L60");
 
 
 	/* «∞»’»’K */
