@@ -16,10 +16,23 @@ public:
 	int vol;		//	当前K线的成交量
 	int vol_acc;	//	累积成交量
 	int avg;		//	均价线
+	
+	//	均线
 	double ma5;
 	double ma10;
 	double ma20;
 	double ma60;
+
+	//	最高最低价
+	double high5;
+	double low5;
+	double high10;
+	double low10;
+	double high20;
+	double low20;
+	double high60;
+	double low60;
+
 };
 
 class KLineCollection : public vector<KLine>

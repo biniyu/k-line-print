@@ -99,6 +99,7 @@ public:
 	afx_msg void OnPlaybackPause();
 	afx_msg void OnPlaybackFastfw();
 	afx_msg void OnPlaybackFastrev();
+	afx_msg void OnPlaybackStop();
 };
 
 #ifndef _DEBUG  // KLinePrintView.cpp 中的调试版本

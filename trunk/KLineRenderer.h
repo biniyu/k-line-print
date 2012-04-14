@@ -126,6 +126,8 @@ public:
 
 	void SelectByTime(int nTime);
 
+	void SelectLastK();
+
 	void ToggleRenderMode();
 
 	void ToggleTrackingMode();

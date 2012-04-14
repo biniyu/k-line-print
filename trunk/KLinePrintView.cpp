@@ -37,6 +37,7 @@ BEGIN_MESSAGE_MAP(CKLinePrintView, CView)
 	ON_COMMAND(ID_PLAYBACK_PAUSE, &CKLinePrintView::OnPlaybackPause)
 	ON_COMMAND(ID_PLAYBACK_FASTFW, &CKLinePrintView::OnPlaybackFastfw)
 	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintView::OnPlaybackFastrev)
+	ON_COMMAND(ID_PLAYBACK_STOP, &CKLinePrintView::OnPlaybackStop)
 END_MESSAGE_MAP()
 
 // CKLinePrintView ¹¹Ôì/Îö¹¹
@@ -148,6 +149,8 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(!pDoc->m_CurCsvFile.size()) return;
 
+	int origdate = klr_day.GetCurTime();
+
 	if(nChar == VK_PRIOR )
 	{
 		pDoc->ViewNeighborDate(TRUE);
@@ -236,7 +239,7 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_day.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
 	}
 
-	if(klr_day.IsSelected() && m_bLocked)
+	if(klr_day.IsSelected() && m_bLocked && (origdate != klr_day.GetCurTime()))
 	{
 		pDoc->ReloadByDate(klr_day.GetCurTime());
 	}
@@ -358,7 +361,7 @@ void CKLinePrintView::OnPlaybackBegin()
 	if (!pDoc)
 		return;
 
-	pDoc->DisplayTillTime(0);
+	pDoc->DisplayTill(0, klr_day.GetCurTime());
 }
 
 void CKLinePrintView::OnPlaybackEnd()
@@ -370,7 +373,7 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
-	pDoc->DisplayTillTime(-1);
+	pDoc->DisplayTill(-1, klr_day.GetCurTime());
 }
 
 void CKLinePrintView::OnPlaybackForward()
@@ -391,7 +394,15 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if(!time) 
 		KillTimer(1);
 	else
-		pDoc->PlayTillTime(pDoc->GetCurrentTickTime() + m_nPlaybackSpeed);
+	{
+		int nTillTime = pDoc->GetCurrentTickTime() + m_nPlaybackSpeed;
+		pDoc->PlayTillTime(nTillTime);
+		klr_1min.SelectLastK();
+		klr_5sec.SelectLastK();
+		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
+		Render();
+		Invalidate(FALSE);
+	}
 
 	CView::OnTimer(nIDEvent);
 }
@@ -413,4 +424,15 @@ void CKLinePrintView::OnPlaybackFastrev()
 
 	else
 		m_nPlaybackSpeed = 1;
+}
+
+void CKLinePrintView::OnPlaybackStop()
+{
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	KillTimer(1);
+	pDoc->DisplayTill(-1, -1);
 }

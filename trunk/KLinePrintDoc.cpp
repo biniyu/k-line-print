@@ -85,70 +85,22 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 
 void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 {
-	// 只考虑主力合约
-	targetCsvFile = DataRepoUtil::GetMajorContractPath(targetCsvFile);
-
-	if(targetCsvFile == m_CurCsvFile) return;
-
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-	//	当前日期
-	int nDate = DataRepoUtil::GetDateByPath(targetCsvFile);
-	
-	//	先加载日线数据(提供前一日的日K数据)
-	KLineReader klReader;
+	//	只考虑主力合约，确定分笔数据文件和日线文件
+	m_CurCsvFile = DataRepoUtil::GetMajorContractPath(targetCsvFile);
+	m_CurDayFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
 
-	string dayLineFile = DataRepoUtil::GetDayLinePath(targetCsvFile);
-	if(dayLineFile != m_CurDayFile)
-	{
-		// 读取相应的日线数据
-		klcday.Clear();
-		klReader.Read(dayLineFile, klcday);
-		m_CurDayFile = dayLineFile;
-	}
-
-	pView->SetDayData(&klcday, nDate);
-
-	//  获取前一交易日日K线
-	KLine prevDayKLine;
-
-	prevDayKLine = klcday.GetKLineByTime(CALENDAR.GetPrev(nDate));
-
-	//	不关注前日的开盘价
-	prevDayKLine.open = prevDayKLine.close;
-	prevDayKLine.time = 0;
-	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
-
+	//	读入分笔数据
 	tc.clear();
-	klc15s.Clear();
-	klc1min.Clear();
-
 	TickReader tr;
+	tr.Read(m_CurCsvFile, tc);
 
-	tr.Read(targetCsvFile, tc);
+	//	更新标题
+	SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
 
-	klc15s.Generate(tc, 15);
-	klc1min.Generate(tc, 60, prevDayKLine);
-
-	klc1min.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	klc1min.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
-	pView->Set1MinData(&klc1min);
-
-	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
-	pView->Set5SecData(&klc15s);
-
-	pView->Render();
-
-	m_CurCsvFile = targetCsvFile;
-
-	this->SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-	
-	this->UpdateAllViews(0);
+	//	显示K线
+	DisplayTill(-1, -1);
 }
 
 void CKLinePrintDoc::OnFileOpen()
@@ -223,27 +175,26 @@ BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 			break;
 	}
 
-	pView->Render();	
-	this->UpdateAllViews(0);
-
 	if(m_nCurrentTickIdx == tc.size()) 
 		return FALSE;
 	else 
 		return TRUE;
 }
 
-void CKLinePrintDoc::DisplayTillTime(int nTillTime)
+void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 {
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
 	klcday.Clear();
+	klc15s.Clear();
+	klc1min.Clear();
 
 	//	当前日期
 	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
 
 	//	当日的日线不读入	
 	KLineReader klReader;
-	klReader.Read(m_CurDayFile, klcday, nDate/**/);
+	klReader.Read(m_CurDayFile, klcday, nTillDate/**/);
 
 	//  获取前一交易日日K线
 	KLine prevDayKLine;
@@ -254,13 +205,22 @@ void CKLinePrintDoc::DisplayTillTime(int nTillTime)
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
-	klc15s.Clear();
-	klc1min.Clear();
-
 	klc1min.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	klc1min.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
 	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
+
+	klc1min.AddKeyPrice(prevDayKLine.high, "HIGH1");
+	klc1min.AddKeyPrice(prevDayKLine.high5, "HIGH5");
+	klc1min.AddKeyPrice(prevDayKLine.high10, "HIGH10");
+	klc1min.AddKeyPrice(prevDayKLine.high20, "HIGH20");
+	klc1min.AddKeyPrice(prevDayKLine.high60, "HIGH60");
+
+	klc1min.AddKeyPrice(prevDayKLine.low, "LOW1");
+	klc1min.AddKeyPrice(prevDayKLine.low5, "LOW5");
+	klc1min.AddKeyPrice(prevDayKLine.low10, "LOW10");
+	klc1min.AddKeyPrice(prevDayKLine.low20, "LOW20");
+	klc1min.AddKeyPrice(prevDayKLine.low60, "LOW60");
 
 	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
@@ -305,6 +265,12 @@ void CKLinePrintDoc::DisplayTillTime(int nTillTime)
 
 	}
 
+	//	设置数据
+	pView->SetDayData(&klcday, nDate);
+	pView->Set1MinData(&klc1min);
+	pView->Set5SecData(&klc15s);
+
+	//	显示
 	pView->Render();	
 	this->UpdateAllViews(0);
 }
