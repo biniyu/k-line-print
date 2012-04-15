@@ -13,10 +13,12 @@ public:
 	int low;
 	int open;
 	int close;
-	int vol;		//	当前K线的成交量
-	float vol_acc;	//	累积成交量
-	double price_acc;	//	累积成交价格
-	int avg;		//	均价线
+	int vol;				//	当前K线的成交量
+	
+	//	日内
+	int		avg;			//	均价线
+	float	vol_acc;		//	累积成交量
+	double	price_acc;		//	累积成交价格
 	
 	//	均线
 	double ma5;
@@ -48,6 +50,12 @@ private:
 
 	//	K线周期(以秒为单位, -1为日线)
 	int					m_nKLinePeriod;
+
+public:
+
+	int					m_nMaxPrice;			//	日内最高价
+	int					m_nMinPrice;			//	日内最低价
+
 	
 public:
 	KLineCollection(void);

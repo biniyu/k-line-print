@@ -13,6 +13,7 @@ KLineRenderer::KLineRenderer(void)
 	m_bShowAvg = false;
 	m_bShowMA = false;
 	m_bShowHighLow = false;
+	m_bShowMaxMin = false;
 	m_bShowCriticalTime = false;
 	m_pKLines = NULL;
 	m_bSelected = false;
@@ -216,6 +217,8 @@ void KLineRenderer::Render(CDC* pDC)
 	int kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
 	if(!m_pKLines || !m_pKLines->size()) return;
+
+	if(m_Rect == CRect(0,0,0,0)) return;
 
 	font.CreatePointFont(100, CString("Tahoma"));
 	pDC->SelectObject(&font);
@@ -677,7 +680,25 @@ void KLineRenderer::Render(CDC* pDC)
 		pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
 	}
 
+	//	绘制当日最高最低点
+
+	if(m_bShowMaxMin)
+	{
+		float maxPricePos = m_Rect.top + (m_kHighPrice - m_pKLines->m_nMaxPrice) * m_pixelPerPrice;
+		float minPricePos = m_Rect.top + (m_kHighPrice - m_pKLines->m_nMinPrice) * m_pixelPerPrice;
+
+		pDC->SelectObject(&penRed);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, maxPricePos);
+		pDC->LineTo(m_Rect.right, maxPricePos);	
+
+		pDC->SelectObject(&penGreen);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, minPricePos);
+		pDC->LineTo(m_Rect.right, minPricePos);	
+	}
+
 	pDC->SelectObject(pOldPen);
+
+
 
     penGreen.DeleteObject();
     penRed.DeleteObject();

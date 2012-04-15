@@ -3,7 +3,7 @@
 
 KLineCollection::KLineCollection(void)
 {
-
+	m_nMaxPrice = m_nMinPrice = 0;
 }
 
 KLineCollection::~KLineCollection(void)
@@ -79,6 +79,8 @@ void KLineCollection::StartQuote(Tick tick)
 	tmp.vol_acc = tick.vol;
 	tmp.price_acc = tick.vol * tick.price;
 
+	m_nMaxPrice = m_nMinPrice = tick.price;
+
 	AddToTail(tmp);
 }
 
@@ -86,6 +88,10 @@ void KLineCollection::StartQuote(Tick tick)
 void KLineCollection::Quote(Tick tick)
 {
 	KLine& curKLine = (*this)[this->size() - 1];
+
+	if(tick.price > m_nMaxPrice) m_nMaxPrice = tick.price;
+
+	if(tick.price < m_nMinPrice) m_nMinPrice = tick.price;
 
 	if((tick.time / m_nKLinePeriod) != (curKLine.time / m_nKLinePeriod))
 	{
