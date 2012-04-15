@@ -45,10 +45,12 @@ END_MESSAGE_MAP()
 CKLinePrintView::CKLinePrintView()
 {
 	m_bLocked = TRUE;
+	m_enViewMode = ViewModeAll;
 }
 
 CKLinePrintView::~CKLinePrintView()
 {
+
 }
 
 BOOL CKLinePrintView::PreCreateWindow(CREATESTRUCT& cs)
@@ -150,6 +152,10 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if(!pDoc->m_CurCsvFile.size()) return;
 
 	int origdate = klr_day.GetCurTime();
+
+	if(nChar == VK_RETURN)
+		ToggleViewMode();
+
 
 	if(nChar == VK_PRIOR )
 	{
@@ -280,6 +286,52 @@ void CKLinePrintView::Render()
 	klr_day.Render(&m_MemDC);
 	klr_5sec.Render(&m_MemDC);
 	Invalidate(FALSE);
+}
+
+void CKLinePrintView::ToggleViewMode()		//	«–ªª ”Õº
+{
+	switch(m_enViewMode)
+	{
+	case ViewModeAll:
+		m_enViewMode = ViewMode1Min;
+		break;
+	case ViewMode1Min:
+		m_enViewMode = ViewModeAll;
+		break;
+	default:
+		break;
+	}
+
+	CRect rc, rc1, rc2, rc3;
+	GetClientRect(&rc);
+
+	//ªÊÕº
+	if(m_enViewMode == ViewModeAll)
+	{
+		rc1 = rc;
+		rc1.bottom /= 2;
+
+		rc2 = rc;
+		rc2.top = rc.bottom /2;
+		rc2.right = rc.right / 2;
+
+		rc3 = rc;
+		rc3.top = rc.bottom / 2;
+		rc3.left = rc.right / 2;
+	}
+	else if(m_enViewMode == ViewMode1Min)
+	{
+		rc1 = rc;
+		rc2 = CRect(0,0,0,0);
+		rc3 = CRect(0,0,0,0);
+	}
+
+	klr_1min.SetRect(rc1);
+	klr_day.SetRect(rc2);
+	klr_5sec.SetRect(rc3);
+	
+	Render();
+
 }
 
 void CKLinePrintView::OnSize(UINT nType, int cx, int cy)

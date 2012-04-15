@@ -51,8 +51,11 @@ private:
 	//	是否显示均线
 	bool m_bShowMA;
 
-	//	是否显示高低点
+	//	是否显示n日高低点
 	bool m_bShowHighLow;
+
+	//	是否显示日内最高最低价
+	bool m_bShowMaxMin;
 
 	//	是否显示关键时间线
 	bool m_bShowCriticalTime;
@@ -109,6 +112,7 @@ public:
 	void SetShowCriticalTime(bool bShow) { m_bShowCriticalTime = bShow; }
 	void SetShowDate(bool bShow) { m_bShowDate = bShow; }
 	void SetShowHighLow(bool bShow) { m_bShowHighLow = bShow; }
+	void SetShowMaxMin(bool bShow) { m_bShowMaxMin = bShow; }
 
 	void SetRenderMode(RenderMode mode) { m_enRenderMode = mode; }
 

@@ -36,6 +36,7 @@ public:
 		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 		klr_1min.SetShowAvg(true);
 		klr_1min.SetShowCriticalTime(true);
+		klr_1min.SetShowMaxMin(true);	//	显示日内最高最低价
 		klr_1min.SetOpenIndex(1);
 	}
 
@@ -45,15 +46,26 @@ public:
 		klr_day.SelectByTime(nDate);
 		klr_day.SetShowVol(false);
 		klr_day.SetShowMA(true);
-		klr_day.SetShowHighLow(true);
+		klr_day.SetShowHighLow(true);	//	显示n日最高最低价
 		klr_day.SetOpenIndex(-1);
 		klr_day.SetShowDate(true);
 	}
 
 private:
 
-	bool m_bLocked;				//	联动
-	int	 m_nPlaybackSpeed;		//	放映速度	 
+	enum ViewMode
+	{
+		ViewModeAll,
+		ViewModeDay,
+		ViewMode1Min,
+		ViewModeDetail
+	};
+
+	bool		m_bLocked;				//	联动
+	int			m_nPlaybackSpeed;		//	放映速度
+	ViewMode	m_enViewMode;
+
+	void ToggleViewMode();		//	切换视图
 
 // 重写
 public:
