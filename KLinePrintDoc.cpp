@@ -176,6 +176,7 @@ BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 		klcday.Quote(tmp);
 		klc1min.Quote(tc[m_nCurrentTickIdx]);
 		klc15s.Quote(tc[m_nCurrentTickIdx]);
+		pView->SetTickData(tc[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
 
@@ -278,6 +279,8 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 			klc1min.Quote(tc[m_nCurrentTickIdx]);
 			klc15s.Quote(tc[m_nCurrentTickIdx]);
 		}
+
+		pView->SetTickData(tc[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
 
