@@ -321,6 +321,40 @@ void CKLinePrintView::Render()
 	Invalidate(FALSE);
 }
 
+void CKLinePrintView::Layout()
+{
+	CRect rc;
+	CRect rc_tick, rc_1min, rc_day, rc_detail;
+	
+	GetClientRect(&rc);
+
+	//ªÊÕº
+	if(m_enViewMode == ViewModeAll)
+	{
+		rc_1min = rc;
+		rc_1min.bottom /= 2;
+
+		rc_day = rc;
+		rc_day.top = rc.bottom /2;
+		rc_day.right = rc.right / 2;
+
+		rc_detail = rc;
+		rc_detail.top = rc.bottom / 2;
+		rc_detail.left = rc.right / 2;
+	}
+	else if(m_enViewMode == ViewMode1Min)
+	{
+		rc_1min = rc;
+		rc_day = CRect(0,0,0,0);
+		rc_detail = CRect(0,0,0,0);
+	}
+
+	tick_render.SetRect(rc_tick);
+	klr_1min.SetRect(rc_1min);
+	klr_day.SetRect(rc_day);
+	klr_5sec.SetRect(rc_detail);
+}
+
 void CKLinePrintView::ToggleViewMode()		//	«–ªª ”Õº
 {
 	switch(m_enViewMode)
@@ -335,58 +369,17 @@ void CKLinePrintView::ToggleViewMode()		//	«–ªª ”Õº
 		break;
 	}
 
-	CRect rc, rc1, rc2, rc3;
-	GetClientRect(&rc);
+	Layout();
 
-	//ªÊÕº
-	if(m_enViewMode == ViewModeAll)
-	{
-		rc1 = rc;
-		rc1.bottom /= 2;
-
-		rc2 = rc;
-		rc2.top = rc.bottom /2;
-		rc2.right = rc.right / 2;
-
-		rc3 = rc;
-		rc3.top = rc.bottom / 2;
-		rc3.left = rc.right / 2;
-	}
-	else if(m_enViewMode == ViewMode1Min)
-	{
-		rc1 = rc;
-		rc2 = CRect(0,0,0,0);
-		rc3 = CRect(0,0,0,0);
-	}
-
-	klr_1min.SetRect(rc1);
-	klr_day.SetRect(rc2);
-	klr_5sec.SetRect(rc3);
-	
 	Render();
-
 }
 
 void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
 {
-	//	÷ÿΩ®MEMDC
-
-	CRect rc, rc1, rc2, rc3;
+	CRect rc;
 	GetClientRect(&rc);
 
-	//ªÊÕº
-
-	rc1 = rc;
-	rc1.bottom /= 2;
-
-	rc2 = rc;
-	rc2.top = rc.bottom /2;
-	rc2.right = rc.right / 2;
-
-	rc3 = rc;
-	rc3.top = rc.bottom / 2;
-	rc3.left = rc.right / 2;
-
+	//	÷ÿΩ®MEMDC
 	m_MemBitmap.DeleteObject();
 	m_MemDC.DeleteDC();
 
@@ -396,9 +389,7 @@ void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
 	m_MemDC.SelectObject(&m_MemBitmap);
 	m_MemDC.FillSolidRect(&rc,RGB(255,255,255));
 
-	klr_1min.SetRect(rc1);
-	klr_day.SetRect(rc2);
-	klr_5sec.SetRect(rc3);
+	Layout();
 	
 	Render();
 
