@@ -53,6 +53,38 @@ CKLinePrintView::~CKLinePrintView()
 
 }
 
+void CKLinePrintView::SetTickData(Tick tick)
+{
+	tick_render.SetTick(tick);
+}
+
+void CKLinePrintView::Set5SecData(KLineCollection* pData) 
+{ 
+	klr_5sec.SetKLineData(pData, 120); 
+	klr_5sec.SetOpenIndex(0);
+}
+
+void CKLinePrintView::Set1MinData(KLineCollection* pData) 
+{ 
+	klr_1min.SetKLineData(pData, 240); 
+	klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
+	klr_1min.SetShowAvg(true);
+	klr_1min.SetShowCriticalTime(true);
+	klr_1min.SetShowMaxMin(true);	//	显示日内最高最低价
+	klr_1min.SetOpenIndex(1);
+}
+
+void CKLinePrintView::SetDayData(KLineCollection* pData, int nDate)  
+{ 
+	klr_day.SetKLineData(pData, 120);
+	klr_day.SelectByTime(nDate);
+	klr_day.SetShowVol(false);
+	klr_day.SetShowMA(true);
+	klr_day.SetShowHighLow(true);	//	显示n日最高最低价
+	klr_day.SetOpenIndex(-1);
+	klr_day.SetShowDate(true);
+}
+
 BOOL CKLinePrintView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: 在此处通过修改
@@ -285,6 +317,7 @@ void CKLinePrintView::Render()
 	klr_1min.Render(&m_MemDC);
 	klr_day.Render(&m_MemDC);
 	klr_5sec.Render(&m_MemDC);
+	tick_render.Render(&m_MemDC);
 	Invalidate(FALSE);
 }
 

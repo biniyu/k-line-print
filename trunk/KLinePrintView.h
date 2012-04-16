@@ -5,6 +5,7 @@
 #pragma once
 
 #include "KLineRenderer.h"
+#include "TickRenderer.h"
 
 class KLineCollection;
 class CKLinePrintDoc;
@@ -24,32 +25,10 @@ public:
 
 	void Render();
 
-	void Set5SecData(KLineCollection* pData) 
-	{ 
-		klr_5sec.SetKLineData(pData, 120); 
-		klr_5sec.SetOpenIndex(0);
-	}
-
-	void Set1MinData(KLineCollection* pData) 
-	{ 
-		klr_1min.SetKLineData(pData, 240); 
-		klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
-		klr_1min.SetShowAvg(true);
-		klr_1min.SetShowCriticalTime(true);
-		klr_1min.SetShowMaxMin(true);	//	显示日内最高最低价
-		klr_1min.SetOpenIndex(1);
-	}
-
-	void SetDayData(KLineCollection* pData, int nDate)  
-	{ 
-		klr_day.SetKLineData(pData, 120);
-		klr_day.SelectByTime(nDate);
-		klr_day.SetShowVol(false);
-		klr_day.SetShowMA(true);
-		klr_day.SetShowHighLow(true);	//	显示n日最高最低价
-		klr_day.SetOpenIndex(-1);
-		klr_day.SetShowDate(true);
-	}
+	void SetTickData(Tick tick);
+	void Set5SecData(KLineCollection* pData);
+	void Set1MinData(KLineCollection* pData);
+	void SetDayData(KLineCollection* pData, int nDate);  
 
 private:
 
@@ -89,6 +68,7 @@ protected:
 	KLineRenderer klr_5sec;
 	KLineRenderer klr_1min;
 	KLineRenderer klr_day;
+	TickRenderer  tick_render;
 
 	CDC			m_MemDC;
 	CBitmap		m_MemBitmap;

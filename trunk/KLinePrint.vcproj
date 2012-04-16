@@ -267,6 +267,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TickRenderer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewTree.cpp"
 				>
 			</File>
@@ -350,6 +354,10 @@
 			</File>
 			<File
 				RelativePath=".\TickReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TickRenderer.h"
 				>
 			</File>
 			<File
