@@ -23,6 +23,7 @@ public:
 // ²Ù×÷
 public:
 
+	void Layout();
 	void Render();
 
 	void SetTickData(Tick tick);
