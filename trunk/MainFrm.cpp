@@ -112,29 +112,29 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockPane(&m_wndPlaybackBar);
 
 	// 启用 Visual Studio 2005 样式停靠窗口行为
-	CDockingManager::SetDockingMode(DT_SMART);
+//	CDockingManager::SetDockingMode(DT_SMART);
 	// 启用 Visual Studio 2005 样式停靠窗口自动隐藏行为
-	EnableAutoHidePanes(CBRS_ALIGN_ANY);
+//	EnableAutoHidePanes(CBRS_ALIGN_ANY);
 
 	// 加载菜单项图像(不在任何标准工具栏上):
 	CMFCToolBar::AddToolBarForImageCollection(IDR_MENU_IMAGES, theApp.m_bHiColorIcons ? IDB_MENU_IMAGES_24 : 0);
 
 	// 创建停靠窗口
-	if (!CreateDockingWindows())
-	{
-		TRACE0("未能创建停靠窗口\n");
-		return -1;
-	}
-
-	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndFileView);
-	CDockablePane* pTabbedBar = NULL;
-	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
-	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndOutput);
-	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
-	DockPane(&m_wndProperties);
+//	if (!CreateDockingWindows())
+//	{
+//		TRACE0("未能创建停靠窗口\n");
+//		return -1;
+//	}
+//
+//	m_wndFileView.EnableDocking(CBRS_ALIGN_ANY);
+//	m_wndClassView.EnableDocking(CBRS_ALIGN_ANY);
+//	DockPane(&m_wndFileView);
+//	CDockablePane* pTabbedBar = NULL;
+//	m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
+//	m_wndOutput.EnableDocking(CBRS_ALIGN_ANY);
+//	DockPane(&m_wndOutput);
+//	m_wndProperties.EnableDocking(CBRS_ALIGN_ANY);
+//	DockPane(&m_wndProperties);
 
 
 	// 启用工具栏和停靠窗口菜单替换

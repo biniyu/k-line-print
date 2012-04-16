@@ -183,7 +183,7 @@ BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 		if(m_nCurrentTickIdx >= tc.size()) 
 			break;
 
-		if(tc[m_nCurrentTickIdx].time > nTillTime)
+		if(tc[m_nCurrentTickIdx].time >= nTillTime)
 			break;
 	}
 

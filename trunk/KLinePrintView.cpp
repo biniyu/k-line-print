@@ -328,23 +328,38 @@ void CKLinePrintView::Layout()
 	
 	GetClientRect(&rc);
 
+	int horiSplit = rc.bottom / 5 * 3;
+
+	int vertSplitUp = rc.right / 9;
+	int vertSplitDown = rc.right / 2;
+
 	//»æÍ¼
 	if(m_enViewMode == ViewModeAll)
 	{
+		rc_tick = rc;
+		rc_tick.right = vertSplitUp;
+		rc_tick.bottom = horiSplit;
+
 		rc_1min = rc;
-		rc_1min.bottom /= 2;
+		rc_1min.left = vertSplitUp;
+		rc_1min.bottom = horiSplit;
 
 		rc_day = rc;
-		rc_day.top = rc.bottom /2;
-		rc_day.right = rc.right / 2;
+		rc_day.top = horiSplit;
+		rc_day.right = vertSplitDown;
 
 		rc_detail = rc;
-		rc_detail.top = rc.bottom / 2;
-		rc_detail.left = rc.right / 2;
+		rc_detail.top = horiSplit;
+		rc_detail.left = vertSplitDown;
 	}
 	else if(m_enViewMode == ViewMode1Min)
 	{
+		rc_tick = rc;
+		rc_tick.right = vertSplitUp;
+
 		rc_1min = rc;
+		rc_1min.left = vertSplitUp;
+
 		rc_day = CRect(0,0,0,0);
 		rc_detail = CRect(0,0,0,0);
 	}
@@ -402,6 +417,8 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+
+	tick_render.Select(point);
 
 	klr_1min.Select(point);
 	if(klr_1min.IsSelected() && m_bLocked)
