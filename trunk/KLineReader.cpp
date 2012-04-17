@@ -18,6 +18,12 @@ void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 	char buf[SZ];
 	int year, month, day;
 
+	if((nTillDate == -1) && (m_cachedData.find(path)!= m_cachedData.end()))
+	{
+		klines = m_cachedData[path];
+		return;
+	}
+
 	FastIndicatorComputer fic;
 
 	ifstream in (path.c_str());
@@ -56,4 +62,6 @@ void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 
 		klines.AddToTail(kline);
 	}	
+
+	m_cachedData[path] = klines;
 }
