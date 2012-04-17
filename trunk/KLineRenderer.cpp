@@ -41,6 +41,8 @@ int KLineRenderer::GetCurTime()
 
 void KLineRenderer::AdjustIndex()
 {
+	if(!m_pKLines) return;
+
 	if(m_nSelectedIndex > m_pKLines->size() - 1)
 	{
 		//	如果K线数据小于可显示的数量，则从头开始显示，选中最后K线
@@ -94,6 +96,8 @@ void KLineRenderer::SelectByTime(int nTime)
 
 void KLineRenderer::Select(CPoint pt)
 {
+	if(!m_pKLines) return;
+
 	if(m_Rect.PtInRect(pt))
 		m_bSelected = true;
 	else

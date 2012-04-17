@@ -87,7 +87,13 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
 	//	只考虑主力合约，确定分笔数据文件和日线文件
-	m_CurCsvFile = DataRepoUtil::GetMajorContractPath(targetCsvFile);
+	string tmp;
+
+	tmp = DataRepoUtil::GetMajorContractPath(targetCsvFile);
+
+	if(!tmp.size()) return;
+
+	m_CurCsvFile = tmp;
 	m_CurDayFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
 
 	//	读入分笔数据
@@ -127,6 +133,9 @@ void CKLinePrintDoc::OnFileOpen()
 void CKLinePrintDoc::ReloadByDate(int nDate)
 {
 	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
+
+	if(!tmp.size()) return;
+
 	LoadKLineGroup(tmp);
 	DisplayTill(-1, -1);
 }
@@ -145,6 +154,9 @@ void CKLinePrintDoc::ReloadDetailData(int second)
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
 	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
+
+	if(!tmp.size()) return;
+
 	LoadKLineGroup(tmp);
 	DisplayTill(-1, -1);
 }
@@ -152,6 +164,9 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 BOOL CKLinePrintDoc::LoadNextDay()
 {
 	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, FALSE, TRUE/* 必须是主力合约 */);
+
+	if(!tmp.size()) return FALSE;
+
 	LoadKLineGroup(tmp);
 	int nDate = DataRepoUtil::GetDateByPath(tmp);
 	DisplayTill(0, nDate);
