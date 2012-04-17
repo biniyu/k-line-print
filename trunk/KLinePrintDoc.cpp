@@ -94,7 +94,12 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	//	读入分笔数据
 	tc.clear();
 	TickReader tr;
+
+	DWORD before = GetTickCount();
 	tr.Read(m_CurCsvFile, tc);
+	DWORD after = GetTickCount();
+	TRACE("tick file %s read, use %d ticks\n", m_CurCsvFile.c_str(), after - before);
+
 
 	//	更新标题
 	SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
@@ -206,7 +211,11 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 
 	//	当日的日线不读入	
 	KLineReader klReader;
+
+	DWORD before = GetTickCount();
 	klReader.Read(m_CurDayFile, klcday, nTillDate/**/);
+	DWORD after = GetTickCount();
+	TRACE("day line %s read, use %d ticks\n", m_CurDayFile.c_str(), after - before);
 
 	//  获取前一交易日日K线
 	KLine prevDayKLine;
@@ -261,6 +270,8 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	klc1min.SetPeriod(60);
 	klc15s.SetPeriod(15);
 
+	before = GetTickCount();
+
 	while(m_nCurrentTickIdx < tc.size())
 	{
 		// 需要override时间
@@ -291,6 +302,10 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 			break;
 
 	}
+
+	after = GetTickCount();
+	TRACE("1min/15s generated, use %d ticks\n", after - before);
+
 
 	//	设置数据
 	pView->SetDayData(&klcday, nDate);
