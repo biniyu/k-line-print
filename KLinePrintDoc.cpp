@@ -11,7 +11,6 @@
 #include "TickReader.h"
 #include "KLineCollection.h"
 #include "CalendarGenerator.h"
-#include "KLineReader.h"
 #include "DataRepoUtil.h"
 
 #ifdef _DEBUG
@@ -92,13 +91,12 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	m_CurDayFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
 
 	//	读入分笔数据
-	tc.clear();
-	TickReader tr;
+	m_TickData.clear();
 
 	DWORD before = GetTickCount();
-	tr.Read(m_CurCsvFile, tc);
+	m_TickReader.Read(m_CurCsvFile, m_TickData);
 	DWORD after = GetTickCount();
-	TRACE("tick file %s read, use %d ticks\n", m_CurCsvFile.c_str(), after - before);
+	TRACE("\ntick file %s read, use %d ticks", m_CurCsvFile.c_str(), after - before);
 
 
 	//	更新标题
@@ -137,9 +135,9 @@ void CKLinePrintDoc::ReloadDetailData(int second)
 {
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-	klc15s.Clear();
-	klc15s.Generate(tc, second);
-	pView->Set5SecData(&klc15s);
+	m_15SecData.Clear();
+	m_15SecData.Generate(m_TickData, second);
+	pView->Set5SecData(&m_15SecData);
 	pView->Render();
 	this->UpdateAllViews(0);
 }
@@ -162,8 +160,8 @@ BOOL CKLinePrintDoc::LoadNextDay()
 
 int CKLinePrintDoc::GetCurrentTickTime()
 {
-	if(m_nCurrentTickIdx >= tc.size()) return 0;
-	else return tc[m_nCurrentTickIdx].time;
+	if(m_nCurrentTickIdx >= m_TickData.size()) return 0;
+	else return m_TickData[m_nCurrentTickIdx].time;
 }
 
 BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
@@ -172,27 +170,27 @@ BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-	while(m_nCurrentTickIdx < tc.size())
+	while(m_nCurrentTickIdx < m_TickData.size())
 	{
 		// 需要override时间
-		Tick tmp = tc[m_nCurrentTickIdx];
+		Tick tmp = m_TickData[m_nCurrentTickIdx];
 		tmp.time = nDate;
 
-		klcday.Quote(tmp);
-		klc1min.Quote(tc[m_nCurrentTickIdx]);
-		klc15s.Quote(tc[m_nCurrentTickIdx]);
-		pView->SetTickData(tc[m_nCurrentTickIdx]);
+		m_DayData.Quote(tmp);
+		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
+		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
+		pView->SetTickData(m_TickData[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
 
-		if(m_nCurrentTickIdx >= tc.size()) 
+		if(m_nCurrentTickIdx >= m_TickData.size()) 
 			break;
 
-		if(tc[m_nCurrentTickIdx].time >= nTillTime)
+		if(m_TickData[m_nCurrentTickIdx].time >= nTillTime)
 			break;
 	}
 
-	if(m_nCurrentTickIdx == tc.size()) 
+	if(m_nCurrentTickIdx == m_TickData.size()) 
 		return FALSE;
 	else 
 		return TRUE;
@@ -202,115 +200,112 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 {
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
-	klcday.Clear();
-	klc15s.Clear();
-	klc1min.Clear();
+	m_DayData.Clear();
+	m_15SecData.Clear();
+	m_1MinData.Clear();
 
 	//	当前日期
 	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
 
-	//	当日的日线不读入	
-	KLineReader klReader;
-
 	DWORD before = GetTickCount();
-	klReader.Read(m_CurDayFile, klcday, nTillDate/**/);
+	m_KLineReader.Read(m_CurDayFile, m_DayData, nTillDate/**/);
 	DWORD after = GetTickCount();
-	TRACE("day line %s read, use %d ticks\n", m_CurDayFile.c_str(), after - before);
+	TRACE("\nday line %s read, use %d ticks", m_CurDayFile.c_str(), after - before);
 
 	//  获取前一交易日日K线
 	KLine prevDayKLine;
-	prevDayKLine = klcday.GetKLineByTime(CALENDAR.GetPrev(nDate));
+	prevDayKLine = m_DayData.GetKLineByTime(CALENDAR.GetPrev(nDate));
 
 	//	不关注前日的开盘价
 	prevDayKLine.open = prevDayKLine.close;
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
-	klc1min.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	klc1min.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	klc1min.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	klc1min.AddKeyPrice(prevDayKLine.ma60, "MA60");
+	m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	m_1MinData.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	klc1min.AddKeyPrice(prevDayKLine.high, "H1");
-	klc1min.AddKeyPrice(prevDayKLine.high5, "H5");
-	klc1min.AddKeyPrice(prevDayKLine.high10, "H10");
-	klc1min.AddKeyPrice(prevDayKLine.high20, "H20");
-	klc1min.AddKeyPrice(prevDayKLine.high60, "H60");
+	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
+	m_1MinData.AddKeyPrice(prevDayKLine.high5, "H5");
+	m_1MinData.AddKeyPrice(prevDayKLine.high10, "H10");
+	m_1MinData.AddKeyPrice(prevDayKLine.high20, "H20");
+	m_1MinData.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	klc1min.AddKeyPrice(prevDayKLine.low, "L1");
-	klc1min.AddKeyPrice(prevDayKLine.low5, "L5");
-	klc1min.AddKeyPrice(prevDayKLine.low10, "L10");
-	klc1min.AddKeyPrice(prevDayKLine.low20, "L20");
-	klc1min.AddKeyPrice(prevDayKLine.low60, "L60");
+	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
+	m_1MinData.AddKeyPrice(prevDayKLine.low5, "L5");
+	m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
+	m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
+	m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
 
-	klc15s.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	klc15s.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	klc15s.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	klc15s.AddKeyPrice(prevDayKLine.ma60, "MA60");
+	m_15SecData.AddKeyPrice(prevDayKLine.ma5, "MA5");
+	m_15SecData.AddKeyPrice(prevDayKLine.ma10, "MA10");
+	m_15SecData.AddKeyPrice(prevDayKLine.ma20, "MA20");
+	m_15SecData.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	klc15s.AddKeyPrice(prevDayKLine.high, "H1");
-	klc15s.AddKeyPrice(prevDayKLine.high5, "H5");
-	klc15s.AddKeyPrice(prevDayKLine.high10, "H10");
-	klc15s.AddKeyPrice(prevDayKLine.high20, "H20");
-	klc15s.AddKeyPrice(prevDayKLine.high60, "H60");
+	m_15SecData.AddKeyPrice(prevDayKLine.high, "H1");
+	m_15SecData.AddKeyPrice(prevDayKLine.high5, "H5");
+	m_15SecData.AddKeyPrice(prevDayKLine.high10, "H10");
+	m_15SecData.AddKeyPrice(prevDayKLine.high20, "H20");
+	m_15SecData.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	klc15s.AddKeyPrice(prevDayKLine.low, "L1");
-	klc15s.AddKeyPrice(prevDayKLine.low5, "L5");
-	klc15s.AddKeyPrice(prevDayKLine.low10, "L10");
-	klc15s.AddKeyPrice(prevDayKLine.low20, "L20");
-	klc15s.AddKeyPrice(prevDayKLine.low60, "L60");
+	m_15SecData.AddKeyPrice(prevDayKLine.low, "L1");
+	m_15SecData.AddKeyPrice(prevDayKLine.low5, "L5");
+	m_15SecData.AddKeyPrice(prevDayKLine.low10, "L10");
+	m_15SecData.AddKeyPrice(prevDayKLine.low20, "L20");
+	m_15SecData.AddKeyPrice(prevDayKLine.low60, "L60");
 
 
 	/* 前日日K */
-	klc1min.AddToTail(prevDayKLine);
+	m_1MinData.AddToTail(prevDayKLine);
 	
 	m_nCurrentTickIdx = 0;
 
-	klcday.SetPeriod(36000);
-	klc1min.SetPeriod(60);
-	klc15s.SetPeriod(15);
+	m_DayData.SetPeriod(36000);
+	m_1MinData.SetPeriod(60);
+	m_15SecData.SetPeriod(15);
 
 	before = GetTickCount();
 
-	while(m_nCurrentTickIdx < tc.size())
+	while(m_nCurrentTickIdx < m_TickData.size())
 	{
 		// 需要override时间
-		Tick tmp = tc[m_nCurrentTickIdx];
+		Tick tmp = m_TickData[m_nCurrentTickIdx];
 		tmp.time = nDate;
 
 		if(0 == m_nCurrentTickIdx)
 		{
-			klcday.StartQuote(tmp);
-			klc1min.StartQuote(tc[m_nCurrentTickIdx]);
-			klc15s.StartQuote(tc[m_nCurrentTickIdx]);
+			m_DayData.StartQuote(tmp);
+			m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
+			m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 		}
 		else
 		{
-			klcday.Quote(tmp);
-			klc1min.Quote(tc[m_nCurrentTickIdx]);
-			klc15s.Quote(tc[m_nCurrentTickIdx]);
+			m_DayData.Quote(tmp);
+			m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
+			m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 		}
 
-		pView->SetTickData(tc[m_nCurrentTickIdx]);
+		pView->SetTickData(m_TickData[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
 
 		if(nTillTime == 0 && m_nCurrentTickIdx == 1) 
 			break;
 
-		if(nTillTime != -1 && tc[m_nCurrentTickIdx].time > nTillTime)
+		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime)
 			break;
 
 	}
 
 	after = GetTickCount();
-	TRACE("1min/15s generated, use %d ticks\n", after - before);
+	TRACE("\n1min/15s generated, use %d ticks", after - before);
 
 
 	//	设置数据
-	pView->SetDayData(&klcday, nDate);
-	pView->Set1MinData(&klc1min);
-	pView->Set5SecData(&klc15s);
+	pView->SetDayData(&m_DayData, nDate);
+	pView->Set1MinData(&m_1MinData);
+	pView->Set5SecData(&m_15SecData);
 
 	//	显示
 	pView->Render();	

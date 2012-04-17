@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <map>
 using namespace std;
 
 class Tick
@@ -36,6 +37,10 @@ class TickCollection : public vector<Tick> {};
 
 class TickReader
 {
+private:
+
+	map<string, TickCollection>	m_cachedData;
+
 public:
 	TickReader(void);
 	~TickReader(void);

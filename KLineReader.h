@@ -2,6 +2,7 @@
 
 #include <string>
 #include <deque>
+#include <map>
 #include "KLineCollection.h"
 
 using namespace std;
@@ -161,6 +162,10 @@ public:
 
 class KLineReader
 {
+private:
+
+	map<string, KLineCollection>	m_cachedData;
+
 public:
 	KLineReader(void);
 	~KLineReader(void);

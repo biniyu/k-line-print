@@ -12,6 +12,14 @@ TickReader::~TickReader(void)
 
 void TickReader::Read(string path, TickCollection& ticks)
 {
+#if 0
+	if(m_cachedData.find(path)!= m_cachedData.end())
+	{
+		ticks = m_cachedData[path];
+		return;
+	}
+#endif
+
 	ifstream csvFile(path.c_str());
 
 	/*
@@ -43,4 +51,6 @@ void TickReader::Read(string path, TickCollection& ticks)
 		tick.time = hour*3600 + minute* 60 + second;
 		ticks.push_back(tick);
 	}
+
+//	m_cachedData[path] = ticks;
 }

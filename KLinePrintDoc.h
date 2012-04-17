@@ -4,6 +4,7 @@
 #include <string>
 #include "KLineCollection.h"
 #include "TickReader.h"
+#include "KLineReader.h"
 
 using namespace std;
 
@@ -19,13 +20,13 @@ private:
 
 	int	m_nCurrentTickIdx;		//	下一个待播放tick的索引
 
-// 属性
-public:
+	TickCollection	m_TickData;
+	KLineCollection m_15SecData;
+	KLineCollection m_1MinData;
+	KLineCollection m_DayData;
 
-	TickCollection tc;
-	KLineCollection klc15s;
-	KLineCollection klc1min;
-	KLineCollection klcday;
+	KLineReader		m_KLineReader;
+	TickReader		m_TickReader;
 
 // 操作
 public:
