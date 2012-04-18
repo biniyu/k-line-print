@@ -290,13 +290,16 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 
 		if(0 == m_nCurrentTickIdx)
 		{
-			m_DayData.StartQuote(tmp);
+			//	只有在播放时才需要动态更新最后的K线
+			if(nTillDate != -1) 
+				m_DayData.StartQuote(tmp);
 			m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 			m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 		}
 		else
 		{
-			m_DayData.Quote(tmp);
+			if(nTillDate != -1)
+				m_DayData.Quote(tmp);
 			m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
 			m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 		}

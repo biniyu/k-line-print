@@ -63,5 +63,7 @@ void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 		klines.AddToTail(kline);
 	}	
 
-	m_cachedData[path] = klines;
+	//	完整的日线数据才cache
+	if(nTillDate == -1)
+		m_cachedData[path] = klines;
 }
