@@ -10,6 +10,7 @@
 #include "KLineCollection.h"
 #include "TickReader.h"
 #include "KLineRenderer.h"
+#include "Utility.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -471,7 +472,15 @@ void CKLinePrintView::OnPlaybackEnd()
 
 void CKLinePrintView::OnPlaybackForward()
 {
+	CKLinePrintDoc* pDoc = GetDocument();
+
 	m_nPlaybackSpeed = 1;
+
+	int dispTime = klr_1min.GetCurTime();
+	int contiTime = Utility::ConvDispTimeToContTime(dispTime);
+
+	pDoc->DisplayTill(contiTime, klr_day.GetCurTime());
+
 	SetTimer(1,1000,NULL); 
 }
 

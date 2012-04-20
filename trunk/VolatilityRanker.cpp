@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "VolatilityRanker.h"
-#include "DataRepoUtil.h"
+#include "Utility.h"
 #include "KLinePrint.h"
 #include "KLineCollection.h"
 #include "KLineReader.h"
@@ -15,11 +15,11 @@ vector<string> VolatilityRanker::Rank()
 	vector<string> res;
 
 	// 处理当天的
-	string curFile = DataRepoUtil::GetMajorContractPath(m_strFileName);
-	string dayLineFile = DataRepoUtil::GetDayLinePath(curFile);
+	string curFile = Utility::GetMajorContractPath(m_strFileName);
+	string dayLineFile = Utility::GetDayLinePath(curFile);
 
 	KLineCollection& klcday = GetDayLineData(dayLineFile);
-	KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
+	KLine kline = klcday.GetKLineByTime(Utility::GetDateByPath(curFile));
 
 	if(m_enRankMode == en_RankModeHighLow)
 	{
@@ -31,19 +31,19 @@ vector<string> VolatilityRanker::Rank()
 	}
 	else if(m_enRankMode == en_RankModeGap)
 	{
-		KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+		KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(Utility::GetDateByPath(curFile)));
 		if(prev.open) AddToRankList(abs(prev.close - kline.open), curFile);	
 	}
 
 	//	向后处理
 	while(1)
 	{
-		curFile = DataRepoUtil::GetNeighborCsvFile(curFile, false, true);
+		curFile = Utility::GetNeighborCsvFile(curFile, false, true);
 		if(!curFile.size()) break;
 
-		string dayLineFile = DataRepoUtil::GetDayLinePath(curFile);
+		string dayLineFile = Utility::GetDayLinePath(curFile);
 		KLineCollection& klcday = GetDayLineData(dayLineFile);
-		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
+		KLine kline = klcday.GetKLineByTime(Utility::GetDateByPath(curFile));
 
 		if(m_enRankMode == en_RankModeHighLow)
 		{
@@ -55,22 +55,22 @@ vector<string> VolatilityRanker::Rank()
 		}
 		else if(m_enRankMode == en_RankModeGap)
 		{
-			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(Utility::GetDateByPath(curFile)));
 			if(prev.open)AddToRankList(abs(prev.close - kline.open), curFile);	
 		}
 	}
 
-	curFile = DataRepoUtil::GetMajorContractPath(m_strFileName);
+	curFile = Utility::GetMajorContractPath(m_strFileName);
 
 	//	向前处理
 	while(1)
 	{
-		curFile = DataRepoUtil::GetNeighborCsvFile(curFile, true, true);
+		curFile = Utility::GetNeighborCsvFile(curFile, true, true);
 		if(!curFile.size()) break;
 
-		string dayLineFile = DataRepoUtil::GetDayLinePath(curFile);
+		string dayLineFile = Utility::GetDayLinePath(curFile);
 		KLineCollection& klcday = GetDayLineData(dayLineFile);
-		KLine kline = klcday.GetKLineByTime(DataRepoUtil::GetDateByPath(curFile));
+		KLine kline = klcday.GetKLineByTime(Utility::GetDateByPath(curFile));
 
 		if(m_enRankMode == en_RankModeHighLow)
 		{
@@ -82,7 +82,7 @@ vector<string> VolatilityRanker::Rank()
 		}
 		else if(m_enRankMode == en_RankModeGap)
 		{
-			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(DataRepoUtil::GetDateByPath(curFile)));
+			KLine prev = klcday.GetKLineByTime(CALENDAR.GetPrev(Utility::GetDateByPath(curFile)));
 			if(prev.open)AddToRankList(abs(prev.close - kline.open), curFile);	
 		}
 	}

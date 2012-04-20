@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "Utility.h"
 #include "KLineCollection.h"
 
 KLineCollection::KLineCollection(void)
@@ -95,14 +96,7 @@ void KLineCollection::Quote(Tick tick)
 
 	if((tick.time / m_nKLinePeriod) != (curKLine.time / m_nKLinePeriod))
 	{
-		int tmphour, tmpmin, tmpsec;
-
-		//	还原时间
-		tmphour = tick.time / 3600;
-		tmpmin = tick.time % 3600 / 60;
-		tmpsec = tick.time % 3600 % 60;
-
-		curKLine.time = tmphour * 10000 + tmpmin * 100 + tmpsec;
+		curKLine.time = Utility::ConvContTimeToDispTime(tick.time);
 		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
 
 		/* 新起K线 */
@@ -163,14 +157,7 @@ void KLineCollection::Generate(TickCollection& ticks, int seconds)
 			/* K 已完成，写入文件 */ 
 			KLine kline;
 
-			int tmphour, tmpmin, tmpsec;
-
-			//	还原时间
-			tmphour = nCurSecond / 3600;
-			tmpmin = nCurSecond % 3600 / 60;
-			tmpsec = nCurSecond % 3600 % 60;
-
-			kline.time = tmphour * 10000 + tmpmin * 100 + tmpsec;
+			kline.time = Utility::ConvContTimeToDispTime(nCurSecond);
 			kline.high = kHigh;
 			kline.low = kLow;
 			kline.open = kOpen;

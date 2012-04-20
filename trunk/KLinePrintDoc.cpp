@@ -11,7 +11,7 @@
 #include "TickReader.h"
 #include "KLineCollection.h"
 #include "CalendarGenerator.h"
-#include "DataRepoUtil.h"
+#include "Utility.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -89,12 +89,12 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	//	只考虑主力合约，确定分笔数据文件和日线文件
 	string tmp;
 
-	tmp = DataRepoUtil::GetMajorContractPath(targetCsvFile);
+	tmp = Utility::GetMajorContractPath(targetCsvFile);
 
 	if(!tmp.size()) return;
 
 	m_CurCsvFile = tmp;
-	m_CurDayFile = DataRepoUtil::GetDayLinePath(m_CurCsvFile);
+	m_CurDayFile = Utility::GetDayLinePath(m_CurCsvFile);
 
 	//	读入分笔数据
 	m_TickData.clear();
@@ -132,7 +132,7 @@ void CKLinePrintDoc::OnFileOpen()
 
 void CKLinePrintDoc::ReloadByDate(int nDate)
 {
-	string tmp = DataRepoUtil::GetPathByDate(m_CurCsvFile, nDate);
+	string tmp = Utility::GetPathByDate(m_CurCsvFile, nDate);
 
 	if(!tmp.size()) return;
 
@@ -153,7 +153,7 @@ void CKLinePrintDoc::ReloadDetailData(int second)
 
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
-	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
+	string tmp = Utility::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
 
 	if(!tmp.size()) return;
 
@@ -163,12 +163,12 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 
 BOOL CKLinePrintDoc::LoadNextDay()
 {
-	string tmp = DataRepoUtil::GetNeighborCsvFile(m_CurCsvFile, FALSE, TRUE/* 必须是主力合约 */);
+	string tmp = Utility::GetNeighborCsvFile(m_CurCsvFile, FALSE, TRUE/* 必须是主力合约 */);
 
 	if(!tmp.size()) return FALSE;
 
 	LoadKLineGroup(tmp);
-	int nDate = DataRepoUtil::GetDateByPath(tmp);
+	int nDate = Utility::GetDateByPath(tmp);
 	DisplayTill(0, nDate);
 	return TRUE;
 }
@@ -181,7 +181,7 @@ int CKLinePrintDoc::GetCurrentTickTime()
 
 BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
 {
-	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
+	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
@@ -220,7 +220,7 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	m_1MinData.Clear();
 
 	//	当前日期
-	int nDate = DataRepoUtil::GetDateByPath(m_CurCsvFile);
+	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
 	DWORD before = GetTickCount();
 	m_KLineReader.Read(m_CurDayFile, m_DayData, nTillDate/**/);

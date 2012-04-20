@@ -1,14 +1,14 @@
 #include "StdAfx.h"
 #include "KLinePrint.h"
-#include "DataRepoUtil.h"
+#include "Utility.h"
 #include "direct.h"
 #include "io.h"
 
-DataRepoUtil::DataRepoUtil(void)
+Utility::Utility(void)
 {
 }
 
-DataRepoUtil::~DataRepoUtil(void)
+Utility::~Utility(void)
 {
 }
 
@@ -64,7 +64,7 @@ vector<string> GetFiles(string dir, string filter, bool bDir)
 	return vecFiles;
 }
 
-void DataRepoUtil::GetInfoByPath(string path, string& rootdir, 
+void Utility::GetInfoByPath(string path, string& rootdir, 
 								string& market, string& contract, int& date)
 {
 
@@ -94,7 +94,7 @@ void DataRepoUtil::GetInfoByPath(string path, string& rootdir,
 	contract = filename.substr(0, posUnderScore);
 }
 
-string DataRepoUtil::GetMajorContractPath(string path)
+string Utility::GetMajorContractPath(string path)
 {
 	int date;
 	char buf[512];
@@ -154,7 +154,7 @@ string DataRepoUtil::GetMajorContractPath(string path)
 	else return dir + vecFiles[nMaxFileIndex];
 }
 
-string DataRepoUtil::GetDayLinePath(string path)
+string Utility::GetDayLinePath(string path)
 {
 	int date;
 	char buf[512];
@@ -170,7 +170,7 @@ string DataRepoUtil::GetDayLinePath(string path)
 	return string(buf);
 }
 
-int DataRepoUtil::GetDateByPath(string path)
+int Utility::GetDateByPath(string path)
 {
 	int date;
 	string rootdir, contract, market;
@@ -179,7 +179,7 @@ int DataRepoUtil::GetDateByPath(string path)
 	return date;
 }
 
-string DataRepoUtil::GetPathByDate(string org_path, int date)
+string Utility::GetPathByDate(string org_path, int date)
 {
 	char buf[512];
 	int tmp;
@@ -199,13 +199,13 @@ string DataRepoUtil::GetPathByDate(string org_path, int date)
 	return string(buf);
 }
 
-string DataRepoUtil::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
+string Utility::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 {
 	int date;
 	char buf[512];
 	string rootdir, contract, market;
 
-	DataRepoUtil::GetInfoByPath(path, rootdir, market, contract, date);
+	Utility::GetInfoByPath(path, rootdir, market, contract, date);
 
 	int nNeighDate;
 
@@ -227,10 +227,34 @@ string DataRepoUtil::GetNeighborCsvFile(string path, bool bPrev, bool bZhuLi)
 
 	if(bZhuLi) /* 搜索主力合约 */
 	{
-		return DataRepoUtil::GetMajorContractPath(buf);
+		return Utility::GetMajorContractPath(buf);
 	}
 	else
 	{
 		return string(buf);
 	}
 }
+
+int Utility::ConvDispTimeToContTime(int disp)
+{
+	int tmphour, tmpmin, tmpsec;
+
+	tmphour = disp / 10000;
+	tmpmin = disp % 10000 / 100;
+	tmpsec = disp % 10000 % 100;
+
+	return tmphour * 3600 + tmpmin * 60 + tmpsec;
+}
+
+int Utility::ConvContTimeToDispTime(int cont)
+{
+	int tmphour, tmpmin, tmpsec;
+
+	tmphour = cont / 3600;
+	tmpmin = cont % 3600 / 60;
+	tmpsec = cont % 3600 % 60;
+
+	return tmphour * 10000 + tmpmin * 100 + tmpsec;
+	
+}
+
