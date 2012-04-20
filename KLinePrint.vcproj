@@ -195,10 +195,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DataRepoUtil.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\FileView.cpp"
 				>
 			</File>
@@ -271,6 +267,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Utility.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewTree.cpp"
 				>
 			</File>
@@ -290,10 +290,6 @@
 			</File>
 			<File
 				RelativePath=".\ClassView.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataRepoUtil.h"
 				>
 			</File>
 			<File
@@ -358,6 +354,10 @@
 			</File>
 			<File
 				RelativePath=".\TickRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Utility.h"
 				>
 			</File>
 			<File
