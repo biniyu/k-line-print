@@ -76,7 +76,10 @@ void KLineCollection::StartQuote(Tick tick)
 
 	tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
 	tmp.vol = tick.vol;
+
 	tmp.time = tick.time;
+	tmp.start_time = tick.time;
+
 	tmp.vol_acc = tick.vol;
 	tmp.price_acc = tick.vol * tick.price;
 
@@ -94,9 +97,9 @@ void KLineCollection::Quote(Tick tick)
 
 	if(tick.price < m_nMinPrice) m_nMinPrice = tick.price;
 
-	if((tick.time / m_nKLinePeriod) != (curKLine.time / m_nKLinePeriod))
+	if((tick.time / m_nKLinePeriod) != (curKLine.start_time / m_nKLinePeriod))
 	{
-		curKLine.time = Utility::ConvContTimeToDispTime(tick.time);
+		curKLine.time = tick.time;
 		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
 
 		/* ÐÂÆðKÏß */
@@ -104,7 +107,10 @@ void KLineCollection::Quote(Tick tick)
 		
 		tmp.high = tmp.low = tmp.open = tmp.close = tick.price;
 		tmp.vol = tick.vol;
+		
 		tmp.time = tick.time;
+		tmp.start_time = tick.time;
+
 		tmp.vol_acc = curKLine.vol_acc + tick.vol;
 		tmp.price_acc = curKLine.price_acc + tick.vol * tick.price;
 		tmp.avg = tmp.price_acc / (float) tmp.vol_acc;
@@ -119,6 +125,7 @@ void KLineCollection::Quote(Tick tick)
 		if(tick.price < curKLine.low) 
 			curKLine.low = tick.price;
 
+		curKLine.time = tick.time;
 		curKLine.close = tick.price;
 		curKLine.vol += tick.vol;
 		curKLine.vol_acc += tick.vol;

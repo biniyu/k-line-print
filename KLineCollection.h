@@ -8,7 +8,8 @@ using namespace std;
 class KLine
 {
 public:
-	int time;
+	int time;				//	K线当前时间
+	int start_time;			//	K线起始时间
 	int high;
 	int low;
 	int open;

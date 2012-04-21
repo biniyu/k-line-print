@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "KLineRenderer.h"
 #include "KLineCollection.h"
+#include "Utility.h"
 
 #define ZOOM_STEP				20
 #define LEFT_MARGIN				40
@@ -322,24 +323,6 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
 	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
 
-	CString strPercent;
-
-	//	绘制中轴线
-	if(m_enRenderMode == enAxisMode)
-	{
-		float axleLinePos = m_Rect.top + (m_kHighPrice - kAxisPrice) * m_pixelPerPrice;
-		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, axleLinePos);
-		pDC->LineTo(m_Rect.right, axleLinePos);
-
-		//	显示跳空幅度
-		float todayOpen = (*m_pKLines)[m_nOpenIndex].open;
-		float prevClose = (*m_pKLines)[0].close;
-		float gap = (todayOpen - prevClose) / prevClose * 100;
-
-		strPercent.Format(_T("图%.2f%% 跳%.2f%%"), (fPricePercentage / 0.01), gap);
-		pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
-	}
-
 	//	绘制价格线
 	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
 	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
@@ -348,9 +331,6 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->LineTo(m_Rect.left + LEFT_MARGIN, m_Rect.bottom);
 
 	//////////////////////////////////////////////////////////////////////////////////
-	strPercent.Format(_T("%.2f"), (fPricePercentage / 0.01));
-	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
-
 	float kLastAvgPos = 0;
 	float kLastMA20Pos = 0;
 	float kLastMA60Pos = 0;
@@ -449,9 +429,9 @@ void KLineRenderer::Render(CDC* pDC)
 
 		/* 绘制15分钟，30分钟，60分钟时间线 */
 
-		int tmpHour = kline.time / 10000;
-		int tmpMinute =  kline.time % 10000 / 100;
-		int tmpSecond =  kline.time % 10000 % 100;
+		int tmpHour = kline.time / 3600;
+		int tmpMinute =  kline.time % 3600 / 60;
+		int tmpSecond =  kline.time % 3600 % 60;
 		
 		int tmpTime = tmpHour * 60 + tmpMinute;
 
@@ -647,8 +627,8 @@ void KLineRenderer::Render(CDC* pDC)
 			else
 			{
 				strTime.Format(_T("%d [%s] %s vol:%d vol_acc:%d"), 
-							kline.time, strOpen, strCur, 
-							kline.vol, kline.vol_acc);
+					Utility::ConvContTimeToDispTime(kline.time), 
+							strOpen, strCur, kline.vol, kline.vol_acc);
 			}
 
 			CSize sz = pDC->GetTextExtent(strTime);
@@ -702,7 +682,26 @@ void KLineRenderer::Render(CDC* pDC)
 
 	pDC->SelectObject(pOldPen);
 
+	CString strPercent;
 
+	//	绘制中轴线
+	if(m_enRenderMode == enAxisMode)
+	{
+		float axleLinePos = m_Rect.top + (m_kHighPrice - kAxisPrice) * m_pixelPerPrice;
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, axleLinePos);
+		pDC->LineTo(m_Rect.right, axleLinePos);
+
+		//	显示跳空幅度
+		float todayOpen = (*m_pKLines)[m_nOpenIndex].open;
+		float prevClose = (*m_pKLines)[0].close;
+		float gap = (todayOpen - prevClose) / prevClose * 100;
+
+		strPercent.Format(_T("图%.2f%% 跳%.2f%%"), (fPricePercentage / 0.01), gap);
+		pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
+	}
+
+	strPercent.Format(_T("%.2f"), (fPricePercentage / 0.01));
+	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
 
     penGreen.DeleteObject();
     penRed.DeleteObject();
