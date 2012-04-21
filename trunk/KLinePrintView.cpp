@@ -476,10 +476,7 @@ void CKLinePrintView::OnPlaybackForward()
 
 	m_nPlaybackSpeed = 1;
 
-	int dispTime = klr_1min.GetCurTime();
-	int contiTime = Utility::ConvDispTimeToContTime(dispTime);
-
-	pDoc->DisplayTill(contiTime, klr_day.GetCurTime());
+	pDoc->DisplayTill(klr_1min.GetCurTime(), klr_day.GetCurTime());
 
 	SetTimer(1,1000,NULL); 
 }
