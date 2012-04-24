@@ -47,6 +47,7 @@ CKLinePrintView::CKLinePrintView()
 {
 	m_bLocked = TRUE;
 	m_enViewMode = ViewModeAll;
+	m_pTradeDialog = 0;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -472,6 +473,17 @@ void CKLinePrintView::OnPlaybackEnd()
 
 void CKLinePrintView::OnPlaybackForward()
 {
+	if(!m_pTradeDialog)
+	{
+		m_pTradeDialog = new CTradeDialog;
+		m_pTradeDialog->Create(IDD_TRADE,NULL);
+		m_pTradeDialog->ShowWindow(SW_SHOW); 
+	}
+	else
+	{
+		m_pTradeDialog->ShowWindow(SW_SHOW); 
+	}
+
 	CKLinePrintDoc* pDoc = GetDocument();
 
 	m_nPlaybackSpeed = 1;

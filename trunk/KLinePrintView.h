@@ -6,6 +6,7 @@
 
 #include "KLineRenderer.h"
 #include "TickRenderer.h"
+#include "TradeDialog.h"
 
 class KLineCollection;
 class CKLinePrintDoc;
@@ -73,6 +74,8 @@ protected:
 
 	CDC			m_MemDC;
 	CBitmap		m_MemBitmap;
+
+	CTradeDialog* m_pTradeDialog;
 
 // 生成的消息映射函数
 protected:
