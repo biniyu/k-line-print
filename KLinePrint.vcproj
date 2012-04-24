@@ -267,6 +267,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TradeDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Utility.cpp"
 				>
 			</File>
@@ -354,6 +358,10 @@
 			</File>
 			<File
 				RelativePath=".\TickRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TradeDialog.h"
 				>
 			</File>
 			<File

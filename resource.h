@@ -86,6 +86,7 @@
 #define IDD_SEARCH_CONTRACT             310
 #define IDR_HTML_SEARCHCONTRACTDIALOG   311
 #define IDR_PLAYBACK                    312
+#define IDD_TRADE                       313
 #define IDC_COMBO_VAR_LIST              1000
 #define IDC_EDIT_MORE_THAN              1001
 #define IDC_CHECK_MORE_THAN             1002
@@ -96,6 +97,14 @@
 #define IDC_COMBO1                      1007
 #define IDC_CHECK_GAP                   1010
 #define IDC_CHECK_GAP_RANGE             1010
+#define IDC_BUTTON_BUY                  1011
+#define IDC_BUTTON_SELL                 1012
+#define IDC_LIST_ACCOUNT                1013
+#define IDC_EDIT_FEE                    1014
+#define IDC_EDIT_MARGIN                 1015
+#define IDC_EDIT_UNITS                  1016
+#define IDC_EDIT_SLOTS                  1017
+#define IDC_LIST_POSITION               1018
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -117,9 +126,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        313
+#define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32787
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_CONTROL_VALUE         1019
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
