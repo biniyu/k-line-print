@@ -58,6 +58,9 @@ CKLinePrintView::~CKLinePrintView()
 void CKLinePrintView::SetTickData(Tick tick)
 {
 	tick_render.SetTick(tick);
+
+	if(m_pTradeDialog) 
+		m_pTradeDialog->SetTick(tick);
 }
 
 void CKLinePrintView::Set5SecData(KLineCollection* pData) 
