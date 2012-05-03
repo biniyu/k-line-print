@@ -29,8 +29,6 @@ protected:
 public:
 	afx_msg void OnBnClickedButtonBuy();
 	afx_msg void OnBnClickedButtonSell();
-	afx_msg void OnHdnItemdblclickListPosition(NMHDR *pNMHDR, LRESULT *pResult);
-	CString m_nSlots;
 	virtual BOOL OnInitDialog();
 	CListCtrl m_AccountInfo;
 	CListCtrl m_PositionInfo;
@@ -39,4 +37,10 @@ private:
 public:
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnBnClickedButtonReverse();
+
+	UINT m_nFee;
+	UINT m_nMargin;
+	UINT m_nUnitsPerSlot;
+	UINT m_nSlots;
+	afx_msg void OnBnClickedButtonUpdateParam();
 };

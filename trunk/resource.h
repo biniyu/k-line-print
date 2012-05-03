@@ -107,6 +107,7 @@
 #define IDC_LIST_POSITION               1018
 #define IDC_BUTTON_CLOSE                1019
 #define IDC_BUTTON_REVERSE              1020
+#define IDC_BUTTON_UPDATE_PARAM         1021
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -130,7 +131,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        314
 #define _APS_NEXT_COMMAND_VALUE         32787
-#define _APS_NEXT_CONTROL_VALUE         1019
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif

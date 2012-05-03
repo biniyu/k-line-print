@@ -12,7 +12,10 @@ IMPLEMENT_DYNAMIC(CTradeDialog, CDialog)
 
 CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CTradeDialog::IDD, pParent)
-	, m_nSlots(_T(""))
+	, m_nFee(0)
+	, m_nMargin(0)
+	, m_nUnitsPerSlot(0)
+	, m_nSlots(0)
 {
 	m_tf.SetBalance(50000);
 	m_tf.SetParam(10, 12, 5);
@@ -25,9 +28,13 @@ CTradeDialog::~CTradeDialog()
 void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, IDC_EDIT_SLOTS, m_nSlots);
 	DDX_Control(pDX, IDC_LIST_ACCOUNT, m_AccountInfo);
 	DDX_Control(pDX, IDC_LIST_POSITION, m_PositionInfo);
+
+	DDX_Text(pDX, IDC_EDIT_FEE, m_nFee);
+	DDX_Text(pDX, IDC_EDIT_MARGIN, m_nMargin);
+	DDX_Text(pDX, IDC_EDIT_UNITS, m_nUnitsPerSlot);
+	DDX_Text(pDX, IDC_EDIT_SLOTS, m_nSlots);
 }
 
 
@@ -36,6 +43,7 @@ BEGIN_MESSAGE_MAP(CTradeDialog, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SELL, &CTradeDialog::OnBnClickedButtonSell)
 	ON_BN_CLICKED(IDC_BUTTON_CLOSE, &CTradeDialog::OnBnClickedButtonClose)
 	ON_BN_CLICKED(IDC_BUTTON_REVERSE, &CTradeDialog::OnBnClickedButtonReverse)
+	ON_BN_CLICKED(IDC_BUTTON_UPDATE_PARAM, &CTradeDialog::OnBnClickedButtonUpdateParam)
 END_MESSAGE_MAP()
 
 
@@ -45,15 +53,14 @@ END_MESSAGE_MAP()
 void CTradeDialog::OnBnClickedButtonBuy()
 {
 	UpdateData();
-	m_tf.Buy(CStringToInt(m_nSlots));
+	m_tf.Buy(m_nSlots);
 	UpdateAccountInfo();
-
 }
 
 void CTradeDialog::OnBnClickedButtonSell()
 {
 	UpdateData();
-	m_tf.Sell(CStringToInt(m_nSlots));
+	m_tf.Sell(m_nSlots);
 	UpdateAccountInfo();
 }
 
@@ -84,7 +91,11 @@ BOOL CTradeDialog::OnInitDialog()
 	m_PositionInfo.InsertColumn(1, CString("开仓价格"), 0, 90);
 	m_PositionInfo.InsertColumn(2, CString("浮动盈亏"), 0, 90);
 
-	m_nSlots = CString("1");
+	m_nSlots = 1;
+	m_nFee = m_tf.m_nFee;
+	m_nMargin = m_tf.m_nMargin;
+	m_nUnitsPerSlot = m_tf.m_nUnitsPerSlot;
+
 	UpdateData(FALSE);
 
 	UpdateAccountInfo();
@@ -116,3 +127,9 @@ void CTradeDialog::UpdateAccountInfo(void)
 }
 
 
+
+void CTradeDialog::OnBnClickedButtonUpdateParam()
+{
+	UpdateData();
+	m_tf.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
+}

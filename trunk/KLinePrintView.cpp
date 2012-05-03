@@ -476,6 +476,14 @@ void CKLinePrintView::OnPlaybackEnd()
 
 void CKLinePrintView::OnPlaybackForward()
 {
+	CKLinePrintDoc* pDoc = GetDocument();
+
+	m_nPlaybackSpeed = 1;
+
+	pDoc->DisplayTill(klr_1min.GetCurTime(), klr_day.GetCurTime());
+
+	SetTimer(1,1000,NULL); 
+
 	if(!m_pTradeDialog)
 	{
 		m_pTradeDialog = new CTradeDialog;
@@ -486,14 +494,6 @@ void CKLinePrintView::OnPlaybackForward()
 	{
 		m_pTradeDialog->ShowWindow(SW_SHOW); 
 	}
-
-	CKLinePrintDoc* pDoc = GetDocument();
-
-	m_nPlaybackSpeed = 1;
-
-	pDoc->DisplayTill(klr_1min.GetCurTime(), klr_day.GetCurTime());
-
-	SetTimer(1,1000,NULL); 
 }
 
 void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
