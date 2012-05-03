@@ -311,6 +311,8 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 		if(nTillTime == 0 && m_nCurrentTickIdx == 1) 
 			break;
 
+		if(m_nCurrentTickIdx >= m_TickData.size()) break;
+
 		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime)
 			break;
 

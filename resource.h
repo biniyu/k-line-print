@@ -105,6 +105,8 @@
 #define IDC_EDIT_UNITS                  1016
 #define IDC_EDIT_SLOTS                  1017
 #define IDC_LIST_POSITION               1018
+#define IDC_BUTTON_CLOSE                1019
+#define IDC_BUTTON_REVERSE              1020
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
