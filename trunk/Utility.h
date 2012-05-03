@@ -8,6 +8,9 @@ using namespace std;
 int GetFileSize(string dir, string filename);
 vector<string> GetFiles(string dir, string filter, bool bDir);
 
+int CStringToInt(const CString& str);
+CString IntToCString(int nInt);
+
 class Utility
 {
 public:

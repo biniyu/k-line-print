@@ -12,7 +12,7 @@ public:
 
 class TradeFacility
 {
-private:
+public:
 
 	int			m_nBalance;
 	int			m_nFee;
