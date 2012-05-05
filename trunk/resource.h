@@ -87,6 +87,7 @@
 #define IDR_HTML_SEARCHCONTRACTDIALOG   311
 #define IDR_PLAYBACK                    312
 #define IDD_TRADE                       313
+#define IDD_PLAYBACK_CONF               314
 #define IDC_COMBO_VAR_LIST              1000
 #define IDC_EDIT_MORE_THAN              1001
 #define IDC_CHECK_MORE_THAN             1002
@@ -108,6 +109,26 @@
 #define IDC_BUTTON_CLOSE                1019
 #define IDC_BUTTON_REVERSE              1020
 #define IDC_BUTTON_UPDATE_PARAM         1021
+#define IDC_RADIO_SEQUENCE              1022
+#define IDC_RADIO_RANDOM                1023
+#define IDC_DATETIMEPICKER1             1024
+#define IDC_DATETIMEPICKER2             1025
+#define IDC_CHECK1                      1026
+#define IDC_CHECK2                      1027
+#define IDC_CHECK3                      1028
+#define IDC_CHECK4                      1029
+#define IDC_CHECK5                      1030
+#define IDC_CHECK6                      1031
+#define IDC_CHECK7                      1032
+#define IDC_CHECK9                      1034
+#define IDC_CHECK10                     1035
+#define IDC_CHECK11                     1036
+#define IDC_CHECK12                     1037
+#define IDC_EDIT1                       1038
+#define IDC_CHECK13                     1039
+#define IDC_EDIT2                       1040
+#define IDC_CHECK14                     1041
+#define IDC_EDIT3                       1042
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -124,14 +145,16 @@
 #define ID_PLAYBACK_FASTFW              32784
 #define ID_PLAYBACK_END                 32785
 #define ID_PLAYBACK_STOP                32786
+#define ID_32787                        32787
+#define ID_PLAYBACK_CONF                32788
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        314
-#define _APS_NEXT_COMMAND_VALUE         32787
-#define _APS_NEXT_CONTROL_VALUE         1022
+#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_COMMAND_VALUE         32789
+#define _APS_NEXT_CONTROL_VALUE         1044
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
