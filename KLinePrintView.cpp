@@ -11,6 +11,7 @@
 #include "TickReader.h"
 #include "KLineRenderer.h"
 #include "Utility.h"
+#include "PlaybackConfDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -39,6 +40,7 @@ BEGIN_MESSAGE_MAP(CKLinePrintView, CView)
 	ON_COMMAND(ID_PLAYBACK_FASTFW, &CKLinePrintView::OnPlaybackFastfw)
 	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintView::OnPlaybackFastrev)
 	ON_COMMAND(ID_PLAYBACK_STOP, &CKLinePrintView::OnPlaybackStop)
+	ON_COMMAND(ID_PLAYBACK_CONF, &CKLinePrintView::OnPlaybackConf)
 END_MESSAGE_MAP()
 
 // CKLinePrintView 构造/析构
@@ -508,9 +510,14 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if(!time)
 	{
 		KillTimer(1);
+
 		//  加载次日的数据
 		if(pDoc->LoadNextDay())
 			SetTimer(1,1000,NULL); 
+
+		//	TODO :	根据回放配置决定下一个交易日的日期
+		//	TODO :	完成数据加载后不自动开始，等用户点播放键再开始	
+
 	}
 	else
 	{
@@ -554,4 +561,11 @@ void CKLinePrintView::OnPlaybackStop()
 
 	KillTimer(1);
 	pDoc->DisplayTill(-1, -1);
+}
+
+void CKLinePrintView::OnPlaybackConf()
+{
+	CPlaybackConfDialog dlg;
+
+	dlg.DoModal();
 }

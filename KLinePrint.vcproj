@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlaybackConfDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PropertiesWnd.cpp"
 				>
 			</File>
@@ -334,6 +338,10 @@
 			</File>
 			<File
 				RelativePath=".\OutputWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlaybackConfDialog.h"
 				>
 			</File>
 			<File
