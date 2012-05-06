@@ -35,9 +35,11 @@ void KLineCollection::AddToTail(KLine kline)
 
 void KLineCollection::Clear()
 {
+	clear();
 	m_mapTime2Idx.clear();
 	m_mapKeyPrice.clear();
-	clear();
+	m_nKLinePeriod = 0;
+	m_nMaxPrice = m_nMinPrice = 0;
 }
 
 void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol)

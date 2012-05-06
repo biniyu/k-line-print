@@ -363,8 +363,6 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 			m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 		}
 
-		pView->SetTickData(m_TickData[m_nCurrentTickIdx]);
-
 		m_nCurrentTickIdx++;
 
 		if(nTillTime == 0 && m_nCurrentTickIdx == 1) 
