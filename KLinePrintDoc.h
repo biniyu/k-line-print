@@ -5,6 +5,8 @@
 #include "KLineCollection.h"
 #include "TickReader.h"
 #include "KLineReader.h"
+#include "PlaybackConfig.h"
+#include "CalendarGenerator.h"
 
 using namespace std;
 
@@ -28,6 +30,9 @@ private:
 	KLineReader		m_KLineReader;
 	TickReader		m_TickReader;
 
+	Calendar		m_FilteredCalendar;		// 根据回放选项过滤出来的符合条件的日期
+	PlaybackConfig	m_PlaybackConfig;		// 回放选项
+
 // 操作
 public:
 
@@ -46,6 +51,9 @@ public:
 
 	string m_CurCsvFile;
 	string m_CurDayFile;
+
+	void SetPlaybackConfig(PlaybackConfig pc);
+	BOOL ValidatePlaybackConfig(int nDate);
 
 	void ViewNeighborDate(BOOL bPrev);
 	void ReloadByDate(int nDate);

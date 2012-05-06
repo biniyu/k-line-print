@@ -608,20 +608,7 @@ void KLineRenderer::Render(CDC* pDC)
 
 			if(m_bShowDate)/* 显示星期几 */
 			{
-				// w=y+[y/4]+[c/4]-2c+[26(m+1)/10]+d-1
-				int orgdate = kline.time;
-				int c = orgdate / 1000000;
-				int y = orgdate % 1000000 / 10000;
-				int m = orgdate % 1000000 % 10000 / 100;
-				int d = orgdate % 1000000 % 10000 % 100;
-
-				if(m <= 2)
-				{
-					m += 12;
-					y -= 1;
-				}
-
-				int weekday = (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
+				int weekday = Utility::GetWeekDayByDate(kline.time);
 				strTime.Format(_T("%d - 星期%d - %s"), kline.time, weekday, strCur);				
 			}
 			else

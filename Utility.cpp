@@ -283,3 +283,22 @@ int Utility::ConvContTimeToDispTime(int cont)
 	
 }
 
+int Utility::GetWeekDayByDate(int nDate)
+{
+	// w=y+[y/4]+[c/4]-2c+[26(m+1)/10]+d-1
+
+	int c = nDate / 1000000;
+	int y = nDate % 1000000 / 10000;
+	int m = nDate % 1000000 % 10000 / 100;
+	int d = nDate % 1000000 % 10000 % 100;
+
+	if(m <= 2)
+	{
+		m += 12;
+		y -= 1;
+	}
+
+	return (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
+}
+
+

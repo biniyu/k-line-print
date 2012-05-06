@@ -29,4 +29,6 @@ public:
 	//	连续时间与显示时间的转换
 	static int ConvDispTimeToContTime(int disp);
 	static int ConvContTimeToDispTime(int cont);
+
+	static int GetWeekDayByDate(int nDate);
 };

@@ -511,11 +511,10 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	{
 		KillTimer(1);
 
-		//  加载次日的数据
+		//  根据回放配置决定下一个交易日的日期
 		if(pDoc->LoadNextDay())
 			SetTimer(1,1000,NULL); 
 
-		//	TODO :	根据回放配置决定下一个交易日的日期
 		//	TODO :	完成数据加载后不自动开始，等用户点播放键再开始	
 
 	}

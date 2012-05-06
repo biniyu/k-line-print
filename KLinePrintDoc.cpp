@@ -80,6 +80,46 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
+BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
+{
+	if(m_PlaybackConfig.nStartDate)
+	{
+		if(nDate < m_PlaybackConfig.nStartDate) return FALSE;
+	}
+
+	if(m_PlaybackConfig.nEndDate)
+	{
+		if(nDate > m_PlaybackConfig.nEndDate) return FALSE;
+	}
+
+	int nWeekDay = Utility::GetWeekDayByDate(nDate);
+
+	if(m_PlaybackConfig.bDayOfWeek[nWeekDay] == FALSE)
+		return FALSE;
+
+	//	TODO : 高低开条件
+
+	return TRUE;
+}
+
+void CKLinePrintDoc::SetPlaybackConfig(PlaybackConfig pc)
+{
+	m_PlaybackConfig = pc;
+
+	//	根据配置生成过滤后的日历
+
+	int nCurDate = CALENDAR.GetFirst();
+
+	while(nCurDate > 0)
+	{
+		//	满足所有条件才加入
+		if(ValidatePlaybackConfig(nCurDate))
+			m_FilteredCalendar.Add(nCurDate);
+
+		nCurDate = CALENDAR.GetNext(nCurDate);
+	}
+}
+
 // CKLinePrintDoc 命令
 
 void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
@@ -125,6 +165,10 @@ void CKLinePrintDoc::OnFileOpen()
 
 		LoadKLineGroup(InfoString);
 
+		PlaybackConfig pc;
+
+		SetPlaybackConfig(pc);
+
 		//	显示所有
 		DisplayTill(-1, -1);
 	}
@@ -163,7 +207,22 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 
 BOOL CKLinePrintDoc::LoadNextDay()
 {
-	string tmp = Utility::GetNeighborCsvFile(m_CurCsvFile, FALSE, TRUE/* 必须是主力合约 */);
+	// 根据回放配置决定下一个交易日的日期
+	int nCurDate, nNextDate;
+	
+	nCurDate = Utility::GetDateByPath(m_CurCsvFile);
+
+	if(m_PlaybackConfig.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
+	{
+		nNextDate = m_FilteredCalendar.GetNext(nCurDate);
+	}
+	else	//	PLAYBACK_RANDOM
+	{	
+		int nDayCnt = m_FilteredCalendar.size();
+		nNextDate = m_FilteredCalendar.GetBySeq(rand() % nDayCnt);
+	}
+
+	string tmp = Utility::GetPathByDate(m_CurCsvFile, nNextDate);
 
 	if(!tmp.size()) return FALSE;
 

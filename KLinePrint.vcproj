@@ -345,6 +345,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlaybackConfig.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PropertiesWnd.h"
 				>
 			</File>
