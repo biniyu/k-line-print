@@ -578,6 +578,21 @@ void CKLinePrintView::OnPlaybackConf()
 			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
 		else
 			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
+		
+		pc.bDayOfWeek[1] = dlg.m_bMonday;
+		pc.bDayOfWeek[2] = dlg.m_bTuesday;
+		pc.bDayOfWeek[3] = dlg.m_bWednesday;
+		pc.bDayOfWeek[4] = dlg.m_bThursday;
+		pc.bDayOfWeek[5] = dlg.m_bFriday;
+
+		if(dlg.m_bGap)
+			pc.nGapPercentage = dlg.m_nGap;
+
+		if(dlg.m_bFluncAbove)
+			pc.nLastDayFluctuationAbove = dlg.m_nFluncAbove;
+
+		if(dlg.m_bFluncBelow)
+			pc.nLastDayFluctuationBelow = dlg.m_nFluncBelow;
 
 		pDoc->SetPlaybackConfig(pc);
 	}
