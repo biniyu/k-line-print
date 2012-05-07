@@ -564,7 +564,21 @@ void CKLinePrintView::OnPlaybackStop()
 
 void CKLinePrintView::OnPlaybackConf()
 {
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	PlaybackConfig pc;
 	CPlaybackConfDialog dlg;
 
-	dlg.DoModal();
+	if(IDOK == dlg.DoModal())
+	{
+		if(dlg.m_nPlaybackOrder == 0)
+			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
+		else
+			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
+
+		pDoc->SetPlaybackConfig(pc);
+	}
 }

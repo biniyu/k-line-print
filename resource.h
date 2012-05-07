@@ -112,23 +112,41 @@
 #define IDC_RADIO_SEQUENCE              1022
 #define IDC_RADIO_RANDOM                1023
 #define IDC_DATETIMEPICKER1             1024
+#define IDC_DATETIMEPICKER_FROM         1024
 #define IDC_DATETIMEPICKER2             1025
+#define IDC_DATETIMEPICKER_TO           1025
 #define IDC_CHECK1                      1026
+#define IDC_CHECK_ALLWEEK               1026
 #define IDC_CHECK2                      1027
+#define IDC_CHECK_MONDAY                1027
 #define IDC_CHECK3                      1028
+#define IDC_CHECK_TUESDAY               1028
 #define IDC_CHECK4                      1029
+#define IDC_CHECK_WEDNESDAY             1029
 #define IDC_CHECK5                      1030
+#define IDC_CHECK_THURSDAY              1030
 #define IDC_CHECK6                      1031
+#define IDC_CHECK_FRIDAY                1031
 #define IDC_CHECK7                      1032
 #define IDC_CHECK9                      1034
 #define IDC_CHECK10                     1035
 #define IDC_CHECK11                     1036
 #define IDC_CHECK12                     1037
 #define IDC_EDIT1                       1038
+#define IDC_EDIT_GAP                    1038
 #define IDC_CHECK13                     1039
+#define IDC_CHECK_FLUNC_ABOVE           1039
 #define IDC_EDIT2                       1040
+#define IDC_EDIT_FLUNC_ABOVE            1040
 #define IDC_CHECK14                     1041
+#define IDC_CHECK_FLUNC_BELOW           1041
 #define IDC_EDIT3                       1042
+#define IDC_EDIT_FLUNC_BELOW            1042
+#define IDC_RADIO_1YEAR                 1044
+#define IDC_RADIO_HALFYEAR              1045
+#define IDC_RADIO_3MONTH                1046
+#define IDC_RADIO4                      1047
+#define IDC_RADIO_DATE_RANGE            1047
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -154,7 +172,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32789
-#define _APS_NEXT_CONTROL_VALUE         1044
+#define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
