@@ -40,7 +40,7 @@ void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Radio(pDX, IDC_RADIO_SEQUENCE, m_nPlaybackOrder);
-	DDX_Radio(pDX, IDC_RADIO_1YEAR, m_nDateRangeOption);
+	DDX_Radio(pDX, IDC_RADIO_ALLDATE, m_nDateRangeOption);
 	DDX_Check(pDX, IDC_CHECK_ALLWEEK, m_bAllWeekDays);
 	DDX_Check(pDX, IDC_CHECK_MONDAY, m_bMonday);
 	DDX_Check(pDX, IDC_CHECK_TUESDAY, m_bTuesday);
