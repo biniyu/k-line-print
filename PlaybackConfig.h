@@ -28,7 +28,7 @@ public:
 	int nStartDate;
 	int nEndDate;
 
-	bool bDayOfWeek[7];
+	BOOL bDayOfWeek[7];
 
 	int nGapPercentage;
 	

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PlaybackConfig.h"
 
 // CPlaybackConfDialog 对话框
 
@@ -11,6 +12,9 @@ public:
 	CPlaybackConfDialog(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CPlaybackConfDialog();
 
+	void SetPlaybackConfig(PlaybackConfig pc) { m_pc = pc; } 
+	PlaybackConfig GetPlaybackConfig() { return m_pc; }
+
 // 对话框数据
 	enum { IDD = IDD_PLAYBACK_CONF };
 
@@ -19,7 +23,9 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-public:
+private:
+
+	PlaybackConfig m_pc;
 
 	int m_nPlaybackOrder;
 	int m_nDateRangeOption;
@@ -37,6 +43,9 @@ public:
 	int m_nGap;
 	int m_nFluncAbove;
 	int m_nFluncBelow;
+
+public:
 	
 	afx_msg void OnBnClickedOk();
+	virtual BOOL OnInitDialog();
 };

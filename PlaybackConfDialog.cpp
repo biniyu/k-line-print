@@ -67,7 +67,124 @@ END_MESSAGE_MAP()
 
 void CPlaybackConfDialog::OnBnClickedOk()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	UpdateData();
+
+	if(m_nPlaybackOrder == 0)
+		m_pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
+	else
+		m_pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
+
+	int nLastDate = CALENDAR.GetLast();
+
+	int year = nLastDate / 10000;
+	int mon = nLastDate % 10000 / 100;
+	int day = nLastDate % 10000 % 100;
+
+	switch(m_nDateRangeOption)
+	{
+	case 0:
+		m_pc.nStartDate = m_pc.nEndDate = 0;
+		break;
+	case 1: /* 最近一年 */
+		m_pc.nStartDate = (year - 1) * 10000 + mon * 100 + day;
+		m_pc.nEndDate = 0;
+		break;
+	case 2:	/* 最近半年 */
+		mon -= 6;
+		if(mon <= 0) 
+		{
+			mon += 12;
+			year -= 1;
+		}
+		m_pc.nStartDate = year * 10000 + mon * 100 + day;
+		m_pc.nEndDate = 0;
+		break;
+	case 3:	/* 最近三个月 */
+		mon -= 3;
+		if(mon <= 0) 
+		{
+			mon += 12;
+			year -= 1;
+		}
+		m_pc.nStartDate = year * 10000 + mon * 100 + day;
+		m_pc.nEndDate = 0;
+		break;
+	case 4:
+		break;
+	}
+	
+	m_pc.bDayOfWeek[1] = m_bMonday;
+	m_pc.bDayOfWeek[2] = m_bTuesday;
+	m_pc.bDayOfWeek[3] = m_bWednesday;
+	m_pc.bDayOfWeek[4] = m_bThursday;
+	m_pc.bDayOfWeek[5] = m_bFriday;
+
+	if(m_bGap)
+		m_pc.nGapPercentage = m_nGap;
+
+	if(m_bFluncAbove)
+		m_pc.nLastDayFluctuationAbove = m_nFluncAbove;
+
+	if(m_bFluncBelow)
+		m_pc.nLastDayFluctuationBelow = m_nFluncBelow;
+
 	OnOK();
+}
+
+BOOL CPlaybackConfDialog::OnInitDialog()
+{
+	CDialog::OnInitDialog();
+
+	if(m_pc.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
+		m_nPlaybackOrder = 0;
+	else
+		m_nPlaybackOrder = 1;
+	
+	if(m_pc.bDayOfWeek[1]) 
+		m_bMonday = TRUE;
+	else 
+		m_bMonday = FALSE;
+
+	if(m_pc.bDayOfWeek[2]) 
+		m_bTuesday = TRUE;
+	else 
+		m_bTuesday = FALSE;
+
+	if(m_pc.bDayOfWeek[3]) 
+		m_bWednesday = TRUE;
+	else 
+		m_bWednesday = FALSE;
+
+	if(m_pc.bDayOfWeek[4]) 
+		m_bThursday = TRUE;
+	else 
+		m_bThursday = FALSE;
+
+	if(m_pc.bDayOfWeek[5]) 
+		m_bFriday = TRUE;
+	else 
+		m_bFriday = FALSE;
+
+	if(m_pc.nGapPercentage)
+	{
+		m_bGap = TRUE;
+		m_nGap = m_pc.nGapPercentage;
+	}
+
+	if(m_pc.nLastDayFluctuationAbove)
+	{
+		m_bFluncAbove = TRUE;
+		m_nFluncAbove = m_pc.nLastDayFluctuationAbove;
+	}
+
+	if(m_pc.nLastDayFluctuationBelow)
+	{
+		m_bFluncBelow = TRUE;
+		m_nFluncBelow = m_pc.nLastDayFluctuationBelow;
+	}
+
+	UpdateData(FALSE);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }
