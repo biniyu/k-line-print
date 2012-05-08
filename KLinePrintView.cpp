@@ -578,6 +578,45 @@ void CKLinePrintView::OnPlaybackConf()
 			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
 		else
 			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
+
+		int nLastDate = CALENDAR.GetLast();
+
+		int year = nLastDate / 10000;
+		int mon = nLastDate % 10000 / 100;
+		int day = nLastDate % 10000 % 100;
+
+		switch(dlg.m_nDateRangeOption)
+		{
+		case 0:
+			pc.nStartDate = pc.nEndDate = 0;
+			break;
+		case 1: /* 最近一年 */
+			pc.nStartDate = (year - 1) * 10000 + mon * 100 + day;
+			pc.nEndDate = 0;
+			break;
+		case 2:	/* 最近半年 */
+			mon -= 6;
+			if(mon <= 0) 
+			{
+				mon += 12;
+				year -= 1;
+			}
+			pc.nStartDate = year * 10000 + mon * 100 + day;
+			pc.nEndDate = 0;
+			break;
+		case 3:	/* 最近三个月 */
+			mon -= 3;
+			if(mon <= 0) 
+			{
+				mon += 12;
+				year -= 1;
+			}
+			pc.nStartDate = year * 10000 + mon * 100 + day;
+			pc.nEndDate = 0;
+			break;
+		case 4:
+			break;
+		}
 		
 		pc.bDayOfWeek[1] = dlg.m_bMonday;
 		pc.bDayOfWeek[2] = dlg.m_bTuesday;
