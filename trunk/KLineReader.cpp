@@ -13,6 +13,18 @@ KLineReader::~KLineReader(void)
 {
 }
 
+KLine KLineReader::GetKLineByTime(string path, int time)
+{
+	KLineCollection kl;
+
+	if(m_cachedData.find(path) == m_cachedData.end())
+	{
+		Read(path, kl);
+	}
+
+	return m_cachedData[path].GetKLineByTime(time);
+}
+
 void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 {
 	char buf[SZ];

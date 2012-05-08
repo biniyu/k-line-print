@@ -97,7 +97,32 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 	if(m_PlaybackConfig.bDayOfWeek[nWeekDay] == FALSE)
 		return FALSE;
 
-	//	TODO : 高低开条件
+	//	如果不需要前一交易日K线数据
+	if(!m_PlaybackConfig.nGapPercentage) return TRUE;
+
+	//	获取当前合约在该日期的文件名
+	string tmp = Utility::GetPathByDate(m_CurCsvFile, nDate);
+
+	//	获取主力合约文件名
+	string major = Utility::GetMajorContractPath(tmp);
+
+	//	无法获取主力合约文件，因该品种未上市
+	if(!major.size()) return FALSE;
+
+	//	获取日线数据文件名
+	string dayfile = Utility::GetDayLinePath(major);
+
+	KLine this_kline = m_KLineReader.GetKLineByTime(dayfile, nDate);
+	KLine prev_kline = m_KLineReader.GetKLineByTime(dayfile, CALENDAR.GetPrev(nDate));
+
+	//	无法获取上个交易日的数据
+	if(!prev_kline.time) return FALSE;
+
+	//	高低开条件
+	int gap = 100 * abs(this_kline.open - prev_kline.close) / (float)prev_kline.close;
+
+	if(m_PlaybackConfig.nGapPercentage && gap < m_PlaybackConfig.nGapPercentage)
+		return FALSE;
 
 	return TRUE;
 }
