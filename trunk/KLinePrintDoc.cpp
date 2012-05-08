@@ -106,6 +106,8 @@ void CKLinePrintDoc::SetPlaybackConfig(PlaybackConfig pc)
 {
 	m_PlaybackConfig = pc;
 
+	m_FilteredCalendar.clear();
+
 	//	根据配置生成过滤后的日历
 
 	int nCurDate = CALENDAR.GetFirst();

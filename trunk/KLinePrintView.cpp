@@ -510,13 +510,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if(!time)
 	{
 		KillTimer(1);
-
-		//  根据回放配置决定下一个交易日的日期
-		if(pDoc->LoadNextDay())
-			SetTimer(1,1000,NULL); 
-
-		//	TODO :	完成数据加载后不自动开始，等用户点播放键再开始	
-
+		pDoc->LoadNextDay();
 	}
 	else
 	{
@@ -569,70 +563,12 @@ void CKLinePrintView::OnPlaybackConf()
 	if (!pDoc)
 		return;
 
-	PlaybackConfig pc;
 	CPlaybackConfDialog dlg;
+
+	dlg.SetPlaybackConfig(pDoc->GetPlaybackConfig());
 
 	if(IDOK == dlg.DoModal())
 	{
-		if(dlg.m_nPlaybackOrder == 0)
-			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
-		else
-			pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
-
-		int nLastDate = CALENDAR.GetLast();
-
-		int year = nLastDate / 10000;
-		int mon = nLastDate % 10000 / 100;
-		int day = nLastDate % 10000 % 100;
-
-		switch(dlg.m_nDateRangeOption)
-		{
-		case 0:
-			pc.nStartDate = pc.nEndDate = 0;
-			break;
-		case 1: /* 最近一年 */
-			pc.nStartDate = (year - 1) * 10000 + mon * 100 + day;
-			pc.nEndDate = 0;
-			break;
-		case 2:	/* 最近半年 */
-			mon -= 6;
-			if(mon <= 0) 
-			{
-				mon += 12;
-				year -= 1;
-			}
-			pc.nStartDate = year * 10000 + mon * 100 + day;
-			pc.nEndDate = 0;
-			break;
-		case 3:	/* 最近三个月 */
-			mon -= 3;
-			if(mon <= 0) 
-			{
-				mon += 12;
-				year -= 1;
-			}
-			pc.nStartDate = year * 10000 + mon * 100 + day;
-			pc.nEndDate = 0;
-			break;
-		case 4:
-			break;
-		}
-		
-		pc.bDayOfWeek[1] = dlg.m_bMonday;
-		pc.bDayOfWeek[2] = dlg.m_bTuesday;
-		pc.bDayOfWeek[3] = dlg.m_bWednesday;
-		pc.bDayOfWeek[4] = dlg.m_bThursday;
-		pc.bDayOfWeek[5] = dlg.m_bFriday;
-
-		if(dlg.m_bGap)
-			pc.nGapPercentage = dlg.m_nGap;
-
-		if(dlg.m_bFluncAbove)
-			pc.nLastDayFluctuationAbove = dlg.m_nFluncAbove;
-
-		if(dlg.m_bFluncBelow)
-			pc.nLastDayFluctuationBelow = dlg.m_nFluncBelow;
-
-		pDoc->SetPlaybackConfig(pc);
+		pDoc->SetPlaybackConfig(dlg.GetPlaybackConfig());
 	}
 }

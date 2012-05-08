@@ -53,6 +53,8 @@ public:
 	string m_CurDayFile;
 
 	void SetPlaybackConfig(PlaybackConfig pc);
+	PlaybackConfig GetPlaybackConfig() { return m_PlaybackConfig; }
+
 	BOOL ValidatePlaybackConfig(int nDate);
 
 	void ViewNeighborDate(BOOL bPrev);
