@@ -82,35 +82,42 @@ void CPlaybackConfDialog::OnBnClickedOk()
 
 	switch(m_nDateRangeOption)
 	{
-	case 0:
-		m_pc.nStartDate = m_pc.nEndDate = 0;
-		break;
-	case 1: /* 最近一年 */
-		m_pc.nStartDate = (year - 1) * 10000 + mon * 100 + day;
-		m_pc.nEndDate = 0;
-		break;
-	case 2:	/* 最近半年 */
-		mon -= 6;
-		if(mon <= 0) 
-		{
-			mon += 12;
-			year -= 1;
-		}
-		m_pc.nStartDate = year * 10000 + mon * 100 + day;
-		m_pc.nEndDate = 0;
-		break;
-	case 3:	/* 最近三个月 */
-		mon -= 3;
-		if(mon <= 0) 
-		{
-			mon += 12;
-			year -= 1;
-		}
-		m_pc.nStartDate = year * 10000 + mon * 100 + day;
-		m_pc.nEndDate = 0;
-		break;
-	case 4:
-		break;
+		case 0:
+			m_pc.nStartDate = CALENDAR.GetFirst();
+			m_pc.nEndDate = nLastDate;
+			break;
+
+		case 1: /* 最近一年 */
+			m_pc.nStartDate = (year - 1) * 10000 + mon * 100 + day;
+			m_pc.nEndDate = nLastDate;
+			break;
+
+		case 2:	/* 最近半年 */
+			mon -= 6;
+			if(mon <= 0) 
+			{
+				mon += 12;
+				year -= 1;
+			}
+			m_pc.nStartDate = year * 10000 + mon * 100 + day;
+			m_pc.nEndDate = nLastDate;
+			break;
+
+		case 3:	/* 最近三个月 */
+			mon -= 3;
+			if(mon <= 0) 
+			{
+				mon += 12;
+				year -= 1;
+			}
+			m_pc.nStartDate = year * 10000 + mon * 100 + day;
+			m_pc.nEndDate = nLastDate;
+			break;
+
+		case 4:
+			m_pc.nStartDate = m_StartDate.GetYear() * 10000 + m_StartDate.GetMonth() * 100 + m_StartDate.GetDay();
+			m_pc.nEndDate = m_EndDate.GetYear() * 10000 + m_EndDate.GetMonth() * 100 + m_EndDate.GetDay();
+			break;
 	}
 	
 	m_pc.bDayOfWeek[1] = m_bMonday;
@@ -164,6 +171,13 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 		m_bFriday = TRUE;
 	else 
 		m_bFriday = FALSE;
+
+	m_nDateRangeOption = 4;
+
+	if(m_pc.nStartDate)
+		m_StartDate = CTime(m_pc.nStartDate /10000, m_pc.nStartDate % 10000 / 100, m_pc.nStartDate % 10000 % 100, 0,0,0);
+	if(m_pc.nEndDate)
+		m_EndDate = CTime(m_pc.nEndDate /10000, m_pc.nEndDate % 10000 / 100, m_pc.nEndDate % 10000 % 100, 0,0,0);
 
 	if(m_pc.nGapPercentage)
 	{

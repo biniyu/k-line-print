@@ -171,4 +171,6 @@ public:
 	~KLineReader(void);
 
 	void Read(string path, KLineCollection& klines, int nTillDate = -1);
+
+	KLine GetKLineByTime(string path, int time);
 };
