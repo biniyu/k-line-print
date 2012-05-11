@@ -25,9 +25,9 @@ CPlaybackConfDialog::CPlaybackConfDialog(CWnd* pParent /*=NULL*/)
 	, m_bGap(FALSE)
 	, m_bFluncAbove(FALSE)
 	, m_bFluncBelow(FALSE)
-	, m_nGap(0)
-	, m_nFluncAbove(0)
-	, m_nFluncBelow(0)
+	, m_fGap(0)
+	, m_fFluncAbove(0)
+	, m_fFluncBelow(0)
 {
 
 }
@@ -52,9 +52,9 @@ void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_GAP, m_bGap);
 	DDX_Check(pDX, IDC_CHECK_FLUNC_ABOVE, m_bFluncAbove);
 	DDX_Check(pDX, IDC_CHECK_FLUNC_BELOW, m_bFluncBelow);
-	DDX_Text(pDX, IDC_EDIT_GAP, m_nGap);
-	DDX_Text(pDX, IDC_EDIT_FLUNC_ABOVE, m_nFluncAbove);
-	DDX_Text(pDX, IDC_EDIT_FLUNC_BELOW, m_nFluncBelow);
+	DDX_Text(pDX, IDC_EDIT_GAP, m_fGap);
+	DDX_Text(pDX, IDC_EDIT_FLUNC_ABOVE, m_fFluncAbove);
+	DDX_Text(pDX, IDC_EDIT_FLUNC_BELOW, m_fFluncBelow);
 }
 
 
@@ -127,13 +127,13 @@ void CPlaybackConfDialog::OnBnClickedOk()
 	m_pc.bDayOfWeek[5] = m_bFriday;
 
 	if(m_bGap)
-		m_pc.nGapPercentage = m_nGap;
+		m_pc.nGapPercentage = m_fGap;
 
 	if(m_bFluncAbove)
-		m_pc.nLastDayFluctuationAbove = m_nFluncAbove;
+		m_pc.nLastDayFluctuationAbove = m_fFluncAbove;
 
 	if(m_bFluncBelow)
-		m_pc.nLastDayFluctuationBelow = m_nFluncBelow;
+		m_pc.nLastDayFluctuationBelow = m_fFluncBelow;
 
 	OnOK();
 }
@@ -182,19 +182,19 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 	if(m_pc.nGapPercentage)
 	{
 		m_bGap = TRUE;
-		m_nGap = m_pc.nGapPercentage;
+		m_fGap = m_pc.nGapPercentage;
 	}
 
 	if(m_pc.nLastDayFluctuationAbove)
 	{
 		m_bFluncAbove = TRUE;
-		m_nFluncAbove = m_pc.nLastDayFluctuationAbove;
+		m_fFluncAbove = m_pc.nLastDayFluctuationAbove;
 	}
 
 	if(m_pc.nLastDayFluctuationBelow)
 	{
 		m_bFluncBelow = TRUE;
-		m_nFluncBelow = m_pc.nLastDayFluctuationBelow;
+		m_fFluncBelow = m_pc.nLastDayFluctuationBelow;
 	}
 
 	UpdateData(FALSE);

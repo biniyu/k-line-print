@@ -40,12 +40,12 @@ private:
 	BOOL m_bGap;
 	BOOL m_bFluncAbove;
 	BOOL m_bFluncBelow;
-	int m_nGap;
-	int m_nFluncAbove;
-	int m_nFluncBelow;
 
 public:
 	
 	afx_msg void OnBnClickedOk();
 	virtual BOOL OnInitDialog();
+	float m_fGap;
+	float m_fFluncAbove;
+	float m_fFluncBelow;
 };
