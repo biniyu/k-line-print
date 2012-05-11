@@ -30,10 +30,10 @@ public:
 
 	BOOL bDayOfWeek[7];
 
-	int nGapPercentage;
+	float nGapPercentage;
 	
-	int nLastDayFluctuationAbove;
+	float nLastDayFluctuationAbove;
 
-	int nLastDayFluctuationBelow;
+	float nLastDayFluctuationBelow;
 
 };

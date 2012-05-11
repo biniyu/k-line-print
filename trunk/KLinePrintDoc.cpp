@@ -98,7 +98,10 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 		return FALSE;
 
 	//	如果不需要前一交易日K线数据
-	if(!m_PlaybackConfig.nGapPercentage) return TRUE;
+	if(!m_PlaybackConfig.nGapPercentage 
+		&& (!m_PlaybackConfig.nLastDayFluctuationAbove)
+		&& (!m_PlaybackConfig.nLastDayFluctuationBelow)) 
+		return TRUE;
 
 	//	获取当前合约在该日期的文件名
 	string tmp = Utility::GetPathByDate(m_CurCsvFile, nDate);
@@ -122,6 +125,16 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 	int gap = 100 * abs(this_kline.open - prev_kline.close) / (float)prev_kline.close;
 
 	if(m_PlaybackConfig.nGapPercentage && gap < m_PlaybackConfig.nGapPercentage)
+		return FALSE;
+
+	//	上一交易日的振幅
+	int lastFlunc =  100 * (prev_kline.high - prev_kline.low) 
+					/ ((float)(prev_kline.high + prev_kline.low) / 2.0f);
+
+	if(m_PlaybackConfig.nLastDayFluctuationAbove && lastFlunc < m_PlaybackConfig.nLastDayFluctuationAbove)
+		return FALSE;
+
+	if(m_PlaybackConfig.nLastDayFluctuationBelow && lastFlunc > m_PlaybackConfig.nLastDayFluctuationBelow)
 		return FALSE;
 
 	return TRUE;

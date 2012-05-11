@@ -533,13 +533,13 @@ void CKLinePrintView::OnPlaybackPause()
 
 void CKLinePrintView::OnPlaybackFastfw()
 {
-	m_nPlaybackSpeed += 30;
+	m_nPlaybackSpeed += 10;
 }
 
 void CKLinePrintView::OnPlaybackFastrev()
 {
-	if(m_nPlaybackSpeed - 30 > 1)
-		m_nPlaybackSpeed -= 30;
+	if(m_nPlaybackSpeed - 10 > 1)
+		m_nPlaybackSpeed -= 10;
 
 	else
 		m_nPlaybackSpeed = 1;
