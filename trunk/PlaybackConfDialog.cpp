@@ -127,13 +127,13 @@ void CPlaybackConfDialog::OnBnClickedOk()
 	m_pc.bDayOfWeek[5] = m_bFriday;
 
 	if(m_bGap)
-		m_pc.nGapPercentage = m_fGap;
+		m_pc.fGapPercentage = m_fGap;
 
 	if(m_bFluncAbove)
-		m_pc.nLastDayFluctuationAbove = m_fFluncAbove;
+		m_pc.fLastDayFluctuationAbove = m_fFluncAbove;
 
 	if(m_bFluncBelow)
-		m_pc.nLastDayFluctuationBelow = m_fFluncBelow;
+		m_pc.fLastDayFluctuationBelow = m_fFluncBelow;
 
 	OnOK();
 }
@@ -179,22 +179,22 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 	if(m_pc.nEndDate)
 		m_EndDate = CTime(m_pc.nEndDate /10000, m_pc.nEndDate % 10000 / 100, m_pc.nEndDate % 10000 % 100, 0,0,0);
 
-	if(m_pc.nGapPercentage)
+	if(m_pc.fGapPercentage)
 	{
 		m_bGap = TRUE;
-		m_fGap = m_pc.nGapPercentage;
+		m_fGap = m_pc.fGapPercentage;
 	}
 
-	if(m_pc.nLastDayFluctuationAbove)
+	if(m_pc.fLastDayFluctuationAbove)
 	{
 		m_bFluncAbove = TRUE;
-		m_fFluncAbove = m_pc.nLastDayFluctuationAbove;
+		m_fFluncAbove = m_pc.fLastDayFluctuationAbove;
 	}
 
-	if(m_pc.nLastDayFluctuationBelow)
+	if(m_pc.fLastDayFluctuationBelow)
 	{
 		m_bFluncBelow = TRUE;
-		m_fFluncBelow = m_pc.nLastDayFluctuationBelow;
+		m_fFluncBelow = m_pc.fLastDayFluctuationBelow;
 	}
 
 	UpdateData(FALSE);

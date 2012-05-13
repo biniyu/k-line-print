@@ -98,9 +98,9 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 		return FALSE;
 
 	//	如果不需要前一交易日K线数据
-	if(!m_PlaybackConfig.nGapPercentage 
-		&& (!m_PlaybackConfig.nLastDayFluctuationAbove)
-		&& (!m_PlaybackConfig.nLastDayFluctuationBelow)) 
+	if(!m_PlaybackConfig.fGapPercentage 
+		&& (!m_PlaybackConfig.fLastDayFluctuationAbove)
+		&& (!m_PlaybackConfig.fLastDayFluctuationBelow)) 
 		return TRUE;
 
 	//	获取当前合约在该日期的文件名
@@ -124,17 +124,17 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 	//	高低开条件
 	int gap = 100 * abs(this_kline.open - prev_kline.close) / (float)prev_kline.close;
 
-	if(m_PlaybackConfig.nGapPercentage && gap < m_PlaybackConfig.nGapPercentage)
+	if(m_PlaybackConfig.fGapPercentage && gap < m_PlaybackConfig.fGapPercentage)
 		return FALSE;
 
 	//	上一交易日的振幅
 	int lastFlunc =  100 * (prev_kline.high - prev_kline.low) 
 					/ ((float)(prev_kline.high + prev_kline.low) / 2.0f);
 
-	if(m_PlaybackConfig.nLastDayFluctuationAbove && lastFlunc < m_PlaybackConfig.nLastDayFluctuationAbove)
+	if(m_PlaybackConfig.fLastDayFluctuationAbove && lastFlunc < m_PlaybackConfig.fLastDayFluctuationAbove)
 		return FALSE;
 
-	if(m_PlaybackConfig.nLastDayFluctuationBelow && lastFlunc > m_PlaybackConfig.nLastDayFluctuationBelow)
+	if(m_PlaybackConfig.fLastDayFluctuationBelow && lastFlunc > m_PlaybackConfig.fLastDayFluctuationBelow)
 		return FALSE;
 
 	return TRUE;
