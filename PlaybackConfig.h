@@ -10,9 +10,9 @@ public:
 		nStartDate = 0;
 		nEndDate = 0;
 		memset(bDayOfWeek, TRUE, sizeof(bDayOfWeek));
-		nGapPercentage = 0;
-		nLastDayFluctuationAbove = 0;
-		nLastDayFluctuationBelow = 0;
+		fGapPercentage = 0;
+		fLastDayFluctuationAbove = 0;
+		fLastDayFluctuationBelow = 0;
 	}
 
 public:
@@ -30,10 +30,10 @@ public:
 
 	BOOL bDayOfWeek[7];
 
-	float nGapPercentage;
+	float fGapPercentage;
 	
-	float nLastDayFluctuationAbove;
+	float fLastDayFluctuationAbove;
 
-	float nLastDayFluctuationBelow;
+	float fLastDayFluctuationBelow;
 
 };
