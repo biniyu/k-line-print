@@ -31,4 +31,5 @@ public:
 	static int ConvContTimeToDispTime(int cont);
 
 	static int GetWeekDayByDate(int nDate);
+	static string GetProgramPath();
 };

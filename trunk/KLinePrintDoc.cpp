@@ -22,7 +22,6 @@
 IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CKLinePrintDoc, CDocument)
-	ON_COMMAND(ID_FILE_OPEN, &CKLinePrintDoc::OnFileOpen)
 END_MESSAGE_MAP()
 
 
@@ -30,6 +29,7 @@ END_MESSAGE_MAP()
 
 CKLinePrintDoc::CKLinePrintDoc()
 {
+	m_nCurrentTickIdx = 0;
 }
 
 CKLinePrintDoc::~CKLinePrintDoc()
@@ -41,14 +41,26 @@ BOOL CKLinePrintDoc::OnNewDocument()
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-	// TODO: 在此添加重新初始化代码
-	// (SDI 文档将重用该文档)
-
 	return TRUE;
 }
 
+BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
+{
+	if (!CDocument::OnOpenDocument(lpszPathName))
+		return FALSE;
 
+	char InfoString[256];    
+	  
+	// 转换后的数据存放在InfoString数组中   
+	if (!WideCharToMultiByte(CP_ACP,0, lpszPathName,-1, InfoString,100,NULL,NULL))    
+	{    
+		return FALSE;    
+	} 
 
+	LoadKLineGroup(InfoString);
+	DisplayTill(-1, -1);
+	return TRUE;
+}
 
 // CKLinePrintDoc 序列化
 
@@ -187,34 +199,11 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	DWORD after = GetTickCount();
 	TRACE("\ntick file %s read, use %d ticks", m_CurCsvFile.c_str(), after - before);
 
-
 	//	更新标题
 	SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
-}
-
-void CKLinePrintDoc::OnFileOpen()
-{
-	CFileDialog dlg(TRUE); ///TRUE为OPEN对话框，FALSE为SAVE AS对话框
-	if(dlg.DoModal() == IDOK)
-	{
-		CString FilePathName = dlg.GetPathName(); 
-		char InfoString[256];    
-		  
-		// 转换后的数据存放在InfoString数组中   
-		if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(FilePathName),-1,InfoString,100,NULL,NULL))    
-		{    
-			return;    
-		} 
-
-		LoadKLineGroup(InfoString);
-
-		PlaybackConfig pc;
-
-		SetPlaybackConfig(pc);
-
-		//	显示所有
-		DisplayTill(-1, -1);
-	}
+	
+	::WritePrivateProfileStringA("Files","Current", 
+							m_CurCsvFile.c_str(), (Utility::GetProgramPath() + "klinep.ini").c_str()); 
 }
 
 void CKLinePrintDoc::ReloadByDate(int nDate)
@@ -223,8 +212,7 @@ void CKLinePrintDoc::ReloadByDate(int nDate)
 
 	if(!tmp.size()) return;
 
-	LoadKLineGroup(tmp);
-	DisplayTill(-1, -1);
+	OnOpenDocument(CString(tmp.c_str()));
 }
 
 void CKLinePrintDoc::ReloadDetailData(int second)
@@ -244,8 +232,7 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 
 	if(!tmp.size()) return;
 
-	LoadKLineGroup(tmp);
-	DisplayTill(-1, -1);
+	OnOpenDocument(CString(tmp.c_str()));
 }
 
 BOOL CKLinePrintDoc::LoadNextDay()

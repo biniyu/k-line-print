@@ -97,17 +97,7 @@ void CSearchContractDialog::OnCbnSelchangeCombo1()
 
 	int nIndex = m_comboResult.GetCurSel();	
 	m_comboResult.GetLBText(nIndex, strCBText);
-
-	char InfoString[256];    
-	  
-	// 转换后的数据存放在InfoString数组中   
-	if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(strCBText),-1,InfoString,100,NULL,NULL))    
-	{    
-		return;    
-	} 
-
-	pDoc->LoadKLineGroup(InfoString);
-	pDoc->DisplayTill(-1, -1);
+	pDoc->OnOpenDocument(strCBText);
 }
 
 void CSearchContractDialog::OnDestroy()
