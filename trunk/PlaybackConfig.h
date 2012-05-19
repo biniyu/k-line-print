@@ -13,6 +13,7 @@ public:
 		fGapPercentage = 0;
 		fLastDayFluctuationAbove = 0;
 		fLastDayFluctuationBelow = 0;
+		nStartTime = nEndTime = 0;
 	}
 
 public:
@@ -27,6 +28,9 @@ public:
 
 	int nStartDate;
 	int nEndDate;
+
+	int nStartTime;
+	int nEndTime;
 
 	BOOL bDayOfWeek[7];
 

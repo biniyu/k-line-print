@@ -27,6 +27,8 @@ CPlaybackConfDialog::CPlaybackConfDialog(CWnd* pParent /*=NULL*/)
 	, m_fGap(0)
 	, m_fFluncAbove(0)
 	, m_fFluncBelow(0)
+	, m_TimeFrom(0)
+	, m_TimeTo(0)
 {
 
 }
@@ -53,6 +55,8 @@ void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_GAP, m_fGap);
 	DDX_Text(pDX, IDC_EDIT_FLUNC_ABOVE, m_fFluncAbove);
 	DDX_Text(pDX, IDC_EDIT_FLUNC_BELOW, m_fFluncBelow);
+	DDX_DateTimeCtrl(pDX, IDC_TIMEPICKER_FROM, m_TimeFrom);
+	DDX_DateTimeCtrl(pDX, IDC_TIMEPICKER_TO, m_TimeTo);
 }
 
 
@@ -117,6 +121,9 @@ void CPlaybackConfDialog::OnBnClickedOk()
 			m_pc.nEndDate = m_EndDate.GetYear() * 10000 + m_EndDate.GetMonth() * 100 + m_EndDate.GetDay();
 			break;
 	}
+
+	m_pc.nStartTime = m_TimeFrom.GetHour() * 3600 + m_TimeFrom.GetMinute() * 60 + m_TimeFrom.GetSecond();
+	m_pc.nEndTime = m_TimeTo.GetHour() * 3600 + m_TimeTo.GetMinute() * 60 + m_TimeTo.GetSecond();
 	
 	m_pc.bDayOfWeek[1] = m_bMonday;
 	m_pc.bDayOfWeek[2] = m_bTuesday;
@@ -176,6 +183,19 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 		m_StartDate = CTime(m_pc.nStartDate /10000, m_pc.nStartDate % 10000 / 100, m_pc.nStartDate % 10000 % 100, 0,0,0);
 	if(m_pc.nEndDate)
 		m_EndDate = CTime(m_pc.nEndDate /10000, m_pc.nEndDate % 10000 / 100, m_pc.nEndDate % 10000 % 100, 0,0,0);
+
+	if(!m_pc.nStartTime)
+		m_TimeFrom = CTime(2000,1,1,8,59,0);
+	else
+		m_TimeFrom = CTime(2000,1,1, 
+						m_pc.nStartTime / 3600, m_pc.nStartTime % 3600 / 60, m_pc.nStartTime % 3600 % 60);
+
+	if(!m_pc.nEndTime)
+		m_TimeTo = CTime(2000,1,1,15,1,0);
+
+	else
+		m_TimeTo = CTime(2000,1,1, 
+						m_pc.nEndTime / 3600, m_pc.nEndTime % 3600 / 60, m_pc.nEndTime % 3600 % 60);
 
 	if(m_pc.fGapPercentage)
 	{

@@ -473,7 +473,11 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
+	PlaybackConfig pc;
+	pc = pDoc->GetPlaybackConfig();
+
 	pDoc->LoadNextDay();
+	pDoc->DisplayTill(pc.nStartTime);
 }
 
 void CKLinePrintView::OnPlaybackForward()
@@ -505,23 +509,33 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if (!pDoc)
 		return;
 
+	PlaybackConfig pc;
+	pc = pDoc->GetPlaybackConfig();
+
 	int time = pDoc->GetCurrentTickTime();
 
-	if(!time)
+	if(!time || time > pc.nEndTime)
 	{
 		KillTimer(1);
 		pDoc->LoadNextDay();
+		pDoc->DisplayTill(pc.nStartTime);
+	}
+	else if(time < pc.nStartTime)
+	{
+		KillTimer(1);
+		pDoc->DisplayTill(pc.nStartTime);
 	}
 	else
 	{
 		int nTillTime = pDoc->GetCurrentTickTime() + m_nPlaybackSpeed;
 		pDoc->PlayTillTime(nTillTime);
-		klr_1min.SelectLastK();
-		klr_5sec.SelectLastK();
-		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
-		Render();
-		Invalidate(FALSE);
 	}
+
+	klr_1min.SelectLastK();
+	klr_5sec.SelectLastK();
+	klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
+	Render();
+	Invalidate(FALSE);
 
 	CView::OnTimer(nIDEvent);
 }
@@ -533,13 +547,13 @@ void CKLinePrintView::OnPlaybackPause()
 
 void CKLinePrintView::OnPlaybackFastfw()
 {
-	m_nPlaybackSpeed += 10;
+	m_nPlaybackSpeed += 5;
 }
 
 void CKLinePrintView::OnPlaybackFastrev()
 {
-	if(m_nPlaybackSpeed - 10 > 1)
-		m_nPlaybackSpeed -= 10;
+	if(m_nPlaybackSpeed - 5 > 1)
+		m_nPlaybackSpeed -= 5;
 
 	else
 		m_nPlaybackSpeed = 1;
