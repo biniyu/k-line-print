@@ -29,7 +29,6 @@ private:
 
 	int m_nPlaybackOrder;
 	int m_nDateRangeOption;
-	BOOL m_bAllWeekDays;
 	BOOL m_bMonday;
 	BOOL m_bTuesday;
 	BOOL m_bWednesday;

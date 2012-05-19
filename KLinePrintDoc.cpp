@@ -144,6 +144,9 @@ void CKLinePrintDoc::SetPlaybackConfig(PlaybackConfig pc)
 {
 	m_PlaybackConfig = pc;
 
+	//	未加载分笔数据
+	if(!m_CurCsvFile.size()) return;
+
 	m_FilteredCalendar.clear();
 
 	//	根据配置生成过滤后的日历

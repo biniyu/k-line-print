@@ -473,7 +473,7 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
-	pDoc->DisplayTill(-1, klr_day.GetCurTime());
+	pDoc->LoadNextDay();
 }
 
 void CKLinePrintView::OnPlaybackForward()

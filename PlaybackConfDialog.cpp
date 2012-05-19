@@ -14,7 +14,6 @@ CPlaybackConfDialog::CPlaybackConfDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CPlaybackConfDialog::IDD, pParent)
 	, m_nPlaybackOrder(0)
 	, m_nDateRangeOption(0)
-	, m_bAllWeekDays(FALSE)
 	, m_bMonday(FALSE)
 	, m_bTuesday(FALSE)
 	, m_bWednesday(FALSE)
@@ -41,7 +40,6 @@ void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Radio(pDX, IDC_RADIO_SEQUENCE, m_nPlaybackOrder);
 	DDX_Radio(pDX, IDC_RADIO_ALLDATE, m_nDateRangeOption);
-	DDX_Check(pDX, IDC_CHECK_ALLWEEK, m_bAllWeekDays);
 	DDX_Check(pDX, IDC_CHECK_MONDAY, m_bMonday);
 	DDX_Check(pDX, IDC_CHECK_TUESDAY, m_bTuesday);
 	DDX_Check(pDX, IDC_CHECK_WEDNESDAY, m_bWednesday);
@@ -172,7 +170,7 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 	else 
 		m_bFriday = FALSE;
 
-	m_nDateRangeOption = 4;
+	m_nDateRangeOption = 2;
 
 	if(m_pc.nStartDate)
 		m_StartDate = CTime(m_pc.nStartDate /10000, m_pc.nStartDate % 10000 / 100, m_pc.nStartDate % 10000 % 100, 0,0,0);
