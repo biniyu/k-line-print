@@ -47,4 +47,6 @@ public:
 	float m_fGap;
 	float m_fFluncAbove;
 	float m_fFluncBelow;
+	CTime m_TimeFrom;
+	CTime m_TimeTo;
 };

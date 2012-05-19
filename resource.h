@@ -148,6 +148,8 @@
 #define IDC_RADIO_DATE_RANGE            1047
 #define IDC_RADIO1                      1048
 #define IDC_RADIO_ALLDATE               1048
+#define IDC_TIMEPICKER_FROM             1049
+#define IDC_TIMEPICKER_TO               1050
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -173,7 +175,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32789
-#define _APS_NEXT_CONTROL_VALUE         1049
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
