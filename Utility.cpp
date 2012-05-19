@@ -89,6 +89,15 @@ vector<string> GetFiles(string dir, string filter, bool bDir)
 	return vecFiles;
 }
 
+string Utility::GetProgramPath()
+{
+	char szPath[MAX_PATH];   
+	GetModuleFileNameA(NULL, szPath, MAX_PATH);
+	string PathName(szPath);
+	size_t npos = PathName.find_last_of('\\');
+	return PathName.substr(0, npos + 1);
+}
+
 void Utility::GetInfoByPath(string path, string& rootdir, 
 								string& market, string& contract, int& date)
 {

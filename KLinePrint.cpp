@@ -6,6 +6,7 @@
 #include "afxwinappex.h"
 #include "KLinePrint.h"
 #include "MainFrm.h"
+#include "Utility.h"
 
 #include "KLinePrintDoc.h"
 #include "KLinePrintView.h"
@@ -114,6 +115,18 @@ BOOL CKLinePrintApp::InitInstance()
 	cg.Generate("J:\\FutureData\\ZZ", cal);
 
 	srand(time(0));
+
+	//	自动打开上次的文件
+	char path[MAX_PATH];
+
+	::GetPrivateProfileStringA("Files","Current","", 
+							path, sizeof(path), 
+							(Utility::GetProgramPath() + "klinep.ini").c_str());
+
+	OpenDocumentFile(CString(path));
+
+	//	TODO : 加载回放配置并生成日历
+
 
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);
