@@ -128,6 +128,59 @@ void Utility::GetInfoByPath(string path, string& rootdir,
 	contract = filename.substr(0, posUnderScore);
 }
 
+vector<string> Utility::GetAllContractPath(string path)
+{
+	int date;
+	char buf[512];
+
+	vector<string> contracts;
+
+	string rootdir, contract, var, market, final;
+
+	GetInfoByPath(path, rootdir, market, contract, date);
+
+	//	合约最后两位是月份
+	var = contract.substr(0, contract.size() - 2);
+
+	//	处理跨年合约
+	if(var[var.size() - 1] == 'X'
+		|| var[var.size() - 1] == 'Y')
+	{
+		var = var.substr(0, var.size() - 1);
+	}
+
+	// 在该目录搜索最大的文件(需要过滤掉MI,PI,VI文件)
+	vector<string> vecFiles;
+
+	sprintf(buf, "%s\\%s\\%s%d\\%d\\",
+		rootdir.c_str(),
+		market.c_str(),
+		market.c_str(),
+		date/100,
+		date);
+
+	string dir = buf;
+
+	sprintf(buf, "%s*_%d.csv",
+		var.c_str(),
+		date);
+
+	vecFiles = GetFiles(dir, buf, false);
+
+	for(int i = 0; i < vecFiles.size(); i++)
+	{
+		// 过滤PI/MI/VI文件
+
+		if((vecFiles[i].find("PI_") != string::npos)
+		|| (vecFiles[i].find("MI_") != string::npos)
+		|| (vecFiles[i].find("VI_") != string::npos)) continue;
+
+		contracts.push_back(dir + vecFiles[i]);
+	}
+
+	return contracts;
+}
+
 string Utility::GetMajorContractPath(string path)
 {
 	int date;

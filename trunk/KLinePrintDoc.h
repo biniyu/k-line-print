@@ -62,6 +62,8 @@ public:
 	void LoadKLineGroup(string targetCsvFile);
 	void ReloadDetailData(int second);
 
+	KLine GenerateDayLineFromQuoteData(string path, int nDate);
+
 	//  加载下一日数据准备播放
 	BOOL LoadNextDay();
 

@@ -20,6 +20,7 @@ public:
 	static void GetInfoByPath(string path, string& rootdir, 
 					string& market, string& contract, int& date);
 
+	static vector<string> GetAllContractPath(string path);
 	static string GetMajorContractPath(string path);
 	static string GetDayLinePath(string path);
 	static int GetDateByPath(string path);

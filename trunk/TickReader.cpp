@@ -20,6 +20,8 @@ void TickReader::Read(string path, TickCollection& ticks)
 	}
 #endif
 
+	ticks.clear();
+
 	ifstream csvFile(path.c_str());
 
 	/*
