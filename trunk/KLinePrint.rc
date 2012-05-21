@@ -228,8 +228,6 @@ BEGIN
     POPUP "合约(&C)"
     BEGIN
         MENUITEM "搜索合约",                        ID_SEARCH_CONTRACT
-        MENUITEM "日历生成",                        ID_GEN_CAL
-        MENUITEM "加载日历",                        ID_LOAD_CAL
         MENUITEM "日线生成",                        ID_GEN_DAYLINE
     END
     POPUP "视图(&V)"

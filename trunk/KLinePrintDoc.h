@@ -83,6 +83,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
+	afx_msg void OnGenDayline();
 };
 
 

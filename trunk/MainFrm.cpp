@@ -27,9 +27,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 	ON_COMMAND(ID_SEARCH_CONTRACT, &CMainFrame::OnSearchContract)
-	ON_COMMAND(ID_GEN_CAL, &CMainFrame::OnGenCal)
-	ON_COMMAND(ID_LOAD_CAL, &CMainFrame::OnLoadCal)
-	ON_COMMAND(ID_GEN_DAYLINE, &CMainFrame::OnGenDayline)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -406,17 +403,3 @@ void CMainFrame::OnSearchContract()
 	dlg->ShowWindow(SW_SHOW); 
 }
 
-void CMainFrame::OnGenCal()
-{
-	// TODO: 在此添加命令处理程序代码
-}
-
-void CMainFrame::OnLoadCal()
-{
-	// TODO: 在此添加命令处理程序代码
-}
-
-void CMainFrame::OnGenDayline()
-{
-	// TODO: 在此添加命令处理程序代码
-}

@@ -123,7 +123,8 @@ BOOL CKLinePrintApp::InitInstance()
 							path, sizeof(path), 
 							(Utility::GetProgramPath() + "klinep.ini").c_str());
 
-	OpenDocumentFile(CString(path));
+	if(strlen(path))
+		OpenDocumentFile(CString(path));
 
 	//	TODO : 加载回放配置并生成日历
 
