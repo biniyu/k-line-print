@@ -471,10 +471,10 @@ void CKLinePrintDoc::OnGenDayline()
 			nCurDate = CALENDAR.GetNext(nCurDate);
 		}
 
-		while(nCurDate > 0 && nCurKLineIdx < klcorg.size())
+		while(nCurDate > 0)
 		{
 			//	该交易日日线数据存在
-			if(nCurDate == klcorg[nCurKLineIdx].time)
+			if(nCurKLineIdx < klcorg.size() && nCurDate == klcorg[nCurKLineIdx].time)
 			{
 				//	添加到最终的数据集中
 				klc.AddToTail(klcorg[nCurKLineIdx]);
@@ -482,12 +482,22 @@ void CKLinePrintDoc::OnGenDayline()
 			}
 			else // 日线不存在
 			{
+//				TRACE("\ncontract %s missing %d ", contracts[i].c_str(), nCurDate);
+
 				//	从分笔数据生成日线
 				KLine kl = GenerateDayLineFromQuoteData(contracts[i], nCurDate);
 
 				//	增加到数据集中
 				if(kl.time)
+				{
+					TRACE("\ncontract %s missing %d ", contracts[i].c_str(), nCurDate);
 					klc.AddToTail(kl);
+					TRACE("regenerated.");
+				}
+				else
+				{
+//					TRACE("generation failed!");
+				}
 			}
 
 			//	检查各合约在该日是否有日线数据
