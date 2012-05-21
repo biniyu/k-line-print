@@ -22,6 +22,7 @@
 IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CKLinePrintDoc, CDocument)
+	ON_COMMAND(ID_GEN_DAYLINE, &CKLinePrintDoc::OnGenDayline)
 END_MESSAGE_MAP()
 
 
@@ -417,4 +418,26 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	//	显示
 	pView->Render();	
 	this->UpdateAllViews(0);
+}
+
+void CKLinePrintDoc::OnGenDayline()
+{
+	if(!m_CurCsvFile.size()) return;
+
+	if(!CALENDAR.size()) return;
+
+	//	根据最新的日历搜索当前品种所有合约的日线数据，如果缺失则补全
+
+	int nCurDate = CALENDAR.GetFirst();
+
+	while(nCurDate > 0)
+	{
+
+		//	检查各合约在该日是否有日线数据
+		nCurDate = CALENDAR.GetNext(nCurDate);
+
+		//	若没有日线数据，则从分笔数据中生成
+	}
+
+	//	保存各合约的日线数据到文件，备份原日线数据文件
 }

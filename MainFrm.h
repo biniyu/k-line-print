@@ -58,9 +58,6 @@ protected:
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
 public:
 	afx_msg void OnSearchContract();
-	afx_msg void OnGenCal();
-	afx_msg void OnLoadCal();
-	afx_msg void OnGenDayline();
 };
 
 
