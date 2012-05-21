@@ -422,22 +422,115 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 
 void CKLinePrintDoc::OnGenDayline()
 {
+	int nCurDate, nCurKLineIdx;
+
+	KLineCollection klcorg, klc;
+
 	if(!m_CurCsvFile.size()) return;
 
 	if(!CALENDAR.size()) return;
 
 	//	根据最新的日历搜索当前品种所有合约的日线数据，如果缺失则补全
+	vector<string> contracts = Utility::GetAllContractPath(m_CurCsvFile);
 
-	int nCurDate = CALENDAR.GetFirst();
-
-	while(nCurDate > 0)
+	for(int i = 0; i < contracts.size(); i++)
 	{
+		string daylinePath = Utility::GetDayLinePath(contracts[i]);
+		
+		klcorg.Clear();
 
-		//	检查各合约在该日是否有日线数据
-		nCurDate = CALENDAR.GetNext(nCurDate);
+		m_KLineReader.Read(daylinePath, klcorg);
 
-		//	若没有日线数据，则从分笔数据中生成
+		//	从该合约首个交易日开始检查缺失的日线
+		//	但未必从首个交易日起就有分笔数据文件
+
+		nCurDate = klcorg[0].time;
+		nCurKLineIdx = 0;
+
+		//	寻找首个有分笔数据文件的交易日
+		TickCollection ticks;
+
+		while(nCurDate > 0 && nCurKLineIdx < klcorg.size())
+		{
+			string quotefile = Utility::GetPathByDate(contracts[i], nCurDate);
+
+			m_TickReader.Read(quotefile, ticks);
+
+			if(!ticks.size())
+			{
+				//	不存在分笔数据，只拷贝日线数据
+				klc.AddToTail(klcorg[nCurKLineIdx]);
+				nCurKLineIdx++;			
+			}
+			else
+			{
+				//	首个有分笔数据文件的交易日
+				break;
+			}
+
+			nCurDate = CALENDAR.GetNext(nCurDate);
+		}
+
+		while(nCurDate > 0 && nCurKLineIdx < klcorg.size())
+		{
+			//	该交易日日线数据存在
+			if(nCurDate == klcorg[nCurKLineIdx].time)
+			{
+				//	添加到最终的数据集中
+				klc.AddToTail(klcorg[nCurKLineIdx]);
+				nCurKLineIdx++;
+			}
+			else // 日线不存在
+			{
+				//	从分笔数据生成日线
+				KLine kl = GenerateDayLineFromQuoteData(contracts[i], nCurDate);
+
+				//	增加到数据集中
+				if(kl.time)
+					klc.AddToTail(kl);
+			}
+
+			//	检查各合约在该日是否有日线数据
+			nCurDate = CALENDAR.GetNext(nCurDate);
+
+			//	若没有日线数据，则从分笔数据中生成
+		}
+
+		//	保存各合约的日线数据到文件，备份原日线数据文件
 	}
 
-	//	保存各合约的日线数据到文件，备份原日线数据文件
+}
+
+KLine CKLinePrintDoc::GenerateDayLineFromQuoteData(string path, int date)
+{
+	string quotefile = Utility::GetPathByDate(path, date);
+
+	KLine kline;
+	TickCollection ticks;
+
+	m_TickReader.Read(quotefile, ticks);
+
+	if(!ticks.size())
+	{
+		kline.time = 0;
+		return kline;
+	}
+
+	kline.time = date;
+	kline.open = kline.high = kline.low = ticks[0].price;
+	kline.close = ticks[ticks.size()-1].price;
+	kline.vol = 0;
+
+	for(int i = 0; i < ticks.size(); i++)
+	{
+		kline.vol += ticks[i].vol;
+		
+		if(ticks[i].price > kline.high)
+			kline.high = ticks[i].price;
+
+		if(ticks[i].price < kline.low)
+			kline.low = ticks[i].price;
+	}
+
+	return kline;
 }
