@@ -455,6 +455,13 @@ void KLineRenderer::Render(CDC* pDC)
 
 			pDC->MoveTo(kMiddle, kLowPos + 10);
 			pDC->LineTo(kMiddle, timeLinePos);
+
+			CString tmptime;
+
+			tmptime.Format(_T("%02d:%02d"), tmpHour, tmpMinute);
+
+			CSize sz = pDC->GetTextExtent(tmptime);
+			pDC->TextOutW(kMiddle, timeLinePos - sz.cy, tmptime);
 		}
 
 		//	иоуг╨Лё╛об╣Ьбл

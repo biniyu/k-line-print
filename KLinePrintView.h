@@ -70,7 +70,6 @@ protected:
 	KLineRenderer klr_5sec;
 	KLineRenderer klr_1min;
 	KLineRenderer klr_day;
-	TickRenderer  tick_render;
 
 	CDC			m_MemDC;
 	CBitmap		m_MemBitmap;

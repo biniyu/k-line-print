@@ -59,8 +59,6 @@ CKLinePrintView::~CKLinePrintView()
 
 void CKLinePrintView::SetTickData(Tick tick)
 {
-	tick_render.SetTick(tick);
-
 	if(m_pTradeDialog) 
 		m_pTradeDialog->SetTick(tick);
 }
@@ -324,29 +322,24 @@ void CKLinePrintView::Render()
 	klr_1min.Render(&m_MemDC);
 	klr_day.Render(&m_MemDC);
 	klr_5sec.Render(&m_MemDC);
-	tick_render.Render(&m_MemDC);
 	Invalidate(FALSE);
 }
 
 void CKLinePrintView::Layout()
 {
 	CRect rc;
-	CRect rc_tick, rc_1min, rc_day, rc_detail;
+	CRect rc_1min, rc_day, rc_detail;
 	
 	GetClientRect(&rc);
 
 	int horiSplit = rc.bottom / 5 * 3;
 
-	int vertSplitUp = rc.right / 9;
+	int vertSplitUp = 0;
 	int vertSplitDown = rc.right / 2;
 
 	//»æÍ¼
 	if(m_enViewMode == ViewModeAll)
 	{
-		rc_tick = rc;
-		rc_tick.right = vertSplitUp;
-		rc_tick.bottom = horiSplit;
-
 		rc_1min = rc;
 		rc_1min.left = vertSplitUp;
 		rc_1min.bottom = horiSplit;
@@ -361,9 +354,6 @@ void CKLinePrintView::Layout()
 	}
 	else if(m_enViewMode == ViewMode1Min)
 	{
-		rc_tick = rc;
-		rc_tick.right = vertSplitUp;
-
 		rc_1min = rc;
 		rc_1min.left = vertSplitUp;
 
@@ -371,7 +361,6 @@ void CKLinePrintView::Layout()
 		rc_detail = CRect(0,0,0,0);
 	}
 
-	tick_render.SetRect(rc_tick);
 	klr_1min.SetRect(rc_1min);
 	klr_day.SetRect(rc_day);
 	klr_5sec.SetRect(rc_detail);
@@ -424,8 +413,6 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
-
-	tick_render.Select(point);
 
 	klr_1min.Select(point);
 	if(klr_1min.IsSelected() && m_bLocked)
