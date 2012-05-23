@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KLineWriter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
@@ -330,6 +334,10 @@
 			</File>
 			<File
 				RelativePath=".\KLineRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KLineWriter.h"
 				>
 			</File>
 			<File
