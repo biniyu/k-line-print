@@ -9,6 +9,7 @@
 #include "KLinePrintView.h"
 #include "KLinePrintDoc.h"
 #include "TickReader.h"
+#include "KLineWriter.h"
 #include "KLineCollection.h"
 #include "CalendarGenerator.h"
 #include "Utility.h"
@@ -424,6 +425,7 @@ void CKLinePrintDoc::OnGenDayline()
 {
 	int nCurDate, nCurKLineIdx;
 
+	KLineWriter klineWriter;
 	KLineCollection klcorg, klc;
 
 	if(!m_CurCsvFile.size()) return;
@@ -437,6 +439,7 @@ void CKLinePrintDoc::OnGenDayline()
 	{
 		string daylinePath = Utility::GetDayLinePath(contracts[i]);
 		
+		klc.Clear();
 		klcorg.Clear();
 
 		m_KLineReader.Read(daylinePath, klcorg);
@@ -507,7 +510,10 @@ void CKLinePrintDoc::OnGenDayline()
 		}
 
 		//	保存各合约的日线数据到文件，备份原日线数据文件
+		klineWriter.Write(daylinePath, klc);
 	}
+
+	AfxMessageBox(_T("日线数据补充生成完毕"));
 
 }
 
