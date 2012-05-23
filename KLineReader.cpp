@@ -46,8 +46,10 @@ void KLineReader::Read(string path, KLineCollection& klines, int nTillDate)
 
 		kline.vol = 0;
 
-		sscanf(buf, "%d/%d/%d %d %d %d %d ", 
-			&year, &month, &day, &kline.open, &kline.high, &kline.low, &kline.close);
+		sscanf(buf, "%d/%d/%d %d %d %d %d %d", 
+			&year, &month, &day, 
+			&kline.open, &kline.high, &kline.low, &kline.close,
+			&kline.vol);
 
 		kline.time = year*10000 + month*100 + day;
 
