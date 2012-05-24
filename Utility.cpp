@@ -363,4 +363,61 @@ int Utility::GetWeekDayByDate(int nDate)
 	return (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
 }
 
+#define CONFIG_FILE ((Utility::GetProgramPath() + "klinep.ini").c_str())
+
+//	读入回放配置
+PlaybackConfig Utility::ReadPlaybackConfig()
+{
+	PlaybackConfig pc;
+
+	pc.enPlaybackOrder = (PlaybackConfig::PlaybackOrder)
+		GetPrivateProfileIntA("Playback","Order", 0, CONFIG_FILE);
+	
+	pc.nStartDate = GetPrivateProfileIntA("Playback","StartDate", 0, CONFIG_FILE);
+	pc.nEndDate = GetPrivateProfileIntA("Playback","EndDate", 0, CONFIG_FILE);
+	pc.nStartTime = GetPrivateProfileIntA("Playback","StartTime", 0, CONFIG_FILE);
+	pc.nEndTime = GetPrivateProfileIntA("Playback","EndTime", 0, CONFIG_FILE);
+
+	pc.bDayOfWeek[1] = GetPrivateProfileIntA("Playback","Monday", 0, CONFIG_FILE);
+	pc.bDayOfWeek[2] = GetPrivateProfileIntA("Playback","Tuesday", 0, CONFIG_FILE);
+	pc.bDayOfWeek[3] = GetPrivateProfileIntA("Playback","Wednesday", 0, CONFIG_FILE);
+	pc.bDayOfWeek[4] = GetPrivateProfileIntA("Playback","Thursday", 0, CONFIG_FILE);
+	pc.bDayOfWeek[5] = GetPrivateProfileIntA("Playback","Friday", 0, CONFIG_FILE);
+
+	pc.fGapPercentage = GetPrivateProfileIntA("Playback","Gap", 0, CONFIG_FILE);
+	pc.fLastDayFluctuationAbove = GetPrivateProfileIntA("Playback","FluctuationAbove", 0, CONFIG_FILE);
+	pc.fLastDayFluctuationBelow = GetPrivateProfileIntA("Playback","FluctuationBelow", 0, CONFIG_FILE);
+
+	return pc;
+}
+
+void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, LPCSTR lpFileName)
+{
+	char buf[64];
+	sprintf(buf, "%d", nDefault);
+	WritePrivateProfileStringA(lpAppName, lpKeyName, buf, lpFileName);
+}
+
+//	保存回放配置
+void Utility::SavePlaybackConfig(PlaybackConfig pc)
+{
+	WritePrivateProfileIntA("Playback","Order", (int)pc.enPlaybackOrder, CONFIG_FILE);
+
+	WritePrivateProfileIntA("Playback","StartDate", pc.nStartDate, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","EndDate", pc.nEndDate, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","StartTime", pc.nStartTime, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","EndTime", pc.nEndTime, CONFIG_FILE);
+
+	WritePrivateProfileIntA("Playback","Monday", (int)pc.bDayOfWeek[1], CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","Tuesday", (int)pc.bDayOfWeek[2], CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","Wednesday", (int)pc.bDayOfWeek[3], CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","Thursday", (int)pc.bDayOfWeek[4], CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","Friday", (int)pc.bDayOfWeek[5], CONFIG_FILE);
+
+	WritePrivateProfileIntA("Playback","Gap", (int)pc.fGapPercentage, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","FluctuationAbove", (int)pc.fLastDayFluctuationAbove, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","FluctuationBelow", (int)pc.fLastDayFluctuationBelow, CONFIG_FILE);
+}
+
+
 
