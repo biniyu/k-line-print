@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include "PlaybackConfig.h"
 
 using namespace std;
 
@@ -16,6 +17,12 @@ class Utility
 public:
 	Utility(void);
 	~Utility(void);
+
+	//	读入回放配置
+	static PlaybackConfig ReadPlaybackConfig();
+
+	//	保存回放配置
+	static void SavePlaybackConfig(PlaybackConfig pc);
 
 	static void GetInfoByPath(string path, string& rootdir, 
 					string& market, string& contract, int& date);

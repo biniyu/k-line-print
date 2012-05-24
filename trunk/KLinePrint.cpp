@@ -118,16 +118,20 @@ BOOL CKLinePrintApp::InitInstance()
 
 	//	自动打开上次的文件
 	char path[MAX_PATH];
+	CKLinePrintDoc* pDocument = 0;
 
 	::GetPrivateProfileStringA("Files","Current","", 
 							path, sizeof(path), 
 							(Utility::GetProgramPath() + "klinep.ini").c_str());
 
 	if(strlen(path))
-		OpenDocumentFile(CString(path));
+		pDocument = (CKLinePrintDoc*)OpenDocumentFile(CString(path));
 
-	//	TODO : 加载回放配置并生成日历
-
+	//	加载回放配置并生成日历
+	if(pDocument)
+	{
+		pDocument->SetPlaybackConfig(Utility::ReadPlaybackConfig());
+	}
 
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);

@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "Utility.h"
 #include "KLinePrint.h"
 #include "PlaybackConfDialog.h"
 
@@ -139,6 +140,9 @@ void CPlaybackConfDialog::OnBnClickedOk()
 
 	if(m_bFluncBelow)
 		m_pc.fLastDayFluctuationBelow = m_fFluncBelow;
+
+	//	保存到配置文件
+	Utility::SavePlaybackConfig(m_pc);
 
 	OnOK();
 }
