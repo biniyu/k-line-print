@@ -9,6 +9,7 @@
 
 #include "resource.h"       // 主符号
 
+#include "PlaybackConfig.h"
 #include "CalendarGenerator.h"
 
 // CKLinePrintApp:
@@ -20,16 +21,16 @@ class CKLinePrintApp : public CWinAppEx
 public:
 	CKLinePrintApp();
 
-
 // 重写
 public:
 	virtual BOOL InitInstance();
 
 // 实现
-	UINT  m_nAppLook;
-	BOOL  m_bHiColorIcons;
+	UINT			m_nAppLook;
+	BOOL			m_bHiColorIcons;
 
-	Calendar cal;
+	Calendar		m_cal;
+	PlaybackConfig	m_PlaybackConfig;		// 回放选项
 
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
@@ -41,5 +42,6 @@ public:
 
 extern CKLinePrintApp theApp;
 
-#define CALENDAR ((CKLinePrintApp*)AfxGetApp())->cal
+#define CALENDAR ((CKLinePrintApp*)AfxGetApp())->m_cal
+#define PBCONFIG ((CKLinePrintApp*)AfxGetApp())->m_PlaybackConfig
 

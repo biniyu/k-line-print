@@ -112,26 +112,22 @@ BOOL CKLinePrintApp::InitInstance()
 		return FALSE;
 
 	CalendarGenerator cg;
-	cg.Generate("J:\\FutureData\\ZZ", cal);
+	cg.Generate("J:\\FutureData\\ZZ", m_cal);
 
 	srand(time(0));
 
 	//	自动打开上次的文件
 	char path[MAX_PATH];
-	CKLinePrintDoc* pDocument = 0;
 
 	::GetPrivateProfileStringA("Files","Current","", 
 							path, sizeof(path), 
 							(Utility::GetProgramPath() + "klinep.ini").c_str());
 
 	if(strlen(path))
-		pDocument = (CKLinePrintDoc*)OpenDocumentFile(CString(path));
+		OpenDocumentFile(CString(path));
 
 	//	加载回放配置并生成日历
-	if(pDocument)
-	{
-		pDocument->SetPlaybackConfig(Utility::ReadPlaybackConfig());
-	}
+	m_PlaybackConfig = Utility::ReadPlaybackConfig();
 
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);

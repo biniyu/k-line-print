@@ -94,27 +94,27 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 
-BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
+BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig)
 {
-	if(m_PlaybackConfig.nStartDate)
+	if(pbConfig.nStartDate)
 	{
-		if(nDate < m_PlaybackConfig.nStartDate) return FALSE;
+		if(nDate < pbConfig.nStartDate) return FALSE;
 	}
 
-	if(m_PlaybackConfig.nEndDate)
+	if(pbConfig.nEndDate)
 	{
-		if(nDate > m_PlaybackConfig.nEndDate) return FALSE;
+		if(nDate > pbConfig.nEndDate) return FALSE;
 	}
 
 	int nWeekDay = Utility::GetWeekDayByDate(nDate);
 
-	if(m_PlaybackConfig.bDayOfWeek[nWeekDay] == FALSE)
+	if(pbConfig.bDayOfWeek[nWeekDay] == FALSE)
 		return FALSE;
 
 	//	如果不需要前一交易日K线数据
-	if(!m_PlaybackConfig.fGapPercentage 
-		&& (!m_PlaybackConfig.fLastDayFluctuationAbove)
-		&& (!m_PlaybackConfig.fLastDayFluctuationBelow)) 
+	if(!pbConfig.fGapPercentage 
+		&& (!pbConfig.fLastDayFluctuationAbove)
+		&& (!pbConfig.fLastDayFluctuationBelow)) 
 		return TRUE;
 
 	//	获取当前合约在该日期的文件名
@@ -138,26 +138,24 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate)
 	//	高低开条件
 	int gap = 100 * abs(this_kline.open - prev_kline.close) / (float)prev_kline.close;
 
-	if(m_PlaybackConfig.fGapPercentage && gap < m_PlaybackConfig.fGapPercentage)
+	if(pbConfig.fGapPercentage && gap < pbConfig.fGapPercentage)
 		return FALSE;
 
 	//	上一交易日的振幅
 	int lastFlunc =  100 * (prev_kline.high - prev_kline.low) 
 					/ ((float)(prev_kline.high + prev_kline.low) / 2.0f);
 
-	if(m_PlaybackConfig.fLastDayFluctuationAbove && lastFlunc < m_PlaybackConfig.fLastDayFluctuationAbove)
+	if(pbConfig.fLastDayFluctuationAbove && lastFlunc < pbConfig.fLastDayFluctuationAbove)
 		return FALSE;
 
-	if(m_PlaybackConfig.fLastDayFluctuationBelow && lastFlunc > m_PlaybackConfig.fLastDayFluctuationBelow)
+	if(pbConfig.fLastDayFluctuationBelow && lastFlunc > pbConfig.fLastDayFluctuationBelow)
 		return FALSE;
 
 	return TRUE;
 }
 
-void CKLinePrintDoc::SetPlaybackConfig(PlaybackConfig pc)
+void CKLinePrintDoc::LoadPlaybackCalendar(PlaybackConfig pbConfig)
 {
-	m_PlaybackConfig = pc;
-
 	//	未加载分笔数据
 	if(!m_CurCsvFile.size()) return;
 
@@ -170,7 +168,7 @@ void CKLinePrintDoc::SetPlaybackConfig(PlaybackConfig pc)
 	while(nCurDate > 0)
 	{
 		//	满足所有条件才加入
-		if(ValidatePlaybackConfig(nCurDate))
+		if(ValidatePlaybackConfig(nCurDate, pbConfig))
 			m_FilteredCalendar.Add(nCurDate);
 
 		nCurDate = CALENDAR.GetNext(nCurDate);
@@ -244,7 +242,7 @@ BOOL CKLinePrintDoc::LoadNextDay()
 	
 	nCurDate = Utility::GetDateByPath(m_CurCsvFile);
 
-	if(m_PlaybackConfig.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
+	if(PBCONFIG.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
 	{
 		nNextDate = m_FilteredCalendar.GetNext(nCurDate);
 	}

@@ -134,14 +134,21 @@ void CPlaybackConfDialog::OnBnClickedOk()
 
 	if(m_bGap)
 		m_pc.fGapPercentage = m_fGap;
+	else
+		m_pc.fGapPercentage = 0;
 
 	if(m_bFluncAbove)
 		m_pc.fLastDayFluctuationAbove = m_fFluncAbove;
+	else
+		m_pc.fLastDayFluctuationAbove = 0;
 
 	if(m_bFluncBelow)
 		m_pc.fLastDayFluctuationBelow = m_fFluncBelow;
+	else
+		m_pc.fLastDayFluctuationBelow = 0;
 
 	//	保存到配置文件
+	PBCONFIG = m_pc;
 	Utility::SavePlaybackConfig(m_pc);
 
 	OnOK();
@@ -181,7 +188,7 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 	else 
 		m_bFriday = FALSE;
 
-	m_nDateRangeOption = 2;
+	m_nDateRangeOption = 4;
 
 	if(m_pc.nStartDate)
 		m_StartDate = CTime(m_pc.nStartDate /10000, m_pc.nStartDate % 10000 / 100, m_pc.nStartDate % 10000 % 100, 0,0,0);
