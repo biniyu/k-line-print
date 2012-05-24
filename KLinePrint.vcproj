@@ -191,14 +191,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ClassView.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\FileView.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\KLineCollection.cpp"
 				>
 			</File>
@@ -231,15 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\OutputWnd.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\PlaybackConfDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PropertiesWnd.cpp"
 				>
 			</File>
 			<File
@@ -287,10 +271,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ViewTree.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\VolatilityRanker.cpp"
 				>
 			</File>
@@ -302,14 +282,6 @@
 			>
 			<File
 				RelativePath=".\CalendarGenerator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ClassView.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FileView.h"
 				>
 			</File>
 			<File
@@ -345,19 +317,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\OutputWnd.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PlaybackConfDialog.h"
 				>
 			</File>
 			<File
 				RelativePath=".\PlaybackConfig.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PropertiesWnd.h"
 				>
 			</File>
 			<File
@@ -394,10 +358,6 @@
 			</File>
 			<File
 				RelativePath=".\Utility.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ViewTree.h"
 				>
 			</File>
 			<File
