@@ -460,16 +460,16 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
-	PlaybackConfig pc;
-	pc = pDoc->GetPlaybackConfig();
-
 	pDoc->LoadNextDay();
-	pDoc->DisplayTill(pc.nStartTime);
+	pDoc->DisplayTill(PBCONFIG.nStartTime);
 }
 
 void CKLinePrintView::OnPlaybackForward()
 {
 	CKLinePrintDoc* pDoc = GetDocument();
+
+	if(!pDoc->HasPlaybackCalendar())
+		pDoc->LoadPlaybackCalendar(PBCONFIG);
 
 	m_nPlaybackSpeed = 1;
 
@@ -481,6 +481,7 @@ void CKLinePrintView::OnPlaybackForward()
 	{
 		m_pTradeDialog = new CTradeDialog;
 		m_pTradeDialog->Create(IDD_TRADE,NULL);
+		m_pTradeDialog->CenterWindow();
 		m_pTradeDialog->ShowWindow(SW_SHOW); 
 	}
 	else
@@ -496,21 +497,18 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if (!pDoc)
 		return;
 
-	PlaybackConfig pc;
-	pc = pDoc->GetPlaybackConfig();
-
 	int time = pDoc->GetCurrentTickTime();
 
-	if(!time || time > pc.nEndTime)
+	if(!time || time > PBCONFIG.nEndTime)
 	{
 		KillTimer(1);
 		pDoc->LoadNextDay();
-		pDoc->DisplayTill(pc.nStartTime);
+		pDoc->DisplayTill(PBCONFIG.nStartTime);
 	}
-	else if(time < pc.nStartTime)
+	else if(time < PBCONFIG.nStartTime)
 	{
 		KillTimer(1);
-		pDoc->DisplayTill(pc.nStartTime);
+		pDoc->DisplayTill(PBCONFIG.nStartTime);
 	}
 	else
 	{
@@ -566,10 +564,10 @@ void CKLinePrintView::OnPlaybackConf()
 
 	CPlaybackConfDialog dlg;
 
-	dlg.SetPlaybackConfig(pDoc->GetPlaybackConfig());
+	dlg.SetPlaybackConfig(PBCONFIG);
 
 	if(IDOK == dlg.DoModal())
 	{
-		pDoc->SetPlaybackConfig(dlg.GetPlaybackConfig());
+		pDoc->LoadPlaybackCalendar(PBCONFIG);
 	}
 }

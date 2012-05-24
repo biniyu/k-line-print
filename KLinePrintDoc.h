@@ -31,7 +31,6 @@ private:
 	TickReader		m_TickReader;
 
 	Calendar		m_FilteredCalendar;		// 根据回放选项过滤出来的符合条件的日期
-	PlaybackConfig	m_PlaybackConfig;		// 回放选项
 
 // 操作
 public:
@@ -52,10 +51,10 @@ public:
 	string m_CurCsvFile;
 	string m_CurDayFile;
 
-	void SetPlaybackConfig(PlaybackConfig pc);
-	PlaybackConfig GetPlaybackConfig() { return m_PlaybackConfig; }
+	void LoadPlaybackCalendar(PlaybackConfig pbConfig);
+	BOOL ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig);
 
-	BOOL ValidatePlaybackConfig(int nDate);
+	BOOL HasPlaybackCalendar() { return (m_FilteredCalendar.size()!=0); }
 
 	void ViewNeighborDate(BOOL bPrev);
 	void ReloadByDate(int nDate);
