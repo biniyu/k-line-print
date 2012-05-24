@@ -19,6 +19,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 {
 	m_tf.SetBalance(50000);
 	m_tf.SetParam(10, 12, 5);
+	m_tf.SetTick(Tick());
 }
 
 CTradeDialog::~CTradeDialog()
@@ -89,7 +90,8 @@ BOOL CTradeDialog::OnInitDialog()
 
 	m_PositionInfo.InsertColumn(0, CString("持仓量"), 0, 90);
 	m_PositionInfo.InsertColumn(1, CString("开仓价格"), 0, 90);
-	m_PositionInfo.InsertColumn(2, CString("浮动盈亏"), 0, 90);
+	m_PositionInfo.InsertColumn(2, CString("当前价格"), 0, 90);
+	m_PositionInfo.InsertColumn(3, CString("浮动盈亏"), 0, 90);
 
 	m_nSlots = 1;
 	m_nFee = m_tf.m_nFee;
@@ -123,7 +125,8 @@ void CTradeDialog::UpdateAccountInfo(void)
 	m_PositionInfo.DeleteAllItems();
 	m_PositionInfo.InsertItem(0, IntToCString(m_tf.m_nPosition.nSlot));
 	m_PositionInfo.SetItemText(0, 1, IntToCString(m_tf.m_nPosition.nPrice));
-	m_PositionInfo.SetItemText(0, 2, IntToCString(m_tf.m_nPosition.nProfit));
+	m_PositionInfo.SetItemText(0, 2, IntToCString(m_tf.m_nTick.price));
+	m_PositionInfo.SetItemText(0, 3, IntToCString(m_tf.m_nPosition.nProfit));
 }
 
 
