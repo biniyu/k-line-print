@@ -48,7 +48,7 @@ END_MESSAGE_MAP()
 CKLinePrintView::CKLinePrintView()
 {
 	m_bLocked = TRUE;
-	m_enViewMode = ViewModeAll;
+	m_enViewMode = ViewMode1Min;
 	m_pTradeDialog = 0;
 }
 
