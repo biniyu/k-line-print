@@ -199,8 +199,16 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	DWORD after = GetTickCount();
 	TRACE("\ntick file %s read, use %d ticks", m_CurCsvFile.c_str(), after - before);
 
+	int nWeekDay = Utility::GetWeekDayByDate(Utility::GetDateByPath(m_CurCsvFile));
+
+	CString csvFileName(m_CurCsvFile.c_str());
+	CString dayFileName(m_CurDayFile.c_str());
+	CString title;
+
+	title.Format(_T("%s | %s | 星期%d"), csvFileName, dayFileName, nWeekDay);
+
 	//	更新标题
-	SetTitle(CString((m_CurCsvFile + "|" + m_CurDayFile).c_str()));
+	SetTitle(title);
 	
 	::WritePrivateProfileStringA("Files","Current", 
 							m_CurCsvFile.c_str(), (Utility::GetProgramPath() + "klinep.ini").c_str()); 

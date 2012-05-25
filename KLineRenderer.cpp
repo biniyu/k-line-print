@@ -268,12 +268,14 @@ void KLineRenderer::Render(CDC* pDC)
 
 		fPricePercentage = (m_kHighPrice - kAxisPrice)/(float)kAxisPrice;
 
-		if( fPricePercentage < 0.02)
+		float fDefaultRange = 0.02;
+
+		if( fPricePercentage < fDefaultRange)
 		{
 			//	波动过小则统一使用 2% 的涨跌幅比例
-			m_kHighPrice = kAxisPrice * 1.02;
-			kLowPrice = kAxisPrice * 0.98;
-			fPricePercentage = 0.02;
+			m_kHighPrice = kAxisPrice * (1 + fDefaultRange);
+			kLowPrice = kAxisPrice * (1 - fDefaultRange);
+			fPricePercentage = fDefaultRange;
 		}
 		else // 将幅度调的稍大，以便看到附近的均线 
 		{
