@@ -325,40 +325,27 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
+	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
+	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
+
+	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
+	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
+
+
 	m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
 	m_1MinData.AddKeyPrice(prevDayKLine.high5, "H5");
 	m_1MinData.AddKeyPrice(prevDayKLine.high10, "H10");
 	m_1MinData.AddKeyPrice(prevDayKLine.high20, "H20");
 	m_1MinData.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
 	m_1MinData.AddKeyPrice(prevDayKLine.low5, "L5");
 	m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
 	m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
 	m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
-
-	m_15SecData.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	m_15SecData.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	m_15SecData.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	m_15SecData.AddKeyPrice(prevDayKLine.ma60, "MA60");
-
-	m_15SecData.AddKeyPrice(prevDayKLine.high, "H1");
-	m_15SecData.AddKeyPrice(prevDayKLine.high5, "H5");
-	m_15SecData.AddKeyPrice(prevDayKLine.high10, "H10");
-	m_15SecData.AddKeyPrice(prevDayKLine.high20, "H20");
-	m_15SecData.AddKeyPrice(prevDayKLine.high60, "H60");
-
-	m_15SecData.AddKeyPrice(prevDayKLine.low, "L1");
-	m_15SecData.AddKeyPrice(prevDayKLine.low5, "L5");
-	m_15SecData.AddKeyPrice(prevDayKLine.low10, "L10");
-	m_15SecData.AddKeyPrice(prevDayKLine.low20, "L20");
-	m_15SecData.AddKeyPrice(prevDayKLine.low60, "L60");
-
 
 	/* «∞»’»’K */
 	m_1MinData.AddToTail(prevDayKLine);
