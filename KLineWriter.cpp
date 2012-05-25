@@ -26,10 +26,10 @@ void KLineWriter::Write(string path, KLineCollection& klines)
 		int month = kline.time % 10000 / 100;
 		int day = kline.time % 10000 % 100;
 
-		sprintf(buf,"%d/%02d/%02d %d %d %d %d %.2f", 
+		sprintf(buf,"%d/%02d/%02d %d %d %d %d %d %d", 
 			year, month, day, 
 			kline.open, kline.high, kline.low, kline.close,
-			(float)kline.vol);
+			kline.vol, kline.avg);
 
 		outf << buf << endl;
 	}

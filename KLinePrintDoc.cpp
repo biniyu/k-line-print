@@ -445,7 +445,11 @@ void CKLinePrintDoc::OnGenDayline()
 		//	从该合约首个交易日开始检查缺失的日线
 		//	但未必从首个交易日起就有分笔数据文件
 
-		nCurDate = klcorg[0].time;
+		if(klcorg.size())
+			nCurDate = klcorg[0].time;
+		else
+			nCurDate = CALENDAR.GetFirst();
+
 		nCurKLineIdx = 0;
 
 		//	寻找首个有分笔数据文件的交易日
@@ -521,6 +525,7 @@ KLine CKLinePrintDoc::GenerateDayLineFromQuoteData(string path, int date)
 
 	KLine kline;
 	TickCollection ticks;
+	float totalPrice = 0;
 
 	m_TickReader.Read(quotefile, ticks);
 
@@ -538,13 +543,16 @@ KLine CKLinePrintDoc::GenerateDayLineFromQuoteData(string path, int date)
 	for(int i = 0; i < ticks.size(); i++)
 	{
 		kline.vol += ticks[i].vol;
-		
+		totalPrice += (ticks[i].price * ticks[i].vol);
+
 		if(ticks[i].price > kline.high)
 			kline.high = ticks[i].price;
 
 		if(ticks[i].price < kline.low)
 			kline.low = ticks[i].price;
 	}
+
+	kline.avg = (int)(totalPrice / kline.vol);
 
 	return kline;
 }
