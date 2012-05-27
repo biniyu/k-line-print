@@ -335,11 +335,10 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 
 	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
 	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
-
 	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
 	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
 
-
+#if 0
 	m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
@@ -354,6 +353,7 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
 	m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
 	m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
+#endif
 
 	/* «∞»’»’K */
 	m_1MinData.AddToTail(prevDayKLine);
