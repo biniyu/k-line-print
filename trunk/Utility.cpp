@@ -360,7 +360,14 @@ int Utility::GetWeekDayByDate(int nDate)
 		y -= 1;
 	}
 
-	return (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
+	int weekday =  (y + y/4 + c/4 - 2*c + 26*(m+1)/10 + d-1) % 7;
+
+	if(weekday < 0)
+	{
+		weekday += 7;
+	}
+
+	return weekday;
 }
 
 #define CONFIG_FILE ((Utility::GetProgramPath() + "klinep.ini").c_str())
