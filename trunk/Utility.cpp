@@ -382,10 +382,10 @@ void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, L
 //	读入账户/品种信息
 void Utility::ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, int& nUnitsPerSlot)
 {
-	GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
-	GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
-	GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
-	GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
+	nBalance = GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
+	nFee = GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
+	nMargin = GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
+	nUnitsPerSlot = GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
 }
 
 void Utility::WriteBalance(int nBalance)
