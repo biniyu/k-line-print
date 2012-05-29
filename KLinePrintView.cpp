@@ -503,6 +503,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 		/* 到点自动平仓 */
 		EXCHANGE.SetTick(pDoc->GetCurTick());
 		EXCHANGE.Close();
+		m_pTradeDialog->UpdateAccountInfo();
 
 		pDoc->LoadNextDay();
 		pDoc->DisplayTill(PBCONFIG.nStartTime);
@@ -561,6 +562,7 @@ void CKLinePrintView::OnPlaybackStop()
 
 	EXCHANGE.SetTick(pDoc->GetCurTick());
 	EXCHANGE.Close();
+	m_pTradeDialog->UpdateAccountInfo();
 
 	KillTimer(1);
 	pDoc->DisplayTill(-1, -1);

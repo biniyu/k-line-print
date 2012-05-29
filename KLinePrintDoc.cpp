@@ -272,18 +272,28 @@ BOOL CKLinePrintDoc::LoadNextDay()
 
 Tick CKLinePrintDoc::GetCurTick()
 {
-	if(m_nCurrentTickIdx-1 < m_TickData.size())
-		return m_TickData[m_nCurrentTickIdx-1];
+	Tick tmp;
+
+	if(m_nCurrentTickIdx < m_TickData.size())
+		return m_TickData[m_nCurrentTickIdx];
 	else
-		return Tick();
+	{
+		tmp = m_TickData[m_TickData.size() - 1];
+		tmp.time = 0;
+		return tmp;
+	}
 }
 
 void CKLinePrintDoc::PlayTillTime(int nTillTime)
 {
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
-	while(m_nCurrentTickIdx < m_TickData.size())
+	while(1)
 	{
+		m_nCurrentTickIdx++;
+
+		if(m_nCurrentTickIdx >= m_TickData.size()) break;
+
 		// 需要override时间
 		Tick tmp = m_TickData[m_nCurrentTickIdx];
 
@@ -292,8 +302,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 
 		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
 		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
-
-		m_nCurrentTickIdx++;
 
 		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime) 
 			break;
@@ -364,8 +372,6 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	m_DayData.StartQuote(tmp);
 	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
-
-	m_nCurrentTickIdx++;
 
 	//	继续生成
 	PlayTillTime(nTillTime);
