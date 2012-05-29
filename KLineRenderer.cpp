@@ -652,7 +652,7 @@ void KLineRenderer::Render(CDC* pDC)
 		pDC->SelectObject(pOldPen);
 	}
 
-	//	绘制关键价格线
+	//	绘制关键价格线(文本需要错开，以免互相覆盖)
 	map<int, string>::iterator itKeyPrice;
 	map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
 
@@ -681,9 +681,17 @@ void KLineRenderer::Render(CDC* pDC)
 		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, maxPricePos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, maxPricePos);	
 
+		CString tmp;
+
+		tmp.Format(_T("%d"), m_pKLines->m_nMaxPrice);
+		pDC->TextOutW(m_Rect.right - RIGHT_MARGIN + 4, maxPricePos, tmp);
+
 		pDC->SelectObject(&penGreen);
 		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, minPricePos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, minPricePos);	
+
+		tmp.Format(_T("%d"), m_pKLines->m_nMinPrice);
+		pDC->TextOutW(m_Rect.right - RIGHT_MARGIN + 4, minPricePos, tmp);
 	}
 
 	pDC->SelectObject(pOldPen);
@@ -701,8 +709,9 @@ void KLineRenderer::Render(CDC* pDC)
 		float todayOpen = (*m_pKLines)[m_nOpenIndex].open;
 		float prevClose = (*m_pKLines)[0].close;
 		float gap = (todayOpen - prevClose) / prevClose * 100;
+		int range = m_pKLines->m_nMaxPrice - m_pKLines->m_nMinPrice;
 
-		strPercent.Format(_T("图%.2f%% 跳%.2f%%"), (fPricePercentage / 0.01), gap);
+		strPercent.Format(_T("图%.2f%% 跳%.2f%% 波幅%d点"), (fPricePercentage / 0.01), gap, range);
 		pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
 	}
 

@@ -287,8 +287,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 		// 需要override时间
 		Tick tmp = m_TickData[m_nCurrentTickIdx];
 
-		if(tmp.time > nTillTime) break;
-
 		tmp.time = nDate;
 		m_DayData.Quote(tmp);
 
@@ -296,6 +294,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
+
+		if(nTillTime != -1 && tmp.time > nTillTime) break;
 	}
 }
 
@@ -324,12 +324,12 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
+#if 0
 	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
 	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
 	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
 	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
 
-#if 0
 	m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
 	m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
