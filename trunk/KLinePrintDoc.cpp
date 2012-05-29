@@ -295,7 +295,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 
 		m_nCurrentTickIdx++;
 
-		if(nTillTime != -1 && tmp.time > nTillTime) break;
+		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime) 
+			break;
 	}
 }
 
