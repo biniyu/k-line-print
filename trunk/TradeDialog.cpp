@@ -104,13 +104,6 @@ BOOL CTradeDialog::OnInitDialog()
 	// 异常: OCX 属性页应返回 FALSE
 }
 
-void CTradeDialog::SetTick(Tick tick) 
-{ 
-	EXCHANGE.SetTick(tick);
-	UpdateAccountInfo();
-}
-
-
 void CTradeDialog::UpdateAccountInfo(void)
 {
 	m_AccountInfo.DeleteAllItems();
