@@ -303,7 +303,7 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
 		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 
-		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime) 
+		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time >= nTillTime) 
 			break;
 	}
 }
