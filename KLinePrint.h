@@ -11,6 +11,7 @@
 
 #include "PlaybackConfig.h"
 #include "CalendarGenerator.h"
+#include "TradeFacility.h"
 
 // CKLinePrintApp:
 // 有关此类的实现，请参阅 KLinePrint.cpp
@@ -30,7 +31,8 @@ public:
 	BOOL			m_bHiColorIcons;
 
 	Calendar		m_cal;
-	PlaybackConfig	m_PlaybackConfig;		// 回放选项
+	PlaybackConfig	m_PlaybackConfig;		//	回放选项
+	TradeFacility	m_ex;					//	交易所
 
 	virtual void PreLoadState();
 	virtual void LoadCustomState();
@@ -44,4 +46,5 @@ extern CKLinePrintApp theApp;
 
 #define CALENDAR ((CKLinePrintApp*)AfxGetApp())->m_cal
 #define PBCONFIG ((CKLinePrintApp*)AfxGetApp())->m_PlaybackConfig
+#define EXCHANGE ((CKLinePrintApp*)AfxGetApp())->m_ex
 

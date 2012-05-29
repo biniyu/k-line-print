@@ -114,6 +114,12 @@ BOOL CKLinePrintApp::InitInstance()
 	CalendarGenerator cg;
 	cg.Generate("J:\\FutureData\\ZZ", m_cal);
 
+	//	读入账户/品种信息
+	Utility::ReadExchangeConfig(EXCHANGE.m_nBalance,
+								EXCHANGE.m_nFee,
+								EXCHANGE.m_nMargin,
+								EXCHANGE.m_nUnitsPerSlot);
+
 	srand(time(0));
 
 	//	自动打开上次的文件
