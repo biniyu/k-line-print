@@ -270,42 +270,33 @@ BOOL CKLinePrintDoc::LoadNextDay()
 	return TRUE;
 }
 
-int CKLinePrintDoc::GetCurrentTickTime()
+Tick CKLinePrintDoc::GetCurTick()
 {
-	if(m_nCurrentTickIdx >= m_TickData.size()) return 0;
-	else return m_TickData[m_nCurrentTickIdx].time;
+	if(m_nCurrentTickIdx-1 < m_TickData.size())
+		return m_TickData[m_nCurrentTickIdx-1];
+	else
+		return Tick();
 }
 
-BOOL CKLinePrintDoc::PlayTillTime(int nTillTime)
+void CKLinePrintDoc::PlayTillTime(int nTillTime)
 {
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
-
-	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
 	while(m_nCurrentTickIdx < m_TickData.size())
 	{
 		// 需要override时间
 		Tick tmp = m_TickData[m_nCurrentTickIdx];
-		tmp.time = nDate;
 
+		if(tmp.time > nTillTime) break;
+
+		tmp.time = nDate;
 		m_DayData.Quote(tmp);
+
 		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
 		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
-		pView->SetTickData(m_TickData[m_nCurrentTickIdx]);
 
 		m_nCurrentTickIdx++;
-
-		if(m_nCurrentTickIdx >= m_TickData.size()) 
-			break;
-
-		if(m_TickData[m_nCurrentTickIdx].time >= nTillTime)
-			break;
 	}
-
-	if(m_nCurrentTickIdx == m_TickData.size()) 
-		return FALSE;
-	else 
-		return TRUE;
 }
 
 void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
@@ -358,51 +349,25 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	/* 前日日K */
 	m_1MinData.AddToTail(prevDayKLine);
 	
+	//	生成本日第一条K线
 	m_nCurrentTickIdx = 0;
 
 	m_DayData.SetPeriod(36000);
 	m_1MinData.SetPeriod(60);
 	m_15SecData.SetPeriod(15);
 
-	before = GetTickCount();
+	//	需要override时间
+	Tick tmp = m_TickData[m_nCurrentTickIdx];
+	tmp.time = nDate;
 
-	while(m_nCurrentTickIdx < m_TickData.size())
-	{
-		// 需要override时间
-		Tick tmp = m_TickData[m_nCurrentTickIdx];
-		tmp.time = nDate;
+	m_DayData.StartQuote(tmp);
+	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
+	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
-		if(0 == m_nCurrentTickIdx)
-		{
-			//	只有在播放时才需要动态更新最后的K线
-			if(nTillDate != -1) 
-				m_DayData.StartQuote(tmp);
-			m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
-			m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
-		}
-		else
-		{
-			if(nTillDate != -1)
-				m_DayData.Quote(tmp);
-			m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
-			m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
-		}
+	m_nCurrentTickIdx++;
 
-		m_nCurrentTickIdx++;
-
-		if(nTillTime == 0 && m_nCurrentTickIdx == 1) 
-			break;
-
-		if(m_nCurrentTickIdx >= m_TickData.size()) break;
-
-		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time > nTillTime)
-			break;
-
-	}
-
-	after = GetTickCount();
-	TRACE("\n1min/15s generated, use %d ticks", after - before);
-
+	//	继续生成
+	PlayTillTime(nTillTime);
 
 	//	设置数据
 	pView->SetDayData(&m_DayData, nDate);

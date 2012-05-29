@@ -74,10 +74,10 @@ public:
 	void DisplayTill(int nTillTime = -1, int nTillDate = -1);
 
 	/* 播放至某个时点 */
-	BOOL PlayTillTime(int nTillTime);
+	void PlayTillTime(int nTillTime);
 
-	// 获取当前时点	
-	int GetCurrentTickTime();
+	//	获取当前价格
+	Tick GetCurTick();
 
 // 生成的消息映射函数
 protected:

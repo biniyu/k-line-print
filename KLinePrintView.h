@@ -27,7 +27,6 @@ public:
 	void Layout();
 	void Render();
 
-	void SetTickData(Tick tick);
 	void Set5SecData(KLineCollection* pData);
 	void Set1MinData(KLineCollection* pData);
 	void SetDayData(KLineCollection* pData, int nDate);  

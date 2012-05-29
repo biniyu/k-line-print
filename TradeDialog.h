@@ -13,8 +13,6 @@ public:
 	CTradeDialog(CWnd* pParent = NULL);   // 标准构造函数
 	virtual ~CTradeDialog();
 
-	void SetTick(Tick tick);
-
 // 对话框数据
 	enum { IDD = IDD_TRADE };
 
@@ -28,8 +26,8 @@ public:
 	virtual BOOL OnInitDialog();
 	CListCtrl m_AccountInfo;
 	CListCtrl m_PositionInfo;
-private:
 	void UpdateAccountInfo(void);
+
 public:
 	afx_msg void OnBnClickedButtonClose();
 	afx_msg void OnBnClickedButtonReverse();

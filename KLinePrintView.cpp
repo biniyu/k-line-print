@@ -57,12 +57,6 @@ CKLinePrintView::~CKLinePrintView()
 
 }
 
-void CKLinePrintView::SetTickData(Tick tick)
-{
-	if(m_pTradeDialog) 
-		m_pTradeDialog->SetTick(tick);
-}
-
 void CKLinePrintView::Set5SecData(KLineCollection* pData) 
 { 
 	klr_5sec.SetKLineData(pData, 120); 
@@ -460,6 +454,9 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
+	EXCHANGE.SetTick(pDoc->GetCurTick());
+	EXCHANGE.Close();
+
 	pDoc->LoadNextDay();
 	pDoc->DisplayTill(PBCONFIG.nStartTime, klr_day.GetCurTime());
 }
@@ -497,30 +494,41 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if (!pDoc)
 		return;
 
-	int time = pDoc->GetCurrentTickTime();
+	Tick tick = pDoc->GetCurTick();
 
-	if(!time || time > PBCONFIG.nEndTime)
+	if(!tick.time || tick.time > PBCONFIG.nEndTime)
 	{
 		KillTimer(1);
+
+		/* 到点自动平仓 */
+		EXCHANGE.SetTick(pDoc->GetCurTick());
+		EXCHANGE.Close();
+
 		pDoc->LoadNextDay();
 		pDoc->DisplayTill(PBCONFIG.nStartTime);
+		
 	}
-	else if(time < PBCONFIG.nStartTime)
+	else if(tick.time < PBCONFIG.nStartTime)
 	{
 		KillTimer(1);
 		pDoc->DisplayTill(PBCONFIG.nStartTime);
 	}
 	else
 	{
-		int nTillTime = pDoc->GetCurrentTickTime() + m_nPlaybackSpeed;
+		int nTillTime = tick.time + m_nPlaybackSpeed;
 		pDoc->PlayTillTime(nTillTime);
 	}
+
+	EXCHANGE.SetTick(pDoc->GetCurTick());
 
 	klr_1min.SelectLastK();
 	klr_5sec.SelectLastK();
 	klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
 	Render();
 	Invalidate(FALSE);
+
+	if(m_pTradeDialog)
+		m_pTradeDialog->UpdateAccountInfo();
 
 	CView::OnTimer(nIDEvent);
 }
@@ -550,6 +558,9 @@ void CKLinePrintView::OnPlaybackStop()
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+
+	EXCHANGE.SetTick(pDoc->GetCurTick());
+	EXCHANGE.Close();
 
 	KillTimer(1);
 	pDoc->DisplayTill(-1, -1);
