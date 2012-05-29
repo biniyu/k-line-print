@@ -17,9 +17,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nUnitsPerSlot(0)
 	, m_nSlots(0)
 {
-	m_tf.SetBalance(50000);
-	m_tf.SetParam(10, 12, 5);
-	m_tf.SetTick(Tick());
+	EXCHANGE.SetTick(Tick());
 }
 
 CTradeDialog::~CTradeDialog()
@@ -54,26 +52,26 @@ END_MESSAGE_MAP()
 void CTradeDialog::OnBnClickedButtonBuy()
 {
 	UpdateData();
-	m_tf.Buy(m_nSlots);
+	EXCHANGE.Buy(m_nSlots);
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonSell()
 {
 	UpdateData();
-	m_tf.Sell(m_nSlots);
+	EXCHANGE.Sell(m_nSlots);
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonClose()
 {
-	m_tf.Close();
+	EXCHANGE.Close();
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonReverse()
 {
-	m_tf.Reverse();
+	EXCHANGE.Reverse();
 	UpdateAccountInfo();
 }
 
@@ -94,9 +92,9 @@ BOOL CTradeDialog::OnInitDialog()
 	m_PositionInfo.InsertColumn(3, CString("¸¡¶¯Ó¯¿÷"), 0, 90);
 
 	m_nSlots = 1;
-	m_nFee = m_tf.m_nFee;
-	m_nMargin = m_tf.m_nMargin;
-	m_nUnitsPerSlot = m_tf.m_nUnitsPerSlot;
+	m_nFee = EXCHANGE.m_nFee;
+	m_nMargin = EXCHANGE.m_nMargin;
+	m_nUnitsPerSlot = EXCHANGE.m_nUnitsPerSlot;
 
 	UpdateData(FALSE);
 
@@ -108,7 +106,7 @@ BOOL CTradeDialog::OnInitDialog()
 
 void CTradeDialog::SetTick(Tick tick) 
 { 
-	m_tf.SetTick(tick);
+	EXCHANGE.SetTick(tick);
 	UpdateAccountInfo();
 }
 
@@ -116,23 +114,24 @@ void CTradeDialog::SetTick(Tick tick)
 void CTradeDialog::UpdateAccountInfo(void)
 {
 	m_AccountInfo.DeleteAllItems();
-	m_AccountInfo.InsertItem(0, IntToCString(m_tf.m_nBalance));
-	m_AccountInfo.SetItemText(0, 1, IntToCString(m_tf.m_nBalance));
+	m_AccountInfo.InsertItem(0, IntToCString(EXCHANGE.m_nBalance));
+	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance));
 	m_AccountInfo.SetItemText(0, 2, IntToCString(0));
 	m_AccountInfo.SetItemText(0, 3, IntToCString(0));
 	m_AccountInfo.SetItemText(0, 4, IntToCString(0));
 
 	m_PositionInfo.DeleteAllItems();
-	m_PositionInfo.InsertItem(0, IntToCString(m_tf.m_nPosition.nSlot));
-	m_PositionInfo.SetItemText(0, 1, IntToCString(m_tf.m_nPosition.nPrice));
-	m_PositionInfo.SetItemText(0, 2, IntToCString(m_tf.m_nTick.price));
-	m_PositionInfo.SetItemText(0, 3, IntToCString(m_tf.m_nPosition.nProfit));
+	m_PositionInfo.InsertItem(0, IntToCString(EXCHANGE.m_nPosition.nSlot));
+	m_PositionInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nPosition.nPrice));
+	m_PositionInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nTick.price));
+	m_PositionInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nPosition.nProfit));
+
+	Utility::WriteBalance(EXCHANGE.m_nBalance);
 }
-
-
 
 void CTradeDialog::OnBnClickedButtonUpdateParam()
 {
 	UpdateData();
-	m_tf.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
+	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
+	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot);
 }

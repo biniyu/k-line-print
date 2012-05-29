@@ -18,10 +18,6 @@ public:
 // 对话框数据
 	enum { IDD = IDD_TRADE };
 
-private:
-
-	TradeFacility m_tf;
-
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 

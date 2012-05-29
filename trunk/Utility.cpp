@@ -372,6 +372,34 @@ int Utility::GetWeekDayByDate(int nDate)
 
 #define CONFIG_FILE ((Utility::GetProgramPath() + "klinep.ini").c_str())
 
+void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, LPCSTR lpFileName)
+{
+	char buf[64];
+	sprintf(buf, "%d", nDefault);
+	WritePrivateProfileStringA(lpAppName, lpKeyName, buf, lpFileName);
+}
+
+//	读入账户/品种信息
+void Utility::ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, int& nUnitsPerSlot)
+{
+	GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
+	GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
+	GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
+	GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
+}
+
+void Utility::WriteBalance(int nBalance)
+{
+	WritePrivateProfileIntA("Exchange","Balance", nBalance, CONFIG_FILE);
+}
+
+void Utility::WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot)
+{
+	WritePrivateProfileIntA("Exchange","Fee", nFee, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","Margin", nMargin, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","UnitsPerSlot", nUnitsPerSlot, CONFIG_FILE);
+}
+
 //	读入回放配置
 PlaybackConfig Utility::ReadPlaybackConfig()
 {
@@ -396,13 +424,6 @@ PlaybackConfig Utility::ReadPlaybackConfig()
 	pc.fLastDayFluctuationBelow = GetPrivateProfileIntA("Playback","FluctuationBelow", 0, CONFIG_FILE);
 
 	return pc;
-}
-
-void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, LPCSTR lpFileName)
-{
-	char buf[64];
-	sprintf(buf, "%d", nDefault);
-	WritePrivateProfileStringA(lpAppName, lpKeyName, buf, lpFileName);
 }
 
 //	保存回放配置
