@@ -539,7 +539,10 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 			int this_tick_in_millisec = tick_next.time_ms;
 			int next_tick_in_millisec = tick_next_2.time_ms;
 
-			SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / m_nPlaybackSpeed, NULL); 
+			if(next_tick_in_millisec - this_tick_in_millisec > 300 * 1000)
+				SetTimer(1, 10 * 1000, NULL);
+			else
+				SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / m_nPlaybackSpeed, NULL); 
 		}
 		else
 		{
