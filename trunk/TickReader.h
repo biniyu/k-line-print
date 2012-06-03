@@ -9,8 +9,7 @@ class Tick
 {
 public:
 
-	int time;
-	int millisec;	//	毫秒级时间
+	int time_ms;		//	毫秒级时间
 	int price;
 	int vol;
 	int totalvol;

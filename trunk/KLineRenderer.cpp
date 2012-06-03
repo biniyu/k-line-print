@@ -435,9 +435,9 @@ void KLineRenderer::Render(CDC* pDC)
 
 		/* 绘制15分钟，30分钟，60分钟时间线 */
 
-		int tmpHour = kline.time / 3600;
-		int tmpMinute =  kline.time % 3600 / 60;
-		int tmpSecond =  kline.time % 3600 % 60;
+		int tmpHour = kline.time / 1000 / 3600;
+		int tmpMinute =  kline.time / 1000 % 3600 / 60;
+		int tmpSecond =  kline.time / 1000 % 3600 % 60;
 		
 		int tmpTime = tmpHour * 60 + tmpMinute;
 
@@ -633,7 +633,7 @@ void KLineRenderer::Render(CDC* pDC)
 			else
 			{
 				strTime.Format(_T("%d %s"), 
-					Utility::ConvContTimeToDispTime(kline.time), strOpen);
+					Utility::ConvContTimeToDispTime(kline.time / 1000), strOpen);
 			}
 
 			CSize sz = pDC->GetTextExtent(strTime);

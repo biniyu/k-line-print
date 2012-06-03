@@ -49,9 +49,9 @@ void TickRenderer::Render(CDC* pDC)
 	CString strTime;
 	int tmphour, tmpmin, tmpsec;
 
-	tmphour = m_tick.time / 3600;
-	tmpmin = m_tick.time % 3600 / 60;
-	tmpsec = m_tick.time % 3600 % 60;
+	tmphour = m_tick.time_ms / 1000 / 3600;
+	tmpmin = m_tick.time_ms / 1000 % 3600 / 60;
+	tmpsec = m_tick.time_ms / 1000 % 3600 % 60;
 
 	strTime.Format(_T("%02d:%02d:%02d"), tmphour, tmpmin, tmpsec);
 

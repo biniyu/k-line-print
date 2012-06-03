@@ -20,7 +20,8 @@ protected: // 仅从序列化创建
 
 private:
 
-	int	m_nCurrentTickIdx;		//	下一个待播放tick的索引
+	int	m_nCurrentTickIdx;		//	当前tick的索引
+	int m_nCurrentTickTime;		//	当前时间
 
 	TickCollection	m_TickData;
 	KLineCollection m_15SecData;
@@ -71,13 +72,19 @@ public:
 	/* nTillTime		:	-1是播放所有，0是播放首tick，其他是播放至目标时间 */
 	/* nTillDate(日线)	:	-1是播放所有日期，其他是播放至目标日期 */
 
-	void DisplayTill(int nTillTime = -1, int nTillDate = -1);
+	void DisplayTill(int nTillMilliTime = -1, int nTillDate = -1);
 
 	/* 播放至某个时点 */
 	void PlayTillTime(int nTillMilliTime);
 
 	//	获取当前价格(0为当前tick)
 	Tick GetTick(int nOffset = 0);
+
+	//  获取当前时间
+	int GetCurTickTime()
+	{
+		return m_nCurrentTickTime;
+	}
 
 // 生成的消息映射函数
 protected:

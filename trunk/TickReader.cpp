@@ -50,10 +50,9 @@ void TickReader::Read(string path, TickCollection& ticks)
 			&tick.priceS1, &tick.volS1, &tick.priceS2, &tick.volS2, &tick.priceS3, &tick.volS3,
 			&tick.bs);
 
-		tick.time = hour*3600 + minute* 60 + second;
-		tick.millisec = 0;
+		tick.time_ms = (hour*3600 + minute* 60 + second) * 1000;
 
-		if(lasttime != tick.time)
+		if(lasttime/1000 != tick.time_ms/1000)
 		{
 			if(cnt > 1)
 			{
@@ -62,12 +61,12 @@ void TickReader::Read(string path, TickCollection& ticks)
 
 				for(int i = 0; i < cnt; i++)
 				{
-					ticks[ticks.size() - 1 - i].millisec = 1000 - (i + 1) * milli_interval;
+					ticks[ticks.size() - 1 - i].time_ms += 1000 - (i + 1) * milli_interval;
 				}
 			}
 
 			cnt = 1;
-			lasttime = tick.time;
+			lasttime = tick.time_ms;
 		}
 		else
 		{
