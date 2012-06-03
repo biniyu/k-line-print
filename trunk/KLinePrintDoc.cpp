@@ -294,11 +294,9 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 	{
 		//	检查下一个尚未播放的tick
 		Tick tickToQuote = m_TickData[m_nCurrentTickIdx + 1];
-		
-		int tickMilliTime = tickToQuote.time_ms;
-		
+				
 		//	未到达指定时间，播放
-		if(nTillMilliTime == -1 || tickMilliTime <= nTillMilliTime)
+		if(nTillMilliTime == -1 || tickToQuote.time_ms <= nTillMilliTime)
 		{
 			Tick tmp = tickToQuote;
 			tmp.time_ms = nDate;
@@ -308,7 +306,7 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 			m_15SecData.Quote(tickToQuote);
 
 			lastQuote = tickToQuote;
-			m_nCurrentTickTime = tickMilliTime;
+			m_nCurrentTickTime = tickToQuote.time_ms;
 			m_nCurrentTickIdx++;
 
 		}
@@ -318,13 +316,19 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 			tmp.time_ms = nDate;
 			m_DayData.Quote(tmp);
 
+			//	有可能数据缺失，虚拟的Quote一次
 			tmp.time_ms = nTillMilliTime;
 
 			m_1MinData.Quote(tmp);
 			m_15SecData.Quote(tmp);
 
-			//	有可能数据缺失，虚拟的Quote一次
-			m_nCurrentTickTime = nTillMilliTime;
+			//	如果相差的时间大于5分钟，应该是盘中休息时间，跳过
+
+			if(tickToQuote.time_ms - nTillMilliTime > 300 * 1000)
+				m_nCurrentTickTime = tickToQuote.time_ms - 10 * 1000;
+			else
+				m_nCurrentTickTime = nTillMilliTime;
+
 			break;
 		}
 	}
