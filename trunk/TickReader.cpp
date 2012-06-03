@@ -31,7 +31,7 @@ void TickReader::Read(string path, TickCollection& ticks)
 	*/
 
 	int	year, month, day;
-	int hour, minute, second;
+	int hour, minute, second, lasttime = 0, cnt = 0;
 
 #define SZ 1024
 	char buf[SZ];
@@ -51,6 +51,29 @@ void TickReader::Read(string path, TickCollection& ticks)
 			&tick.bs);
 
 		tick.time = hour*3600 + minute* 60 + second;
+		tick.millisec = 0;
+
+		if(lasttime != tick.time)
+		{
+			if(cnt > 1)
+			{
+				int milli_interval = 1000 / cnt;
+				/* 向前更新毫秒数 */
+
+				for(int i = 0; i < cnt; i++)
+				{
+					ticks[ticks.size() - 1 - i].millisec = 1000 - (i + 1) * milli_interval;
+				}
+			}
+
+			cnt = 1;
+			lasttime = tick.time;
+		}
+		else
+		{
+			cnt++;
+		}
+
 		ticks.push_back(tick);
 	}
 

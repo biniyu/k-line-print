@@ -10,10 +10,11 @@ class Tick
 public:
 
 	int time;
+	int millisec;	//	毫秒级时间
 	int price;
 	int vol;
 	int totalvol;
-	int interest;
+	int interest;	//	持仓量
 	
 	int priceB1;
 	int volB1;

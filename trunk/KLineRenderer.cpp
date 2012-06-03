@@ -632,9 +632,8 @@ void KLineRenderer::Render(CDC* pDC)
 			}
 			else
 			{
-				strTime.Format(_T("%d [%s] %s vol:%d vol_acc:%d"), 
-					Utility::ConvContTimeToDispTime(kline.time), 
-							strOpen, strCur, kline.vol, kline.vol_acc);
+				strTime.Format(_T("%d %s"), 
+					Utility::ConvContTimeToDispTime(kline.time), strOpen);
 			}
 
 			CSize sz = pDC->GetTextExtent(strTime);

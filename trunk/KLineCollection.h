@@ -15,6 +15,7 @@ public:
 	int open;
 	int close;
 	int vol;				//	当前K线的成交量
+	int interest;			//  持仓量
 	
 	//	日内
 	int		avg;			//	均价线
