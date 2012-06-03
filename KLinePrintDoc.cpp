@@ -274,12 +274,12 @@ Tick CKLinePrintDoc::GetTick(int nOffset)
 {
 	Tick tmp;
 
-	if(m_nCurrentTickIdx < m_TickData.size())
+	if(m_nCurrentTickIdx + nOffset < m_TickData.size())
 		return m_TickData[m_nCurrentTickIdx + nOffset];
 	else
 	{
 		tmp = m_TickData[m_TickData.size() - 1];
-		tmp.time = 0;
+		tmp.time_ms = 0;
 		return tmp;
 	}
 }
@@ -288,29 +288,49 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 {
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
-	while(1)
+	Tick lastQuote = m_TickData[m_nCurrentTickIdx];
+
+	while(m_nCurrentTickIdx + 1 < m_TickData.size())
 	{
-		m_nCurrentTickIdx++;
+		//	检查下一个尚未播放的tick
+		Tick tickToQuote = m_TickData[m_nCurrentTickIdx + 1];
+		
+		int tickMilliTime = tickToQuote.time_ms;
+		
+		//	未到达指定时间，播放
+		if(nTillMilliTime == -1 || tickMilliTime <= nTillMilliTime)
+		{
+			Tick tmp = tickToQuote;
+			tmp.time_ms = nDate;
+			m_DayData.Quote(tmp);
 
-		if(m_nCurrentTickIdx >= m_TickData.size()) break;
+			m_1MinData.Quote(tickToQuote);
+			m_15SecData.Quote(tickToQuote);
 
-		// 需要override时间
-		Tick tmp = m_TickData[m_nCurrentTickIdx];
+			lastQuote = tickToQuote;
+			m_nCurrentTickTime = tickMilliTime;
+			m_nCurrentTickIdx++;
 
-		tmp.time = nDate;
-		m_DayData.Quote(tmp);
+		}
+		else	// 越过指定时间
+		{
+			Tick tmp = lastQuote;
+			tmp.time_ms = nDate;
+			m_DayData.Quote(tmp);
 
-		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
-		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
+			tmp.time_ms = nTillMilliTime;
 
-		int curMilliTime = m_TickData[m_nCurrentTickIdx].time * 1000 + m_TickData[m_nCurrentTickIdx].millisec; 
+			m_1MinData.Quote(tmp);
+			m_15SecData.Quote(tmp);
 
-		if(nTillMilliTime != -1 && curMilliTime >= nTillMilliTime) 
+			//	有可能数据缺失，虚拟的Quote一次
+			m_nCurrentTickTime = nTillMilliTime;
 			break;
+		}
 	}
 }
 
-void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
+void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 {
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
@@ -361,20 +381,23 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	//	生成本日第一条K线
 	m_nCurrentTickIdx = 0;
 
-	m_DayData.SetPeriod(36000);
-	m_1MinData.SetPeriod(60);
-	m_15SecData.SetPeriod(15);
+	m_DayData.SetPeriod(36000 * 1000);
+	m_1MinData.SetPeriod(60 * 1000);
+	m_15SecData.SetPeriod(15 * 1000);
 
 	//	需要override时间
 	Tick tmp = m_TickData[m_nCurrentTickIdx];
-	tmp.time = nDate;
+	tmp.time_ms = nDate;
 
 	m_DayData.StartQuote(tmp);
 	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
+	//	记录下当前时间
+	m_nCurrentTickTime = m_TickData[m_nCurrentTickIdx].time_ms;
+
 	//	继续生成
-	PlayTillTime(nTillTime == -1 ? -1 : nTillTime * 1000);
+	PlayTillTime(nTillMilliTime);
 
 	//	设置数据
 	pView->SetDayData(&m_DayData, nDate);

@@ -513,7 +513,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	Tick tick_next = pDoc->GetTick(1);
 	Tick tick_next_2 = pDoc->GetTick(2);
 
-	if(!tick.time || tick.time > PBCONFIG.nEndTime)
+	if(!tick.time_ms || tick.time_ms > PBCONFIG.nEndTime * 1000)
 	{
 		/* 到点自动平仓 */
 		EXCHANGE.SetTick(pDoc->GetTick());
@@ -521,29 +521,29 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 		m_pTradeDialog->UpdateAccountInfo();
 
 		pDoc->LoadNextDay();
-		pDoc->DisplayTill(PBCONFIG.nStartTime);
+		pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 		
 	}
-	else if(tick.time < PBCONFIG.nStartTime)
+	else if(tick.time_ms < PBCONFIG.nStartTime * 1000)
 	{
-		pDoc->DisplayTill(PBCONFIG.nStartTime);
+		pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 	}
 	else
 	{
 		if(m_bRealTimePlay)
 		{
 			//	播放至当前时间
-			pDoc->PlayTillTime(tick_next.time * 1000 + tick_next.millisec);
+			pDoc->PlayTillTime(tick_next.time_ms);
 
 			//	计算播放至下一个tick的时间
-			int this_tick_in_millisec = tick_next.time * 1000 + tick_next.millisec;
-			int next_tick_in_millisec = tick_next_2.time * 1000 + tick_next_2.millisec;
+			int this_tick_in_millisec = tick_next.time_ms;
+			int next_tick_in_millisec = tick_next_2.time_ms;
 
 			SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / m_nPlaybackSpeed, NULL); 
 		}
 		else
 		{
-			pDoc->PlayTillTime((tick.time + m_nPlaybackSpeed) * 1000);
+			pDoc->PlayTillTime(pDoc->GetCurTickTime() + m_nPlaybackSpeed * 1000);
 			SetTimer(1,1000,NULL);
 		}
 	}
