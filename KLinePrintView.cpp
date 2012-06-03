@@ -50,6 +50,8 @@ CKLinePrintView::CKLinePrintView()
 	m_bLocked = TRUE;
 	m_enViewMode = ViewMode1Min;
 	m_pTradeDialog = 0;
+	m_bRealTimePlay = FALSE;
+	m_nPlaybackSpeed = 1;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -108,6 +110,12 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 
 	if(m_bLocked)
 		m_MemDC.Ellipse(rc.right - 2 * RADIUS, rc.top, rc.right, rc.top + 2*RADIUS);
+
+	CString txtSpeed;
+
+	txtSpeed.Format(_T("%dX(%c)"), m_nPlaybackSpeed, m_bRealTimePlay ? 'R':'-');
+
+	m_MemDC.TextOutW(rc.right - 2 * RADIUS - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
 
 	//将内存中的图拷贝到屏幕上进行显示
 	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);
@@ -261,6 +269,11 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if(nChar == VK_SPACE)
 	{
 		m_bLocked = !m_bLocked;
+	}
+
+	if(nChar == 'R')
+	{
+		m_bRealTimePlay = !m_bRealTimePlay;
 	}
 
 	if(klr_1min.IsSelected() && m_bLocked)
@@ -454,7 +467,7 @@ void CKLinePrintView::OnPlaybackEnd()
 	if (!pDoc)
 		return;
 
-	EXCHANGE.SetTick(pDoc->GetCurTick());
+	EXCHANGE.SetTick(pDoc->GetTick());
 	EXCHANGE.Close();
 
 	pDoc->LoadNextDay();
@@ -494,14 +507,16 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	if (!pDoc)
 		return;
 
-	Tick tick = pDoc->GetCurTick();
+	KillTimer(1);
+
+	Tick tick = pDoc->GetTick(0);
+	Tick tick_next = pDoc->GetTick(1);
+	Tick tick_next_2 = pDoc->GetTick(2);
 
 	if(!tick.time || tick.time > PBCONFIG.nEndTime)
 	{
-		KillTimer(1);
-
 		/* 到点自动平仓 */
-		EXCHANGE.SetTick(pDoc->GetCurTick());
+		EXCHANGE.SetTick(pDoc->GetTick());
 		EXCHANGE.Close();
 		m_pTradeDialog->UpdateAccountInfo();
 
@@ -511,16 +526,29 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	}
 	else if(tick.time < PBCONFIG.nStartTime)
 	{
-		KillTimer(1);
 		pDoc->DisplayTill(PBCONFIG.nStartTime);
 	}
 	else
 	{
-		int nTillTime = tick.time + m_nPlaybackSpeed;
-		pDoc->PlayTillTime(nTillTime);
+		if(m_bRealTimePlay)
+		{
+			//	播放至当前时间
+			pDoc->PlayTillTime(tick_next.time * 1000 + tick_next.millisec);
+
+			//	计算播放至下一个tick的时间
+			int this_tick_in_millisec = tick_next.time * 1000 + tick_next.millisec;
+			int next_tick_in_millisec = tick_next_2.time * 1000 + tick_next_2.millisec;
+
+			SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / m_nPlaybackSpeed, NULL); 
+		}
+		else
+		{
+			pDoc->PlayTillTime((tick.time + m_nPlaybackSpeed) * 1000);
+			SetTimer(1,1000,NULL);
+		}
 	}
 
-	EXCHANGE.SetTick(pDoc->GetCurTick());
+	EXCHANGE.SetTick(pDoc->GetTick());
 
 	klr_1min.SelectLastK();
 	klr_5sec.SelectLastK();
@@ -541,16 +569,32 @@ void CKLinePrintView::OnPlaybackPause()
 
 void CKLinePrintView::OnPlaybackFastfw()
 {
-	m_nPlaybackSpeed += 5;
+	if(m_bRealTimePlay)
+	{
+		if(m_nPlaybackSpeed < 10)
+			m_nPlaybackSpeed++;
+	}
+	else
+	{
+		if(m_nPlaybackSpeed < 30)
+			m_nPlaybackSpeed += 5;
+	}
 }
 
 void CKLinePrintView::OnPlaybackFastrev()
 {
-	if(m_nPlaybackSpeed - 5 > 1)
-		m_nPlaybackSpeed -= 5;
-
+	if(m_bRealTimePlay)
+	{
+		if(m_nPlaybackSpeed > 1)
+			m_nPlaybackSpeed--;
+	}
 	else
-		m_nPlaybackSpeed = 1;
+	{
+		if(m_nPlaybackSpeed >= 6)
+			m_nPlaybackSpeed -= 5;
+		else
+			m_nPlaybackSpeed = 1;
+	}
 }
 
 void CKLinePrintView::OnPlaybackStop()
@@ -560,7 +604,7 @@ void CKLinePrintView::OnPlaybackStop()
 	if (!pDoc)
 		return;
 
-	EXCHANGE.SetTick(pDoc->GetCurTick());
+	EXCHANGE.SetTick(pDoc->GetTick());
 	EXCHANGE.Close();
 	m_pTradeDialog->UpdateAccountInfo();
 

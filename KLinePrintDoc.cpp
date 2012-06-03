@@ -270,12 +270,12 @@ BOOL CKLinePrintDoc::LoadNextDay()
 	return TRUE;
 }
 
-Tick CKLinePrintDoc::GetCurTick()
+Tick CKLinePrintDoc::GetTick(int nOffset)
 {
 	Tick tmp;
 
 	if(m_nCurrentTickIdx < m_TickData.size())
-		return m_TickData[m_nCurrentTickIdx];
+		return m_TickData[m_nCurrentTickIdx + nOffset];
 	else
 	{
 		tmp = m_TickData[m_TickData.size() - 1];
@@ -284,7 +284,7 @@ Tick CKLinePrintDoc::GetCurTick()
 	}
 }
 
-void CKLinePrintDoc::PlayTillTime(int nTillTime)
+void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 {
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
@@ -303,7 +303,9 @@ void CKLinePrintDoc::PlayTillTime(int nTillTime)
 		m_1MinData.Quote(m_TickData[m_nCurrentTickIdx]);
 		m_15SecData.Quote(m_TickData[m_nCurrentTickIdx]);
 
-		if(nTillTime != -1 && m_TickData[m_nCurrentTickIdx].time >= nTillTime) 
+		int curMilliTime = m_TickData[m_nCurrentTickIdx].time * 1000 + m_TickData[m_nCurrentTickIdx].millisec; 
+
+		if(nTillMilliTime != -1 && curMilliTime >= nTillMilliTime) 
 			break;
 	}
 }
@@ -333,7 +335,6 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 
-#if 0
 	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
 	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
 	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
@@ -353,7 +354,6 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
 	m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
 	m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
-#endif
 
 	/* 前日日K */
 	m_1MinData.AddToTail(prevDayKLine);
@@ -374,7 +374,7 @@ void CKLinePrintDoc::DisplayTill(int nTillTime, int nTillDate)
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
 	//	继续生成
-	PlayTillTime(nTillTime);
+	PlayTillTime(nTillTime == -1 ? -1 : nTillTime * 1000);
 
 	//	设置数据
 	pView->SetDayData(&m_DayData, nDate);

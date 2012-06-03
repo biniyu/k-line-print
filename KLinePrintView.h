@@ -74,6 +74,7 @@ protected:
 	CBitmap		m_MemBitmap;
 
 	CTradeDialog* m_pTradeDialog;
+	BOOL		m_bRealTimePlay;
 
 // 生成的消息映射函数
 protected:
