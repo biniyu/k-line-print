@@ -423,12 +423,18 @@ PlaybackConfig Utility::ReadPlaybackConfig()
 	pc.fLastDayFluctuationAbove = GetPrivateProfileIntA("Playback","FluctuationAbove", 0, CONFIG_FILE);
 	pc.fLastDayFluctuationBelow = GetPrivateProfileIntA("Playback","FluctuationBelow", 0, CONFIG_FILE);
 
+	pc.bRealTime = GetPrivateProfileIntA("Playback","RealTime", 1, CONFIG_FILE);
+	pc.nPlaySpeed = GetPrivateProfileIntA("Playback","Speed", 1, CONFIG_FILE);
+
 	return pc;
 }
 
 //	±£¥Êªÿ∑≈≈‰÷√
 void Utility::SavePlaybackConfig(PlaybackConfig pc)
 {
+	WritePrivateProfileIntA("Playback","RealTime", pc.bRealTime, CONFIG_FILE);
+	WritePrivateProfileIntA("Playback","Speed", pc.nPlaySpeed, CONFIG_FILE);
+
 	WritePrivateProfileIntA("Playback","Order", (int)pc.enPlaybackOrder, CONFIG_FILE);
 
 	WritePrivateProfileIntA("Playback","StartDate", pc.nStartDate, CONFIG_FILE);

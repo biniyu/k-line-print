@@ -42,7 +42,6 @@ private:
 	};
 
 	bool		m_bLocked;				//	联动
-	int			m_nPlaybackSpeed;		//	放映速度
 	ViewMode	m_enViewMode;
 
 	void ToggleViewMode();		//	切换视图
@@ -74,7 +73,6 @@ protected:
 	CBitmap		m_MemBitmap;
 
 	CTradeDialog* m_pTradeDialog;
-	BOOL		m_bRealTimePlay;
 
 // 生成的消息映射函数
 protected:

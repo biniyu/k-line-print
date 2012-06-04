@@ -50,8 +50,6 @@ CKLinePrintView::CKLinePrintView()
 	m_bLocked = TRUE;
 	m_enViewMode = ViewMode1Min;
 	m_pTradeDialog = 0;
-	m_bRealTimePlay = FALSE;
-	m_nPlaybackSpeed = 1;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -113,7 +111,7 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 
 	CString txtSpeed;
 
-	txtSpeed.Format(_T("%dX(%c)"), m_nPlaybackSpeed, m_bRealTimePlay ? 'R':'-');
+	txtSpeed.Format(_T("%dX(%c)"), PBCONFIG.nPlaySpeed, PBCONFIG.bRealTime ? 'R':'-');
 
 	m_MemDC.TextOutW(rc.right - 2 * RADIUS - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
 
@@ -273,7 +271,8 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(nChar == 'R')
 	{
-		m_bRealTimePlay = !m_bRealTimePlay;
+		PBCONFIG.bRealTime = !PBCONFIG.bRealTime;
+		Utility::SavePlaybackConfig(PBCONFIG);
 	}
 
 	if(klr_1min.IsSelected() && m_bLocked)
@@ -481,8 +480,6 @@ void CKLinePrintView::OnPlaybackForward()
 	if(!pDoc->HasPlaybackCalendar())
 		pDoc->LoadPlaybackCalendar(PBCONFIG);
 
-	m_nPlaybackSpeed = 1;
-
 	pDoc->DisplayTill(klr_1min.GetCurTime(), klr_day.GetCurTime());
 
 	SetTimer(1,1000,NULL); 
@@ -532,7 +529,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	}
 	else
 	{
-		if(m_bRealTimePlay)
+		if(PBCONFIG.bRealTime)
 		{
 			//	播放至当前时间
 			pDoc->PlayTillTime(tick_next.time_ms);
@@ -544,11 +541,11 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 			if(next_tick_in_millisec - this_tick_in_millisec > 300 * 1000)
 				SetTimer(1, 10 * 1000, NULL);
 			else
-				SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / m_nPlaybackSpeed, NULL); 
+				SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / PBCONFIG.nPlaySpeed, NULL); 
 		}
 		else
 		{
-			pDoc->PlayTillTime(pDoc->GetCurTickTime() + m_nPlaybackSpeed * 1000);
+			pDoc->PlayTillTime(pDoc->GetCurTickTime() + PBCONFIG.nPlaySpeed * 1000);
 			SetTimer(1,1000,NULL);
 		}
 	}
@@ -574,32 +571,37 @@ void CKLinePrintView::OnPlaybackPause()
 
 void CKLinePrintView::OnPlaybackFastfw()
 {
-	if(m_bRealTimePlay)
+	if(PBCONFIG.bRealTime)
 	{
-		if(m_nPlaybackSpeed < 10)
-			m_nPlaybackSpeed++;
+		if(PBCONFIG.nPlaySpeed < 10)
+			PBCONFIG.nPlaySpeed++;
 	}
 	else
 	{
-		if(m_nPlaybackSpeed < 30)
-			m_nPlaybackSpeed += 5;
+		if(PBCONFIG.nPlaySpeed < 30)
+			PBCONFIG.nPlaySpeed += 5;
 	}
+
+	Utility::SavePlaybackConfig(PBCONFIG);
+
 }
 
 void CKLinePrintView::OnPlaybackFastrev()
 {
-	if(m_bRealTimePlay)
+	if(PBCONFIG.bRealTime)
 	{
-		if(m_nPlaybackSpeed > 1)
-			m_nPlaybackSpeed--;
+		if(PBCONFIG.nPlaySpeed > 1)
+			PBCONFIG.nPlaySpeed--;
 	}
 	else
 	{
-		if(m_nPlaybackSpeed >= 6)
-			m_nPlaybackSpeed -= 5;
+		if(PBCONFIG.nPlaySpeed >= 6)
+			PBCONFIG.nPlaySpeed -= 5;
 		else
-			m_nPlaybackSpeed = 1;
+			PBCONFIG.nPlaySpeed = 1;
 	}
+
+	Utility::SavePlaybackConfig(PBCONFIG);
 }
 
 void CKLinePrintView::OnPlaybackStop()
