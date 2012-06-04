@@ -14,9 +14,15 @@ public:
 		fLastDayFluctuationAbove = 0;
 		fLastDayFluctuationBelow = 0;
 		nStartTime = nEndTime = 0;
+		bRealTime = TRUE;
+		nPlaySpeed = 1;
 	}
 
 public:
+
+	int nPlaySpeed;
+
+	bool bRealTime;
 
 	enum PlaybackOrder
 	{
