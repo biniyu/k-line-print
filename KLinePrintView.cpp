@@ -584,6 +584,7 @@ void CKLinePrintView::OnPlaybackFastfw()
 
 	Utility::SavePlaybackConfig(PBCONFIG);
 
+	Invalidate(FALSE);
 }
 
 void CKLinePrintView::OnPlaybackFastrev()
@@ -602,6 +603,8 @@ void CKLinePrintView::OnPlaybackFastrev()
 	}
 
 	Utility::SavePlaybackConfig(PBCONFIG);
+
+	Invalidate(FALSE);
 }
 
 void CKLinePrintView::OnPlaybackStop()
