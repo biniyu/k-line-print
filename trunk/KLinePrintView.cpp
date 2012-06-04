@@ -471,7 +471,7 @@ void CKLinePrintView::OnPlaybackEnd()
 	EXCHANGE.Close();
 
 	pDoc->LoadNextDay();
-	pDoc->DisplayTill(PBCONFIG.nStartTime, klr_day.GetCurTime());
+	pDoc->DisplayTill(PBCONFIG.nStartTime * 1000, klr_day.GetCurTime());
 }
 
 void CKLinePrintView::OnPlaybackForward()
@@ -513,7 +513,9 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	Tick tick_next = pDoc->GetTick(1);
 	Tick tick_next_2 = pDoc->GetTick(2);
 
-	if(!tick.time_ms || tick.time_ms > PBCONFIG.nEndTime * 1000)
+	int nTickTime = pDoc->GetCurTickTime();
+
+	if( nTickTime >= PBCONFIG.nEndTime * 1000)
 	{
 		/* 到点自动平仓 */
 		EXCHANGE.SetTick(pDoc->GetTick());
@@ -524,7 +526,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 		pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 		
 	}
-	else if(tick.time_ms < PBCONFIG.nStartTime * 1000)
+	else if(nTickTime < PBCONFIG.nStartTime * 1000)
 	{
 		pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 	}
