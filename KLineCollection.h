@@ -74,7 +74,7 @@ public:
 	void AddToTail(KLine kline);
 
 	//	获取价格和成交量的最大最小值
-	void GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol);
+	void GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, int& nMaxVol, int& nMaxInterest);
 
 	//	开始接收分笔数据
 	void StartQuote(Tick tick);

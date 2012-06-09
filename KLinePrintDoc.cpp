@@ -358,6 +358,7 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 	prevDayKLine.open = prevDayKLine.close;
 	prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
+	prevDayKLine.interest = 0;
 
 	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
 	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");

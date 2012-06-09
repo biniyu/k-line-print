@@ -219,8 +219,8 @@ void KLineRenderer::ToggleRenderMode()
 void KLineRenderer::Render(CDC* pDC)
 {
 	CFont font;
-	float fPricePercentage, pixelPerVol;
-	int kLowPrice, volMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
+	float fPricePercentage, pixelPerVol, pixelPerInterest;
+	int kLowPrice, volMax, interestMax, kAxisPrice;	//	图上显示的高/低价范围，中轴价
 
 	if(!m_pKLines || !m_pKLines->size()) return;
 
@@ -238,7 +238,7 @@ void KLineRenderer::Render(CDC* pDC)
 	{
 		m_pKLines->GetPriceVolRange(m_nFirstDisplayedIndex, 
 									m_nFirstDisplayedIndex + m_nDisplayKLineCount, 
-									m_kHighPrice, kLowPrice, volMax);
+									m_kHighPrice, kLowPrice, volMax, interestMax);
 
 		//	高低点间的波动幅度
 		fPricePercentage = (m_kHighPrice - kLowPrice) /((m_kHighPrice + kLowPrice) / 2.0f);
@@ -248,7 +248,7 @@ void KLineRenderer::Render(CDC* pDC)
 		if(m_nOpenIndex > m_pKLines->size() - 1) return;
 
 		m_pKLines->GetPriceVolRange(1, m_pKLines->size() - 1, 
-								m_kHighPrice, kLowPrice, volMax);	
+								m_kHighPrice, kLowPrice, volMax, interestMax);	
 
 		// 以开盘为中轴价
 		kAxisPrice = (*m_pKLines)[m_nOpenIndex].open;
@@ -292,6 +292,8 @@ void KLineRenderer::Render(CDC* pDC)
 		
 		//	计算单位成交量对应多少像素
 		pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / volMax;
+
+		pixelPerInterest = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / (2*interestMax);
 	}
 	else
 	{
@@ -341,7 +343,7 @@ void KLineRenderer::Render(CDC* pDC)
 	float kLastMA20Pos = 0;
 	float kLastMA60Pos = 0;
 
-	float kLastMiddle = 0;
+	float kLastMiddle = m_Rect.left + LEFT_MARGIN;
 
 	for(int i = m_nFirstDisplayedIndex; i <= m_nFirstDisplayedIndex + m_nDisplayKLineCount; i++)
 	{
@@ -431,8 +433,6 @@ void KLineRenderer::Render(CDC* pDC)
 		kLastMA20Pos = kMA20Pos;
 		kLastMA60Pos = kMA60Pos;
 
-		kLastMiddle = kMiddle;
-
 		/* 绘制15分钟，30分钟，60分钟时间线 */
 
 		int tmpHour = kline.time / 1000 / 3600;
@@ -509,7 +509,30 @@ void KLineRenderer::Render(CDC* pDC)
 			pDC->LineTo(kLeft, kVolPos);
 			pDC->LineTo(kRight, kVolPos);
 			pDC->LineTo(kRight, m_Rect.bottom);
+
+			//	日内持仓量线
+			int nInterest, nPrevInterest;
+
+			if(i == 0)
+			{
+				nPrevInterest = 0;
+			}
+			else
+			{
+				nPrevInterest = (*m_pKLines)[i - 1].interest;
+			}
+
+			nInterest = (*m_pKLines)[i].interest;
+
+			float kPrevInterestPos = m_Rect.bottom - (nPrevInterest + interestMax) * pixelPerInterest;
+			float kInterestPos = m_Rect.bottom - (nInterest + interestMax) * pixelPerInterest;
+
+			pDC->SelectObject(&penWhite);
+			pDC->MoveTo(kLastMiddle, kPrevInterestPos);
+			pDC->LineTo(kMiddle, kInterestPos);
 		}
+
+		kLastMiddle = kMiddle;
 
 		//	
 		if(i == m_nSelectedIndex)
