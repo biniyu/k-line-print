@@ -710,7 +710,11 @@ void KLineRenderer::Render(CDC* pDC)
 		float gap = (todayOpen - prevClose) / prevClose * 100;
 		int range = m_pKLines->m_nMaxPrice - m_pKLines->m_nMinPrice;
 
-		strPercent.Format(_T("Í¼%.2f%% Ìø%.2f%% ²¨·ù%dµã"), (fPricePercentage / 0.01), gap, range);
+		KLine tmpk = (*m_pKLines)[m_nSelectedIndex];
+
+		strPercent.Format(_T("Í¼%.2f%% Ìø%.2f%% ²¨·ù%dµã ¾ùÆ«%dµã"), 
+					(fPricePercentage / 0.01), gap, range, tmpk.avg_devi);
+
 		pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
 	}
 

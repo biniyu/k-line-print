@@ -90,6 +90,14 @@ void KLineCollection::StartQuote(Tick tick)
 	AddToTail(tmp);
 }
 
+int KLineCollection::GetAvgDevi(KLine kline)
+{
+	if(abs(kline.high - kline.avg) > abs(kline.low - kline.avg))
+		return abs(kline.high - kline.avg);
+	else
+		return abs(kline.low - kline.avg);
+}
+
 //	接收分笔数据
 void KLineCollection::Quote(Tick tick)
 {
@@ -103,6 +111,7 @@ void KLineCollection::Quote(Tick tick)
 	{
 		curKLine.time = tick.time_ms;
 		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
+		curKLine.avg_devi = GetAvgDevi(curKLine);
 
 		/* 新起K线 */
 		KLine tmp;
@@ -116,6 +125,7 @@ void KLineCollection::Quote(Tick tick)
 		tmp.vol_acc = curKLine.vol_acc + tick.vol;
 		tmp.price_acc = curKLine.price_acc + tick.vol * tick.price;
 		tmp.avg = tmp.price_acc / (float) tmp.vol_acc;
+		tmp.avg_devi = GetAvgDevi(tmp);
 
 		AddToTail(tmp);
 	}
@@ -133,6 +143,7 @@ void KLineCollection::Quote(Tick tick)
 		curKLine.vol_acc += tick.vol;
 		curKLine.price_acc += tick.vol * tick.price;
 		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
+		curKLine.avg_devi = GetAvgDevi(curKLine);
 	}
 }
 
