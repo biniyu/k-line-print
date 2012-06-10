@@ -275,6 +275,11 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		Utility::SavePlaybackConfig(PBCONFIG);
 	}
 
+	if(nChar == 'K')
+	{
+		klr_1min.ToggleKeyPrice();
+	}	
+
 	if(klr_1min.IsSelected() && m_bLocked)
 	{
 		klr_5sec.SelectByTime(klr_1min.GetCurTime());
