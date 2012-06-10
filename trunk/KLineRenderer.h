@@ -60,6 +60,9 @@ private:
 	//	是否显示关键时间线
 	bool m_bShowCriticalTime;
 
+	//	是否显示关键价格
+	bool m_bShowKeyPrice;
+
 	//	K图与成交量图的高度比
 	int m_nKVolRatio;
 
@@ -139,6 +142,8 @@ public:
 	void ToggleRenderMode();
 
 	void ToggleTrackingMode();
+
+	void ToggleKeyPrice() { m_bShowKeyPrice = !m_bShowKeyPrice; }
 
 	void SetSelectedPrice(int price);
 

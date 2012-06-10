@@ -12,6 +12,7 @@ KLineRenderer::KLineRenderer(void)
 	m_nKVolRatio = 3;						//	K图与成交量图的高度为3:1
 	m_nKSpace = 2;							//	K线间的像素数
 	m_bShowVol = true;
+	m_bShowKeyPrice = false;
 	m_bShowAvg = false;
 	m_bShowMA = false;
 	m_bShowHighLow = false;
@@ -674,22 +675,25 @@ void KLineRenderer::Render(CDC* pDC)
 		pDC->SelectObject(pOldPen);
 	}
 
-	//	绘制关键价格线(文本需要错开，以免互相覆盖)
-	map<int, string>::iterator itKeyPrice;
-	map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
-
-	pOldPen = pDC->SelectObject(&penGreenDotted);
-
-	for(itKeyPrice = keyPrices.begin(); itKeyPrice != keyPrices.end(); itKeyPrice++)
+	if(m_bShowKeyPrice)
 	{
-		if(itKeyPrice->first > m_kHighPrice || itKeyPrice->first < kLowPrice) 
-			continue;
+		//	绘制关键价格线(文本需要错开，以免互相覆盖)
+		map<int, string>::iterator itKeyPrice;
+		map<int, string>& keyPrices = m_pKLines->GetKeyPrices();
 
-		float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
+		pOldPen = pDC->SelectObject(&penGreenDotted);
 
-		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, keyPricePos);
-		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, keyPricePos);	
-		pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
+		for(itKeyPrice = keyPrices.begin(); itKeyPrice != keyPrices.end(); itKeyPrice++)
+		{
+			if(itKeyPrice->first > m_kHighPrice || itKeyPrice->first < kLowPrice) 
+				continue;
+
+			float keyPricePos = m_Rect.top + (m_kHighPrice - itKeyPrice->first) * m_pixelPerPrice;
+
+			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, keyPricePos);
+			pDC->LineTo(m_Rect.right - RIGHT_MARGIN, keyPricePos);	
+			pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
+		}
 	}
 
 	//	绘制当日最高最低点
