@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include "PlaybackConfig.h"
+#include "TradeFacility.h"
 
 using namespace std;
 
@@ -43,4 +44,5 @@ public:
 
 	static int GetWeekDayByDate(int nDate);
 	static string GetProgramPath();
+	static void WriteLog(TradeRecord tr);
 };
