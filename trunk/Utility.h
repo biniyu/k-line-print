@@ -44,5 +44,7 @@ public:
 
 	static int GetWeekDayByDate(int nDate);
 	static string GetProgramPath();
+
+	static void ReadLog(vector<TradeRecord>& trs);
 	static void WriteLog(TradeRecord tr);
 };

@@ -463,13 +463,31 @@ void Utility::WriteLog(TradeRecord tr)
 
 	outfile.open(logfile.c_str(),ios::app);
 	
-	outfile << tr.nRealDate << "," << tr.nRealTime << "," << tr.sFileName << "," 
-		<< tr.nSimuTime << "," << tr.nPrice << "," 
-		<< tr.bBuy << "," << tr.bOpen << "," << tr.nSlot 
-		<< tr.nFee << "," << tr.nProfit << endl;
+	outfile << tr.nRealDate << " " << tr.nRealTime << " " << tr.sFileName << " " 
+		<< tr.nSimuTime << " " << tr.nPrice << " " 
+		<< tr.bBuy << " " << tr.bOpen << " " << tr.nSlot << " "
+		<< tr.nFee << " " << tr.nProfit << endl;
 
 	outfile.close();
 }
 
+void Utility::ReadLog(vector<TradeRecord>& trs)
+{
+	ifstream in;
+	TradeRecord tr;
+
+	string logfile = GetProgramPath() + "tradelog.txt";
+
+	in.open(logfile.c_str());
+
+	while(!in.eof())
+	{
+		in >> tr.nRealDate >> tr.nRealTime >> tr.sFileName
+			>> tr.nSimuTime >> tr.nPrice >> tr.bBuy >> tr.bOpen
+			>> tr.nSlot >> tr.nFee >> tr.nProfit;
+
+		trs.push_back(tr);
+	}
+}
 
 
