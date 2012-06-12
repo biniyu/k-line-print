@@ -1,6 +1,24 @@
 #pragma once
 
 #include "TickReader.h"
+#include <string>
+
+using namespace std;
+
+class TradeRecord
+{
+public:
+	int		nRealDate;
+	int		nRealTime;
+	string	sFileName;
+	int		nSimuTime;
+	bool	bBuy;				//	买入卖出
+	bool	bOpen;				//	开平仓
+	int		nPrice;				//	成交价格
+	int		nSlot;				//	手数
+	int		nFee;				//	手续费
+	int		nProfit;			//	平仓盈亏
+};
 
 class Position
 {
@@ -20,6 +38,7 @@ public:
 	int			m_nUnitsPerSlot;
 	Tick		m_nTick;
 	Position	m_nPosition;
+	string		m_nFilePath;
 
 public:
 
@@ -49,4 +68,9 @@ public:
 
 	//	反手
 	void Reverse();
+
+	//	交易记录
+	void Log(int nTime, bool bBuy, bool bOpen, 
+			int nPrice, int nSlot, int nFee, int nProfit);
+
 };

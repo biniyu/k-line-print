@@ -3,6 +3,9 @@
 #include "Utility.h"
 #include "direct.h"
 #include "io.h"
+#include <fstream>
+
+using namespace std;
 
 Utility::Utility(void)
 {
@@ -451,6 +454,21 @@ void Utility::SavePlaybackConfig(PlaybackConfig pc)
 	WritePrivateProfileIntA("Playback","Gap", (int)pc.fGapPercentage, CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","FluctuationAbove", (int)pc.fLastDayFluctuationAbove, CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","FluctuationBelow", (int)pc.fLastDayFluctuationBelow, CONFIG_FILE);
+}
+
+void Utility::WriteLog(TradeRecord tr)
+{
+	ofstream outfile;
+	string logfile = GetProgramPath() + "tradelog.txt";
+
+	outfile.open(logfile.c_str(),ios::app);
+	
+	outfile << tr.nRealDate << "," << tr.nRealTime << "," << tr.sFileName << "," 
+		<< tr.nSimuTime << "," << tr.nPrice << "," 
+		<< tr.bBuy << "," << tr.bOpen << "," << tr.nSlot 
+		<< tr.nFee << "," << tr.nProfit << endl;
+
+	outfile.close();
 }
 
 

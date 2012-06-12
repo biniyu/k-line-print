@@ -191,6 +191,9 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	m_CurCsvFile = tmp;
 	m_CurDayFile = Utility::GetDayLinePath(m_CurCsvFile);
 
+	//	用于交易记录
+	EXCHANGE.m_nFilePath = m_CurCsvFile;
+
 	//	读入分笔数据
 	m_TickData.clear();
 
