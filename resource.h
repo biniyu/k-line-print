@@ -88,6 +88,7 @@
 #define IDR_PLAYBACK                    312
 #define IDD_TRADE                       313
 #define IDD_PLAYBACK_CONF               314
+#define IDD_TRADE_LOG                   315
 #define IDC_COMBO_VAR_LIST              1000
 #define IDC_EDIT_MORE_THAN              1001
 #define IDC_CHECK_MORE_THAN             1002
@@ -150,6 +151,10 @@
 #define IDC_RADIO_ALLDATE               1048
 #define IDC_TIMEPICKER_FROM             1049
 #define IDC_TIMEPICKER_TO               1050
+#define IDC_LIST_DATE                   1051
+#define IDC_LIST_FILE                   1052
+#define IDC_LIST4                       1053
+#define IDC_LIST_LOG                    1053
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -168,14 +173,16 @@
 #define ID_PLAYBACK_STOP                32786
 #define ID_32787                        32787
 #define ID_PLAYBACK_CONF                32788
+#define ID_32789                        32789
+#define ID_TRADE_LOG                    32790
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        315
-#define _APS_NEXT_COMMAND_VALUE         32789
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_COMMAND_VALUE         32791
+#define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif

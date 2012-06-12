@@ -49,6 +49,7 @@ protected:
 	void SetDockingWindowIcons(BOOL bHiColorIcons);
 public:
 	afx_msg void OnSearchContract();
+	afx_msg void OnTradeLog();
 };
 
 

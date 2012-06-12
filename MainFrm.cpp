@@ -7,6 +7,7 @@
 
 #include "MainFrm.h"
 #include "SearchContractDialog.h"
+#include "TradeLogDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,6 +28,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_OFF_2007_AQUA, &CMainFrame::OnUpdateApplicationLook)
 	ON_COMMAND(ID_SEARCH_CONTRACT, &CMainFrame::OnSearchContract)
+	ON_COMMAND(ID_TRADE_LOG, &CMainFrame::OnTradeLog)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -313,11 +315,15 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 
 void CMainFrame::OnSearchContract()
 {
-//	CSearchContractDialog scd;
-//	scd.DoModal();
-
 	CSearchContractDialog* dlg = new CSearchContractDialog;
 	dlg->Create(IDD_SEARCH_CONTRACT,NULL);
 	dlg->ShowWindow(SW_SHOW); 
 }
 
+
+void CMainFrame::OnTradeLog()
+{
+	CTradeLogDialog tld;
+
+	tld.DoModal();
+}
