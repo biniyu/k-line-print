@@ -12,6 +12,7 @@ vector<string> GetFiles(string dir, string filter, bool bDir);
 
 int CStringToInt(const CString& str);
 CString IntToCString(int nInt);
+string CStringTostring(const CString& str);
 
 class Utility
 {

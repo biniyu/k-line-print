@@ -30,6 +30,19 @@ int CStringToInt(const CString& str)
 	return ip;
 }
 
+string CStringTostring(const CString& str)
+{
+	char InfoString[256];    
+	  
+	// 转换后的数据存放在InfoString数组中   
+	if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(str),-1,InfoString,100,NULL,NULL))    
+	{    
+		return "";    
+	} 
+
+	return string(InfoString);
+}
+
 CString IntToCString(int nInt)
 {
 	CString str;
