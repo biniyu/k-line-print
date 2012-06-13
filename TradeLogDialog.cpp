@@ -5,6 +5,8 @@
 #include "KLinePrint.h"
 #include "TradeLogDialog.h"
 #include "Utility.h"
+#include "MainFrm.h"
+#include "KLinePrintDoc.h"
 
 // CTradeLogDialog 对话框
 
@@ -109,7 +111,7 @@ void CTradeLogDialog::OnLbnSelchangeListDate()
 void CTradeLogDialog::OnLbnSelchangeListFile()
 {
 	//	打开文件并显示交易记号
-	CString strSelText;
+	CString strSelText, tmp;
 	int nSelIdx, nSelCnt = 0, nSelDate = 0;
 
 	nSelCnt = m_ctlListDate.GetSelItems(1, &nSelIdx);
@@ -128,6 +130,9 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 	m_ctlListLog.DeleteAllItems();
 
 	//	加载文件
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+	pDoc->OnOpenDocument(strSelText);
+
 	string filename = CStringTostring(strSelText);
 
 	vector<TradeRecord> trs;
@@ -135,8 +140,30 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 
 	for(int i = 0; i < trs.size(); i++)
 	{
-		m_ctlListLog.InsertItem(i, _T(""));
-		m_ctlListLog.SetItemText(i, 0, _T(""));
+		tmp.Format(_T("%d"), trs[i].nSimuTime);
+		m_ctlListLog.InsertItem(i, tmp);
+
+		if(trs[i].bBuy)
+			m_ctlListLog.SetItemText(i, 1, _T("买"));
+		else
+			m_ctlListLog.SetItemText(i, 1, _T("卖"));
+
+		if(trs[i].bOpen)
+			m_ctlListLog.SetItemText(i, 2, _T("开"));
+		else
+			m_ctlListLog.SetItemText(i, 2, _T("平"));
+
+		tmp.Format(_T("%d"), trs[i].nPrice);
+		m_ctlListLog.SetItemText(i, 3, tmp);
+
+		tmp.Format(_T("%d"), trs[i].nSlot);
+		m_ctlListLog.SetItemText(i, 4, tmp);
+
+		tmp.Format(_T("%d"), trs[i].nFee);
+		m_ctlListLog.SetItemText(i, 5, tmp);
+
+		tmp.Format(_T("%d"), trs[i].nProfit);
+		m_ctlListLog.SetItemText(i, 6, tmp);		
 	}
 }
 
