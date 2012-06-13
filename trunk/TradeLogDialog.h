@@ -27,5 +27,11 @@ public:
 	CListBox m_ctlListFile;
 	CListCtrl m_ctlListLog;
 
-	vector<TradeRecord> m_trs;
+private:
+	map<int, map<string, vector<TradeRecord>>> m_trs;
+
+public:
+	afx_msg void OnLbnSelchangeListDate();
+	afx_msg void OnLbnSelchangeListFile();
+	afx_msg void OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult);
 };
