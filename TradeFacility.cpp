@@ -97,7 +97,7 @@ void TradeFacility::Close()
 
 		//	卖出平仓
 		Log(m_nTick.time_ms, false, false, 
-			m_nTick.priceB1, m_nPosition.nSlot, nFee, nProfit);
+			m_nTick.priceB1, abs(m_nPosition.nSlot), nFee, nProfit);
 	}
 	else
 	{
@@ -106,7 +106,7 @@ void TradeFacility::Close()
 
 		//	买入平仓
 		Log(m_nTick.time_ms, true, false, 
-			m_nTick.priceS1, m_nPosition.nSlot, nFee, nProfit);
+			m_nTick.priceS1, abs(m_nPosition.nSlot), nFee, nProfit);
 	}
 
 	m_nBalance -= nFee;
