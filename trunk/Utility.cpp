@@ -4,6 +4,7 @@
 #include "direct.h"
 #include "io.h"
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -486,16 +487,22 @@ void Utility::WriteLog(TradeRecord tr)
 
 void Utility::ReadLog(vector<TradeRecord>& trs)
 {
+#define SZ 1024
+
 	ifstream in;
+
+	char buf[SZ];
 	TradeRecord tr;
 
 	string logfile = GetProgramPath() + "tradelog.txt";
 
 	in.open(logfile.c_str());
 
-	while(!in.eof())
+	while(in.getline(buf,SZ))
 	{
-		in >> tr.nRealDate >> tr.nRealTime >> tr.sFileName
+		stringstream ss(buf);
+		
+		ss >> tr.nRealDate >> tr.nRealTime >> tr.sFileName
 			>> tr.nSimuTime >> tr.nPrice >> tr.bBuy >> tr.bOpen
 			>> tr.nSlot >> tr.nFee >> tr.nProfit;
 
