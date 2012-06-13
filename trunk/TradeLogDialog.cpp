@@ -63,11 +63,11 @@ BOOL CTradeLogDialog::OnInitDialog()
 	}
 
 	m_ctlListLog.InsertColumn(0, _T("时间"), 0, 60);
-	m_ctlListLog.InsertColumn(1, _T("买/卖"), 0, 60);
-	m_ctlListLog.InsertColumn(2, _T("开/平"), 0, 60);
+	m_ctlListLog.InsertColumn(1, _T("买/卖"), 0, 40);
+	m_ctlListLog.InsertColumn(2, _T("开/平"), 0, 40);
 	m_ctlListLog.InsertColumn(3, _T("价格"), 0, 60);
-	m_ctlListLog.InsertColumn(4, _T("数量"), 0, 60);
-	m_ctlListLog.InsertColumn(5, _T("手续费"), 0, 70);
+	m_ctlListLog.InsertColumn(4, _T("数量"), 0, 40);
+	m_ctlListLog.InsertColumn(5, _T("费"), 0, 40);
 	m_ctlListLog.InsertColumn(6, _T("盈亏"), 0, 60);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -76,13 +76,13 @@ BOOL CTradeLogDialog::OnInitDialog()
 
 void CTradeLogDialog::OnLbnSelchangeListDate()
 {
-	int nSelIdx, nSelCnt = 0;
+	int nSelIdx;
 	//	填入该日的文件
 	CString strSelText;
 
-	nSelCnt = m_ctlListDate.GetSelItems(1, &nSelIdx);
+	nSelIdx = m_ctlListDate.GetCurSel();
 
-	if(!nSelCnt) return;
+	if(nSelIdx < 0) return;
 
 	for(int i = m_ctlListFile.GetCount() - 1; i >=0; i--)
 	{
@@ -102,8 +102,7 @@ void CTradeLogDialog::OnLbnSelchangeListDate()
 	map<string, vector<TradeRecord>>::iterator it;
 	for(it = trs.begin(); it != trs.end(); it++)
 	{
-		CString tmp;
-		tmp.Format(_T("%s"),it->first.c_str()); 
+		CString tmp(it->first.c_str()); 
 		m_ctlListFile.AddString(tmp);
 	}
 }
@@ -112,18 +111,18 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 {
 	//	打开文件并显示交易记号
 	CString strSelText, tmp;
-	int nSelIdx, nSelCnt = 0, nSelDate = 0;
+	int nSelIdx, nSelDate = 0;
 
-	nSelCnt = m_ctlListDate.GetSelItems(1, &nSelIdx);
+	nSelIdx = m_ctlListDate.GetCurSel();
 
-	if(!nSelCnt) return;
+	if(nSelIdx < 0) return;
 
 	m_ctlListDate.GetText(nSelIdx, strSelText);
 	int nDate = CStringToInt(strSelText);
 
-	nSelCnt = m_ctlListFile.GetSelItems(1, &nSelIdx);
+	nSelIdx = m_ctlListFile.GetCurSel();
 
-	if(!nSelCnt) return;
+	if(nSelIdx < 0) return;
 
 	m_ctlListFile.GetText(nSelIdx, strSelText);
 
@@ -138,9 +137,12 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 	vector<TradeRecord> trs;
 	trs = m_trs[nDate][filename];
 
-	for(int i = 0; i < trs.size(); i++)
+	int i, nTotalFee = 0, nTotalProfit = 0;
+
+	for(i = 0; i < trs.size(); i++)
 	{
-		tmp.Format(_T("%d"), trs[i].nSimuTime);
+		int nDispTime = Utility::ConvContTimeToDispTime(trs[i].nSimuTime / 1000);
+		tmp.Format(_T("%d"), nDispTime);
 		m_ctlListLog.InsertItem(i, tmp);
 
 		if(trs[i].bBuy)
@@ -162,9 +164,26 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 		tmp.Format(_T("%d"), trs[i].nFee);
 		m_ctlListLog.SetItemText(i, 5, tmp);
 
+		nTotalFee += trs[i].nFee;
+
 		tmp.Format(_T("%d"), trs[i].nProfit);
-		m_ctlListLog.SetItemText(i, 6, tmp);		
+		m_ctlListLog.SetItemText(i, 6, tmp);	
+
+		nTotalProfit += trs[i].nProfit;
 	}
+
+	//	最后一行显示汇总信息
+	m_ctlListLog.InsertItem(i, _T("汇总"));
+	m_ctlListLog.SetItemText(i, 1, _T("-"));
+	m_ctlListLog.SetItemText(i, 2, _T("-"));
+	m_ctlListLog.SetItemText(i, 3, _T("-"));
+	m_ctlListLog.SetItemText(i, 4, _T("-"));
+
+	tmp.Format(_T("%d"), nTotalFee);
+	m_ctlListLog.SetItemText(i, 5, tmp);
+
+	tmp.Format(_T("%d"), nTotalProfit);
+	m_ctlListLog.SetItemText(i, 6, tmp);
 }
 
 void CTradeLogDialog::OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult)
