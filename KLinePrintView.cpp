@@ -524,6 +524,8 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 		EXCHANGE.Close();
 		m_pTradeDialog->UpdateAccountInfo();
 
+		//	TODO : 显示当日的成交汇总
+
 		pDoc->LoadNextDay();
 		pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 		
