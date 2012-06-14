@@ -7,6 +7,7 @@
 #include "KLineReader.h"
 #include "PlaybackConfig.h"
 #include "CalendarGenerator.h"
+#include "TradeFacility.h"
 
 using namespace std;
 
@@ -23,15 +24,18 @@ private:
 	int	m_nCurrentTickIdx;		//	当前tick的索引
 	int m_nCurrentTickTime;		//	当前时间
 
-	TickCollection	m_TickData;
-	KLineCollection m_15SecData;
-	KLineCollection m_1MinData;
-	KLineCollection m_DayData;
+	TickCollection			m_TickData;
+	KLineCollection			m_15SecData;
+	KLineCollection			m_1MinData;
+	KLineCollection			m_DayData;
 
-	KLineReader		m_KLineReader;
-	TickReader		m_TickReader;
+	//	当前交易记录
+	TradeRecordCollection	m_TradeRecords;
 
-	Calendar		m_FilteredCalendar;		// 根据回放选项过滤出来的符合条件的日期
+	KLineReader				m_KLineReader;
+	TickReader				m_TickReader;
+
+	Calendar				m_FilteredCalendar;		// 根据回放选项过滤出来的符合条件的日期
 
 // 操作
 public:
@@ -51,6 +55,17 @@ public:
 
 	string m_CurCsvFile;
 	string m_CurDayFile;
+
+	//	添加交易记录
+	void AppendTradeRecord(TradeRecord tr) { m_TradeRecords.push_back(tr); }
+
+	//	清除交易记录
+	void ClearTradeRecord() { m_TradeRecords.clear(); }
+
+	//	设置交易记录
+	void SetTradeRecord(TradeRecordCollection trs) { m_TradeRecords = trs; }
+
+	TradeRecordCollection* GetTradeRecord() { return &m_TradeRecords; }
 
 	void LoadPlaybackCalendar(PlaybackConfig pbConfig);
 	BOOL ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig);

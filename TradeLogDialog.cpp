@@ -44,7 +44,7 @@ BOOL CTradeLogDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	vector<TradeRecord> logs;
+	TradeRecordCollection logs;
 	Utility::ReadLog(logs);
 
 	for(int i = 0; i < logs.size(); i++)
@@ -54,7 +54,7 @@ BOOL CTradeLogDialog::OnInitDialog()
 	}
 
 	//	先填入练习日期
-	map<int, map<string, vector<TradeRecord>>>::reverse_iterator it;
+	map<int, map<string, TradeRecordCollection>>::reverse_iterator it;
 	for(it = m_trs.rbegin(); it != m_trs.rend(); it++)
 	{
 		CString tmp;
@@ -95,11 +95,11 @@ void CTradeLogDialog::OnLbnSelchangeListDate()
 
 	int nDate = CStringToInt(strSelText);
 
-	map<string, vector<TradeRecord>> trs;
+	map<string, TradeRecordCollection> trs;
 
 	trs = m_trs[nDate];
 
-	map<string, vector<TradeRecord>>::iterator it;
+	map<string, TradeRecordCollection>::iterator it;
 	for(it = trs.begin(); it != trs.end(); it++)
 	{
 		CString tmp(it->first.c_str()); 
@@ -128,14 +128,14 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 
 	m_ctlListLog.DeleteAllItems();
 
-	//	加载文件
-	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
-	pDoc->OnOpenDocument(strSelText);
-
 	string filename = CStringTostring(strSelText);
 
-	vector<TradeRecord> trs;
+	TradeRecordCollection trs;
 	trs = m_trs[nDate][filename];
+
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+	pDoc->OnOpenDocument(strSelText);
+	pDoc->SetTradeRecord(trs);
 
 	int i, nTotalFee = 0, nTotalProfit = 0;
 

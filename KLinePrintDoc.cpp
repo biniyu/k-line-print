@@ -188,6 +188,8 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 
 	if(!tmp.size()) return;
 
+	m_TradeRecords.clear();
+
 	m_CurCsvFile = tmp;
 	m_CurDayFile = Utility::GetDayLinePath(m_CurCsvFile);
 
