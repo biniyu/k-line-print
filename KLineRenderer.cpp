@@ -526,16 +526,16 @@ void KLineRenderer::Render(CDC* pDC)
 					{
 						pDC->SelectObject(&penRed);
 						pDC->MoveTo(kMiddle, kPrPos);
-						pDC->LineTo(kLeft, kPrPos - 3);
-						pDC->LineTo(kRight, kPrPos - 3);
+						pDC->LineTo(kLeft, kPrPos + 5);
+						pDC->LineTo(kRight, kPrPos + 5);
 						pDC->LineTo(kMiddle, kPrPos);
 					}
 					else
 					{
 						pDC->SelectObject(&penGreen);
 						pDC->MoveTo(kMiddle, kPrPos);
-						pDC->LineTo(kLeft, kPrPos + 3);
-						pDC->LineTo(kRight, kPrPos + 3);
+						pDC->LineTo(kLeft, kPrPos - 5);
+						pDC->LineTo(kRight, kPrPos - 5);
 						pDC->LineTo(kMiddle, kPrPos);
 					}
 				}
