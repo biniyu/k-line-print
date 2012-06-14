@@ -7,6 +7,7 @@
 #include "Utility.h"
 #include "MainFrm.h"
 #include "KLinePrintDoc.h"
+#include "KLinePrintView.h"
 
 // CTradeLogDialog ¶Ô»°¿ò
 
@@ -134,8 +135,12 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 	trs = m_trs[nDate][filename];
 
 	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)AfxGetMainWnd())->GetActiveView();
+
 	pDoc->OnOpenDocument(strSelText);
 	pDoc->SetTradeRecord(trs);
+	pView->Render();
+	pDoc->UpdateAllViews(0);
 
 	int i, nTotalFee = 0, nTotalProfit = 0;
 
