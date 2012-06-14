@@ -1,6 +1,7 @@
 #pragma once
 
 class KLineCollection;
+class TradeRecordCollection;
 
 class KLineRenderer
 {
@@ -38,6 +39,9 @@ private:
 
 	//	K线数据
 	KLineCollection* m_pKLines;
+
+	//	交易记录
+	TradeRecordCollection* m_pTradeRecords;
 
 	//	显示区域
 	CRect m_Rect;
@@ -121,6 +125,9 @@ public:
 
 	//	设置K线数据(包括默认显示多少K线位置)
 	void SetKLineData(KLineCollection* pKLines, int nDispKLineCount = -1);
+
+	//	设置交易记录数据
+	void SetTradeRecord(TradeRecordCollection* pTrs) { m_pTradeRecords = pTrs; }
 
 	//	设置绘制范围
 	void SetRect(CRect rect) { m_Rect = rect; }

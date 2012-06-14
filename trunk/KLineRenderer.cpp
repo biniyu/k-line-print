@@ -25,6 +25,7 @@ KLineRenderer::KLineRenderer(void)
 	m_nOpenIndex = -1;
 	m_bShowDate = false;
 	m_nDisplayKLineCount = m_nFirstDisplayedIndex = m_nSelectedIndex = 0;
+	m_pTradeRecords = NULL;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -500,6 +501,37 @@ void KLineRenderer::Render(CDC* pDC)
 			pDC->LineTo(kMiddle, kClosePos);
 			pDC->MoveTo(kMiddle, kOpenPos);
 			pDC->LineTo(kMiddle, kLowPos);
+		}
+
+		//	绘制交易记录
+		for(int nTrIdx = 0; nTrIdx < m_pTradeRecords->size(); nTrIdx++)
+		{
+			TradeRecord tr = (*m_pTradeRecords)[nTrIdx];
+
+			//	正好位于该K线中
+			if(tr.nSimuTime >= kline.start_time
+				&& tr.nSimuTime < kline.time)
+			{
+				float kPrPos = m_Rect.top + (m_kHighPrice - tr.nPrice) * m_pixelPerPrice;
+
+				//	绘制箭头
+				if(tr.bBuy) 
+				{
+					pDC->SelectObject(&penRed);
+					pDC->MoveTo(kMiddle, kPrPos);
+					pDC->LineTo(kLeft, kPrPos - 3);
+					pDC->LineTo(kRight, kPrPos - 3);
+					pDC->LineTo(kMiddle, kPrPos);
+				}
+				else
+				{
+					pDC->SelectObject(&penGreen);
+					pDC->MoveTo(kMiddle, kPrPos);
+					pDC->LineTo(kLeft, kPrPos + 3);
+					pDC->LineTo(kRight, kPrPos + 3);
+					pDC->LineTo(kMiddle, kPrPos);
+				}
+			}
 		}
 
 		if(m_bShowVol)

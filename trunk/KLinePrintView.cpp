@@ -330,9 +330,19 @@ void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 void CKLinePrintView::Render()
 {
+	CKLinePrintDoc* pDoc = GetDocument();
+	ASSERT_VALID(pDoc);
+	if (!pDoc)
+		return;
+
+	klr_1min.SetTradeRecord(pDoc->GetTradeRecord());
 	klr_1min.Render(&m_MemDC);
+
 	klr_day.Render(&m_MemDC);
+
+	klr_5sec.SetTradeRecord(pDoc->GetTradeRecord());
 	klr_5sec.Render(&m_MemDC);
+
 	Invalidate(FALSE);
 }
 

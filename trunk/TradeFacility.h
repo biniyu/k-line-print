@@ -2,6 +2,7 @@
 
 #include "TickReader.h"
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -18,6 +19,11 @@ public:
 	int		nSlot;				//	手数
 	int		nFee;				//	手续费
 	int		nProfit;			//	平仓盈亏
+};
+
+class TradeRecordCollection : public vector<TradeRecord>
+{
+
 };
 
 class Position

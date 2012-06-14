@@ -1,7 +1,7 @@
 #pragma once
 #include "afxwin.h"
 #include "afxcmn.h"
-
+#include "TradeFacility.h"
 
 // CTradeLogDialog ¶Ô»°¿ò
 
@@ -28,7 +28,7 @@ public:
 	CListCtrl m_ctlListLog;
 
 private:
-	map<int, map<string, vector<TradeRecord>>> m_trs;
+	map<int, map<string, TradeRecordCollection>> m_trs;
 
 public:
 	afx_msg void OnLbnSelchangeListDate();
