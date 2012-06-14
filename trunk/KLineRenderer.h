@@ -135,6 +135,9 @@ public:
 	//	选中本区域并选中K线
 	void Select(CPoint pt);
 
+	//	计算价格在图中的位置
+	float GetPricePosition(int nPrice);
+
 	//	绘制K线
 	void Render(CDC* pDC);
 
