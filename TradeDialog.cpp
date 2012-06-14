@@ -5,6 +5,8 @@
 #include "KLinePrint.h"
 #include "TradeDialog.h"
 #include "Utility.h"
+#include "MainFrm.h"
+#include "KLinePrintDoc.h"
 
 // CTradeDialog 对话框
 
@@ -48,30 +50,35 @@ END_MESSAGE_MAP()
 
 
 // CTradeDialog 消息处理程序
+#define CURDOC	((CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument())
 
 void CTradeDialog::OnBnClickedButtonBuy()
 {
 	UpdateData();
-	EXCHANGE.Buy(m_nSlots);
+	CURDOC->AppendTradeRecord(EXCHANGE.Buy(m_nSlots));
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonSell()
 {
 	UpdateData();
-	EXCHANGE.Sell(m_nSlots);
+	CURDOC->AppendTradeRecord(EXCHANGE.Sell(m_nSlots));
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonClose()
 {
-	EXCHANGE.Close();
+	CURDOC->AppendTradeRecord(EXCHANGE.Close());
 	UpdateAccountInfo();
 }
 
 void CTradeDialog::OnBnClickedButtonReverse()
 {
-	EXCHANGE.Reverse();
+	TradeRecordCollection trs = EXCHANGE.Reverse();
+
+	for(int i = 0 ; i < trs.size(); i++)
+		CURDOC->AppendTradeRecord(trs[i]);
+
 	UpdateAccountInfo();
 }
 

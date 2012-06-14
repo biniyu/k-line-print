@@ -66,17 +66,17 @@ public:
 	void SetTick(Tick tick);
 
 	//	开仓
-	void Buy(int nSlot);
-	void Sell(int nSlot);
+	TradeRecord Buy(int nSlot);
+	TradeRecord Sell(int nSlot);
 
 	//	平仓
-	void Close();
+	TradeRecord Close();
 
 	//	反手
-	void Reverse();
+	TradeRecordCollection Reverse();
 
 	//	交易记录
-	void Log(int nTime, bool bBuy, bool bOpen, 
-			int nPrice, int nSlot, int nFee, int nProfit);
+	TradeRecord Log(int nTime, bool bBuy, bool bOpen, 
+					int nPrice, int nSlot, int nFee, int nProfit);
 
 };

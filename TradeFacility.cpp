@@ -25,7 +25,7 @@ void TradeFacility::SetTick(Tick tick)
 	}
 }
 
-void TradeFacility::Log(int nTime, bool bBuy, bool bOpen, 
+TradeRecord TradeFacility::Log(int nTime, bool bBuy, bool bOpen, 
 						int nPrice, int nSlot, int nFee, int nProfit)
 {
 	TradeRecord tr;
@@ -49,13 +49,16 @@ void TradeFacility::Log(int nTime, bool bBuy, bool bOpen,
 	tr.nProfit = nProfit;
 
 	Utility::WriteLog(tr);
+
+	return tr;
 }
 
 //	开仓
-void TradeFacility::Buy(int nSlot)
+TradeRecord TradeFacility::Buy(int nSlot)
 {
 	//	必须先平仓后再开
-	if(m_nPosition.nSlot != 0) return;
+	if(m_nPosition.nSlot != 0) 
+		return TradeRecord();
 
 	m_nPosition.nPrice = m_nTick.priceS1;
 	m_nPosition.nSlot = nSlot;
@@ -63,13 +66,14 @@ void TradeFacility::Buy(int nSlot)
 
 	m_nBalance -= (nSlot * m_nFee);
 
-	Log(m_nTick.time_ms, true, true, 
-		m_nTick.priceS1, nSlot, nSlot * m_nFee, 0);
+	return Log(m_nTick.time_ms, true, true, 
+			   m_nTick.priceS1, nSlot, nSlot * m_nFee, 0);
 }
 
-void TradeFacility::Sell(int nSlot)
+TradeRecord TradeFacility::Sell(int nSlot)
 {
-	if(m_nPosition.nSlot != 0) return;
+	if(m_nPosition.nSlot != 0) 
+		return TradeRecord();
 
 	m_nPosition.nPrice = m_nTick.priceB1;
 	m_nPosition.nSlot = -nSlot;
@@ -77,16 +81,17 @@ void TradeFacility::Sell(int nSlot)
 
 	m_nBalance -= (nSlot * m_nFee);
 
-	Log(m_nTick.time_ms, false, true, 
-		m_nTick.priceB1, nSlot, nSlot * m_nFee, 0);
+	return Log(m_nTick.time_ms, false, true, 
+			   m_nTick.priceB1, nSlot, nSlot * m_nFee, 0);
 }
 
 //	平仓
-void TradeFacility::Close()
+TradeRecord TradeFacility::Close()
 {
 	int nProfit = 0, nFee = 0;
+	TradeRecord rec;
 
-	if(m_nPosition.nSlot == 0) return;
+	if(m_nPosition.nSlot == 0) return TradeRecord();
 
 	nFee = (abs(m_nPosition.nSlot) * m_nFee);
 
@@ -96,8 +101,8 @@ void TradeFacility::Close()
 		m_nBalance += nProfit;
 
 		//	卖出平仓
-		Log(m_nTick.time_ms, false, false, 
-			m_nTick.priceB1, abs(m_nPosition.nSlot), nFee, nProfit);
+		rec = Log(m_nTick.time_ms, false, false, 
+				  m_nTick.priceB1, abs(m_nPosition.nSlot), nFee, nProfit);
 	}
 	else
 	{
@@ -105,8 +110,8 @@ void TradeFacility::Close()
 		m_nBalance += nProfit;
 
 		//	买入平仓
-		Log(m_nTick.time_ms, true, false, 
-			m_nTick.priceS1, abs(m_nPosition.nSlot), nFee, nProfit);
+		rec = Log(m_nTick.time_ms, true, false, 
+				  m_nTick.priceS1, abs(m_nPosition.nSlot), nFee, nProfit);
 	}
 
 	m_nBalance -= nFee;
@@ -114,23 +119,28 @@ void TradeFacility::Close()
 	m_nPosition.nSlot = 0;
 	m_nPosition.nPrice = 0;
 	m_nPosition.nProfit = 0;
+
+	return rec;
 }
 
 //	反手
-void TradeFacility::Reverse()
+TradeRecordCollection TradeFacility::Reverse()
 {
 	int nSlot = m_nPosition.nSlot;
+	TradeRecordCollection trs;
 
-	if(nSlot == 0) return;
+	if(nSlot == 0) return trs;
 
-	Close();
+	trs.push_back(Close());
 
 	if(nSlot > 0)
 	{
-		Sell(abs(nSlot));
+		trs.push_back(Sell(abs(nSlot)));
 	}
 	else
 	{
-		Buy(abs(nSlot));
+		trs.push_back(Buy(abs(nSlot)));
 	}
+
+	return trs;
 }

@@ -509,32 +509,35 @@ void KLineRenderer::Render(CDC* pDC)
 		}
 
 		//	绘制交易记录
-		for(int nTrIdx = 0; nTrIdx < m_pTradeRecords->size(); nTrIdx++)
+		if(m_pTradeRecords)
 		{
-			TradeRecord tr = (*m_pTradeRecords)[nTrIdx];
-
-			//	正好位于该K线中
-			if(tr.nSimuTime >= kline.start_time
-				&& tr.nSimuTime < kline.time)
+			for(int nTrIdx = 0; nTrIdx < m_pTradeRecords->size(); nTrIdx++)
 			{
-				float kPrPos = GetPricePosition(tr.nPrice);
+				TradeRecord tr = (*m_pTradeRecords)[nTrIdx];
 
-				//	绘制箭头
-				if(tr.bBuy) 
+				//	正好位于该K线中
+				if(tr.nSimuTime >= kline.start_time
+					&& tr.nSimuTime < kline.time)
 				{
-					pDC->SelectObject(&penRed);
-					pDC->MoveTo(kMiddle, kPrPos);
-					pDC->LineTo(kLeft, kPrPos - 3);
-					pDC->LineTo(kRight, kPrPos - 3);
-					pDC->LineTo(kMiddle, kPrPos);
-				}
-				else
-				{
-					pDC->SelectObject(&penGreen);
-					pDC->MoveTo(kMiddle, kPrPos);
-					pDC->LineTo(kLeft, kPrPos + 3);
-					pDC->LineTo(kRight, kPrPos + 3);
-					pDC->LineTo(kMiddle, kPrPos);
+					float kPrPos = GetPricePosition(tr.nPrice);
+
+					//	绘制箭头
+					if(tr.bBuy) 
+					{
+						pDC->SelectObject(&penRed);
+						pDC->MoveTo(kMiddle, kPrPos);
+						pDC->LineTo(kLeft, kPrPos - 3);
+						pDC->LineTo(kRight, kPrPos - 3);
+						pDC->LineTo(kMiddle, kPrPos);
+					}
+					else
+					{
+						pDC->SelectObject(&penGreen);
+						pDC->MoveTo(kMiddle, kPrPos);
+						pDC->LineTo(kLeft, kPrPos + 3);
+						pDC->LineTo(kRight, kPrPos + 3);
+						pDC->LineTo(kMiddle, kPrPos);
+					}
 				}
 			}
 		}
