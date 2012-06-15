@@ -82,17 +82,51 @@ private:
 	//  鼠标所在的位置
 	CPoint m_cp;
 
-	//	每个价格单位对应的像素数
-	float m_pixelPerPrice;
+	//	每个价格/成交量/持仓量单位对应的像素数
+	float m_pixelPerPrice, m_pixelPerVol, m_pixelPerInterest;
 
-	//	当前图显示的最高价
-	int m_kHighPrice;
+	//	价格百分比
+	float m_fPricePercentage;
+
+	//	当前K线的左右位置
+	float m_kLeft, m_kMiddle, m_kRight, m_kWidth;
+
+	//	当前K线的上下位置
+	float m_kHighPos, m_kLowPos, m_kOpenPos, m_kClosePos;
+
+	//	最大成交量/持仓量
+	int m_volMax, m_interestMax;
+
+	//	当前图显示的最高/最低/中轴价
+	int m_kHighPrice, m_kLowPrice, m_kAxisPrice;
 
 	//	设置开盘价索引 -1为无
 	int m_nOpenIndex;
 
 	//	显示为日期(星期几)
 	bool m_bShowDate;
+
+private:
+
+	CFont font;
+
+	CPen penRed, penGreen, penBlue, penGreyDotted;
+	CPen penRedDotted, penGreenDotted, penBlueDotted;
+
+private:
+
+	void RenderKeyPrice(CDC* pDC);
+	void RenderMaxMinPrice(CDC* pDC);
+	void RenderAxis(CDC* pDC);
+
+	void RenderTradeRecord(CDC* pDC, int nKIdx);
+	void RenderKLine(CDC* pDC, int nKIdx);
+	void RenderCriticalTime(CDC* pDC, int nKIdx);
+	void RenderHighLowPrice(CDC* pDC, int nKIdx);
+	void RenderSelection(CDC* pDC, int nKIdx);
+	void RenderAvg(CDC* pDC, int nKIdx);
+	void RenderMA(CDC* pDC, int nKIdx);
+	void RenderVol(CDC* pDC, int nKIdx);
 
 public:
 
@@ -137,6 +171,12 @@ public:
 
 	//	计算价格在图中的位置
 	float GetPricePosition(int nPrice);
+
+	//	计算成交量在图中的位置
+	float GetVolPosition(int nVol);
+
+	//	计算持仓量在图中的位置
+	float GetInterestPosition(int nInterest);
 
 	//	绘制K线
 	void Render(CDC* pDC);
