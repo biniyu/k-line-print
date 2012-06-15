@@ -100,11 +100,19 @@ void CTradeLogDialog::OnLbnSelchangeListDate()
 
 	trs = m_trs[nDate];
 
+	//	需要按照练习时间的顺序排列
+	map<int, string> timeVsfile;
+	map<int, string>::reverse_iterator rit;
+
 	map<string, TradeRecordCollection>::iterator it;
 	for(it = trs.begin(); it != trs.end(); it++)
 	{
-		CString tmp(it->first.c_str()); 
-		m_ctlListFile.AddString(tmp);
+		timeVsfile[it->second[0].nRealTime] = it->first;
+	}
+
+	for(rit = timeVsfile.rbegin(); rit != timeVsfile.rend(); rit++)
+	{
+		m_ctlListFile.AddString(CString(rit->second.c_str()));
 	}
 }
 
