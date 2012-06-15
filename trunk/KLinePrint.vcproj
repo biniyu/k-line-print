@@ -495,11 +495,6 @@
 			RelativePath=".\ReadMe.txt"
 			>
 		</File>
-		<File
-			RelativePath=".\SearchContractDialog.htm"
-			DeploymentContent="true"
-			>
-		</File>
 	</Files>
 	<Globals>
 		<Global
