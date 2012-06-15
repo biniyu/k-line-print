@@ -38,6 +38,8 @@ void Calendar::Add(int nDate)
 
 int Calendar::GetFirst()
 {
+	if(0 == size()) return -1;
+
 	map<int,int>::iterator it;
 
 	it = this->begin();
