@@ -38,6 +38,9 @@ KLineRenderer::KLineRenderer(void)
 	penRedDotted.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
     penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 180, 0));
     penBlueDotted.CreatePen(PS_DASH, 1, RGB(0, 0, 255));
+
+	brRed.CreateSolidBrush(RGB(255,0,0));
+	brGreen.CreateSolidBrush(RGB(0,180,0));
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -375,19 +378,32 @@ void KLineRenderer::RenderTradeRecord(CDC* pDC, int nKIdx)
 			if(tr.bBuy) 
 			{
 				pDC->SelectObject(&penRed);
+				pDC->SelectObject(&brRed);
+
+				pDC->BeginPath();
 				pDC->MoveTo(m_kMiddle, kPrPos);
 				pDC->LineTo(m_kLeft, kPrPos + 5);
 				pDC->LineTo(m_kRight, kPrPos + 5);
 				pDC->LineTo(m_kMiddle, kPrPos);
+				pDC->EndPath();
 			}
 			else
 			{
 				pDC->SelectObject(&penGreen);
+				pDC->SelectObject(&brGreen);
+
+				pDC->BeginPath();
 				pDC->MoveTo(m_kMiddle, kPrPos);
 				pDC->LineTo(m_kLeft, kPrPos - 5);
 				pDC->LineTo(m_kRight, kPrPos - 5);
 				pDC->LineTo(m_kMiddle, kPrPos);
+				pDC->EndPath();
 			}
+
+			if(tr.bOpen)
+				pDC->StrokeAndFillPath();
+			else
+				pDC->StrokePath();
 		}
 	}
 }

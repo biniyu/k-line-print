@@ -113,6 +113,8 @@ private:
 	CPen penRed, penGreen, penBlue, penBlack, penGreyDotted;
 	CPen penRedDotted, penGreenDotted, penBlueDotted;
 
+	CBrush brRed, brGreen;
+
 private:
 
 	void RenderGraphFrame(CDC* pDC);
