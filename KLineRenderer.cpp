@@ -53,6 +53,8 @@ KLineRenderer::~KLineRenderer(void)
 	penRedDotted.DeleteObject();
     penGreenDotted.DeleteObject();
     penBlueDotted.DeleteObject();
+	brRed.DeleteObject();
+	brGreen.DeleteObject();
 	font.DeleteObject();
 }
 
