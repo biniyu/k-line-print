@@ -110,10 +110,12 @@ private:
 
 	CFont font;
 
-	CPen penRed, penGreen, penBlue, penGreyDotted;
+	CPen penRed, penGreen, penBlue, penBlack, penGreyDotted;
 	CPen penRedDotted, penGreenDotted, penBlueDotted;
 
 private:
+
+	void RenderGraphFrame(CDC* pDC);
 
 	void RenderKeyPrice(CDC* pDC);
 	void RenderMaxMinPrice(CDC* pDC);
@@ -177,6 +179,12 @@ public:
 
 	//	计算持仓量在图中的位置
 	float GetInterestPosition(int nInterest);
+
+	//	计算K线图的整体绘制位置
+	void CalculateGraphLayout();
+
+	//	计算K线的绘制位置
+	void CalculateKLineLayout(int nKIdx);
 
 	//	绘制K线
 	void Render(CDC* pDC);
