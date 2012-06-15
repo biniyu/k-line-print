@@ -32,6 +32,7 @@ KLineRenderer::KLineRenderer(void)
 	penRed.CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
     penGreen.CreatePen(PS_SOLID, 1, RGB(0, 180, 0));
     penBlue.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+    penBlack.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 
 	penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
 	penRedDotted.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
@@ -44,6 +45,7 @@ KLineRenderer::~KLineRenderer(void)
     penGreen.DeleteObject();
     penRed.DeleteObject();
     penBlue.DeleteObject();
+	penBlack.DeleteObject();
 	penGreyDotted.DeleteObject();
 	penRedDotted.DeleteObject();
     penGreenDotted.DeleteObject();
@@ -242,6 +244,16 @@ float KLineRenderer::GetPricePosition(int nPrice)
 	return m_Rect.top + (m_kHighPrice - nPrice) * m_pixelPerPrice;
 }
 
+float KLineRenderer::GetVolPosition(int nVol)
+{
+	return m_Rect.bottom - nVol * m_pixelPerVol;
+}
+
+float KLineRenderer::GetInterestPosition(int nInterest)
+{
+	return m_Rect.bottom - (nInterest + m_interestMax) * m_pixelPerInterest;
+}
+
 void KLineRenderer::RenderKeyPrice(CDC* pDC)
 {
 	//	绘制关键价格线(文本需要错开，以免互相覆盖)
@@ -288,6 +300,8 @@ void KLineRenderer::RenderMaxMinPrice(CDC* pDC)
 void KLineRenderer::RenderAxis(CDC* pDC)
 {
 	CString strPercent;
+
+	pDC->SelectObject(&penBlack);
 
 	float axleLinePos = GetPricePosition(m_kAxisPrice);
 	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, axleLinePos);
@@ -608,6 +622,7 @@ void KLineRenderer::RenderAvg(CDC* pDC, int nKIdx)
 
 		float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
 
+		pDC->SelectObject(&penBlack);
 		pDC->MoveTo(kLastMiddle, kLastAvgPos);
 		pDC->LineTo(m_kMiddle, kAvgPos);
 	}
@@ -628,6 +643,8 @@ void KLineRenderer::RenderMA(CDC* pDC, int nKIdx)
 
 		float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
 
+		pDC->SelectObject(&penBlack);
+
 		if(kLastMA20Pos > m_Rect.top && kLastMA20Pos < m_Rect.bottom)
 		{
 			pDC->MoveTo(kLastMiddle, kLastMA20Pos);
@@ -642,16 +659,6 @@ void KLineRenderer::RenderMA(CDC* pDC, int nKIdx)
 	}
 }
 
-float KLineRenderer::GetVolPosition(int nVol)
-{
-	return m_Rect.bottom - nVol * m_pixelPerVol;
-}
-
-float KLineRenderer::GetInterestPosition(int nInterest)
-{
-	return m_Rect.bottom - (nInterest + m_interestMax) * m_pixelPerInterest;
-}
-
 void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 {
 	KLine& kline = (*m_pKLines)[nKIdx];
@@ -660,6 +667,14 @@ void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 
 	//	成交量线
 	float kVolPos = GetVolPosition(kline.vol); 
+
+	if(kline.open > kline.close)
+		pDC->SelectObject(&penGreen);
+	else if(kline.open < kline.close)
+		pDC->SelectObject(&penRed);
+	else
+		pDC->SelectObject(&penBlue);
+
 	pDC->MoveTo(m_kLeft, m_Rect.bottom);
 	pDC->LineTo(m_kLeft, kVolPos);
 	pDC->LineTo(m_kRight, kVolPos);
@@ -679,19 +694,33 @@ void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 	pDC->LineTo(m_kMiddle, kInterestPos);
 }
 
-void KLineRenderer::Render(CDC* pDC)
+void KLineRenderer::RenderGraphFrame(CDC* pDC)
 {
-	if(!m_pKLines || !m_pKLines->size()) return;
+	float timeLinePos = GetPricePosition(m_kLowPrice);
 
-	if(m_Rect == CRect(0,0,0,0)) return;
+	pDC->SelectObject(&penBlack);
 
-	pDC->SelectObject(&font);
+	//	绘制分割线
+	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, timeLinePos);
+	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, timeLinePos);
 
-	if(m_bSelected)
-		pDC->FillSolidRect(&m_Rect,RGB(230,230,230));
-	else
-		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
+	//	绘制时间线
+	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
+	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
 
+	//	绘制价格线
+	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
+	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
+
+	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, m_Rect.top);
+	pDC->LineTo(m_Rect.left + LEFT_MARGIN, m_Rect.bottom);
+
+	pDC->MoveTo(m_Rect.right - RIGHT_MARGIN, m_Rect.top);
+	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, m_Rect.bottom);
+}
+
+void KLineRenderer::CalculateGraphLayout()
+{
 	if(m_enRenderMode == enHighLowMode)
 	{
 		m_pKLines->GetPriceVolRange(m_nFirstDisplayedIndex, 
@@ -762,44 +791,46 @@ void KLineRenderer::Render(CDC* pDC)
 	//	计算K线的宽度
 	m_kWidth = (m_Rect.Width() - LEFT_MARGIN - RIGHT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
 		/(float)m_nDisplayKLineCount;
+}
 
-	float timeLinePos = GetPricePosition(m_kLowPrice);
+void KLineRenderer::CalculateKLineLayout(int nKIdx)
+{
+	/* 计算左右方向 */
+	m_kLeft = m_Rect.left + LEFT_MARGIN + (nKIdx - m_nFirstDisplayedIndex + 1) * m_nKSpace
+							+ m_kWidth * (nKIdx - m_nFirstDisplayedIndex);
 
-	//	绘制分割线
-	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, timeLinePos);
-	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, timeLinePos);
+	m_kMiddle = m_kLeft + m_kWidth / 2;
+	m_kRight = m_kLeft + m_kWidth;
 
-	//	绘制时间线
-	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
-	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
+	KLine& kline = (*m_pKLines)[nKIdx];
 
-	//	绘制价格线
-	pDC->MoveTo(m_Rect.left + 1, m_Rect.top);
-	pDC->LineTo(m_Rect.left + 1, m_Rect.bottom);
+	m_kHighPos = GetPricePosition(kline.high);
+	m_kLowPos = GetPricePosition(kline.low);
+	m_kOpenPos = GetPricePosition(kline.open);
+	m_kClosePos = GetPricePosition(kline.close);
+}
 
-	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, m_Rect.top);
-	pDC->LineTo(m_Rect.left + LEFT_MARGIN, m_Rect.bottom);
+void KLineRenderer::Render(CDC* pDC)
+{
+	if(!m_pKLines || !m_pKLines->size() || (m_Rect == CRect(0,0,0,0))) 
+		return;
 
-	pDC->MoveTo(m_Rect.right - RIGHT_MARGIN, m_Rect.top);
-	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, m_Rect.bottom);
+	pDC->SelectObject(&font);
+
+	if(m_bSelected)
+		pDC->FillSolidRect(&m_Rect,RGB(230,230,230));
+	else
+		pDC->FillSolidRect(&m_Rect,RGB(255,255,255));
+
+	CalculateGraphLayout();
+
+	RenderGraphFrame(pDC);
 
 	for(int i = m_nFirstDisplayedIndex; i <= m_nFirstDisplayedIndex + m_nDisplayKLineCount; i++)
 	{
 		if( i >= m_pKLines->size()) break;
 
-		/* 计算左右方向 */
-		m_kLeft = m_Rect.left + LEFT_MARGIN + (i - m_nFirstDisplayedIndex + 1) * m_nKSpace
-								+ m_kWidth * (i - m_nFirstDisplayedIndex);
-
-		m_kMiddle = m_kLeft + m_kWidth / 2;
-		m_kRight = m_kLeft + m_kWidth;
-
-		KLine kline = (*m_pKLines)[i];
-
-		m_kHighPos = GetPricePosition(kline.high);
-		m_kLowPos = GetPricePosition(kline.low);
-		m_kOpenPos = GetPricePosition(kline.open);
-		m_kClosePos = GetPricePosition(kline.close);
+		CalculateKLineLayout(i);
 		
 		//	绘制20/60日高低点
 		if(m_bShowHighLow)
