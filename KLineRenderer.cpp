@@ -760,7 +760,7 @@ void KLineRenderer::Render(CDC* pDC)
 	}
 
 	//	计算K线的宽度
-	float m_kWidth = (m_Rect.Width() - LEFT_MARGIN - RIGHT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
+	m_kWidth = (m_Rect.Width() - LEFT_MARGIN - RIGHT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
 		/(float)m_nDisplayKLineCount;
 
 	float timeLinePos = GetPricePosition(m_kLowPrice);
