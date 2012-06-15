@@ -309,7 +309,7 @@ void KLineRenderer::RenderAxis(CDC* pDC)
 
 void KLineRenderer::RenderKLine(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 
 	//	ÉÏÕÇºì£¬ÏÂµøÂÌ
 	if(kline.open > kline.close)
@@ -345,7 +345,7 @@ void KLineRenderer::RenderKLine(CDC* pDC, int nKIdx)
 
 void KLineRenderer::RenderTradeRecord(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 
 	for(int nTrIdx = 0; nTrIdx < m_pTradeRecords->size(); nTrIdx++)
 	{
@@ -380,7 +380,7 @@ void KLineRenderer::RenderTradeRecord(CDC* pDC, int nKIdx)
 
 void KLineRenderer::RenderCriticalTime(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 	float timeLinePos = GetPricePosition(m_kLowPrice);
 
 	int tmpHour = kline.time / 1000 / 3600;
@@ -421,7 +421,7 @@ void KLineRenderer::RenderCriticalTime(CDC* pDC, int nKIdx)
 
 void KLineRenderer::RenderHighLowPrice(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 
 	float kH20Pos = GetPricePosition(kline.high20);
 	float kH60Pos = GetPricePosition(kline.high60);
@@ -460,7 +460,7 @@ void KLineRenderer::RenderHighLowPrice(CDC* pDC, int nKIdx)
 
 void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 
 	pDC->SelectObject(&penGreyDotted);
 
@@ -600,8 +600,8 @@ void KLineRenderer::RenderAvg(CDC* pDC, int nKIdx)
 {
 	if(nKIdx > m_nFirstDisplayedIndex + 1) 
 	{
-		KLine prev_kline = (*m_pKLines)[nKIdx - 1];
-		KLine kline = (*m_pKLines)[nKIdx];
+		KLine& prev_kline = (*m_pKLines)[nKIdx - 1];
+		KLine& kline = (*m_pKLines)[nKIdx];
 
 		float kLastAvgPos = GetPricePosition(prev_kline.avg);
 		float kAvgPos = GetPricePosition(kline.avg);
@@ -617,8 +617,8 @@ void KLineRenderer::RenderMA(CDC* pDC, int nKIdx)
 {
 	if(nKIdx > m_nFirstDisplayedIndex + 1)
 	{
-		KLine prev_kline = (*m_pKLines)[nKIdx - 1];
-		KLine kline = (*m_pKLines)[nKIdx];
+		KLine& prev_kline = (*m_pKLines)[nKIdx - 1];
+		KLine& kline = (*m_pKLines)[nKIdx];
 
 		float kMA20Pos = GetPricePosition(kline.ma20);
 		float kMA60Pos = GetPricePosition(kline.ma60);
@@ -654,7 +654,7 @@ float KLineRenderer::GetInterestPosition(int nInterest)
 
 void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 {
-	KLine kline = (*m_pKLines)[nKIdx];
+	KLine& kline = (*m_pKLines)[nKIdx];
 
 	float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
 
