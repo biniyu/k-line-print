@@ -23,7 +23,20 @@ public:
 
 class TradeRecordCollection : public vector<TradeRecord>
 {
+private:
+	int m_nSelIdx;
 
+public:
+
+	int GetSelIdx() { return m_nSelIdx; }
+
+	void SetSelIdx(int nSelIdx) 
+	{
+		if(nSelIdx < 0 || nSelIdx > size() - 1)
+			m_nSelIdx = size() - 1;
+		else
+			m_nSelIdx = nSelIdx;
+	}
 };
 
 class Position

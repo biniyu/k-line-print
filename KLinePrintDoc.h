@@ -56,6 +56,9 @@ public:
 	string m_CurCsvFile;
 	string m_CurDayFile;
 
+	//	选中的交易记录
+	void SetSelTradeIdx(int nSelIdx) { m_TradeRecords.SetSelIdx(nSelIdx); }
+
 	//	添加交易记录
 	void AppendTradeRecord(TradeRecord tr) { m_TradeRecords.push_back(tr); }
 

@@ -36,6 +36,7 @@ BEGIN_MESSAGE_MAP(CTradeLogDialog, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST_DATE, &CTradeLogDialog::OnLbnSelchangeListDate)
 	ON_LBN_SELCHANGE(IDC_LIST_FILE, &CTradeLogDialog::OnLbnSelchangeListFile)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_LOG, &CTradeLogDialog::OnNMClickListLog)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_LOG, &CTradeLogDialog::OnLvnItemchangedListLog)
 END_MESSAGE_MAP()
 
 
@@ -155,7 +156,12 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 	for(i = 0; i < trs.size(); i++)
 	{
 		int nDispTime = Utility::ConvContTimeToDispTime(trs[i].nSimuTime / 1000);
-		tmp.Format(_T("%d"), nDispTime);
+		
+		tmp.Format(_T("%02d:%02d:%02d"), 
+					nDispTime / 10000, 
+					nDispTime % 10000 / 100, 
+					nDispTime % 10000 % 100);
+
 		m_ctlListLog.InsertItem(i, tmp);
 
 		if(trs[i].bBuy)
@@ -179,8 +185,15 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 
 		nTotalFee += trs[i].nFee;
 
-		tmp.Format(_T("%d"), trs[i].nProfit);
-		m_ctlListLog.SetItemText(i, 6, tmp);	
+		if(trs[i].bOpen)
+		{
+			m_ctlListLog.SetItemText(i, 6, _T("-"));			
+		}
+		else
+		{
+			tmp.Format(_T("%d"), trs[i].nProfit);
+			m_ctlListLog.SetItemText(i, 6, tmp);	
+		}
 
 		nTotalProfit += trs[i].nProfit;
 	}
@@ -203,6 +216,29 @@ void CTradeLogDialog::OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	//	高亮交易记号
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	// TODO: 在此添加控件通知处理程序代码
+
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)AfxGetMainWnd())->GetActiveView();
+
+	pDoc->SetSelTradeIdx(pNMItemActivate->iItem);
+
+	pView->Render();
+	pDoc->UpdateAllViews(0);
+
+	*pResult = 0;
+}
+
+void CTradeLogDialog::OnLvnItemchangedListLog(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+
+	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
+	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)AfxGetMainWnd())->GetActiveView();
+
+	pDoc->SetSelTradeIdx(pNMLV->iItem);
+
+	pView->Render();
+	pDoc->UpdateAllViews(0);
+
 	*pResult = 0;
 }
