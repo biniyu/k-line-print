@@ -34,4 +34,5 @@ public:
 	afx_msg void OnLbnSelchangeListDate();
 	afx_msg void OnLbnSelchangeListFile();
 	afx_msg void OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnLvnItemchangedListLog(NMHDR *pNMHDR, LRESULT *pResult);
 };

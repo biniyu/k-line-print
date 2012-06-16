@@ -41,6 +41,7 @@ KLineRenderer::KLineRenderer(void)
 
 	brRed.CreateSolidBrush(RGB(255,0,0));
 	brGreen.CreateSolidBrush(RGB(0,180,0));
+	brBlue.CreateSolidBrush(RGB(0,0,255));
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -55,6 +56,7 @@ KLineRenderer::~KLineRenderer(void)
     penBlueDotted.DeleteObject();
 	brRed.DeleteObject();
 	brGreen.DeleteObject();
+	brBlue.DeleteObject();
 	font.DeleteObject();
 }
 
@@ -375,6 +377,21 @@ void KLineRenderer::RenderTradeRecord(CDC* pDC, int nKIdx)
 			&& tr.nSimuTime < kline.time)
 		{
 			float kPrPos = GetPricePosition(tr.nPrice);
+
+			if(nTrIdx == m_pTradeRecords->GetSelIdx())
+			{
+				pDC->SelectObject(&penBlue);
+				pDC->SelectObject(&brBlue);
+
+				pDC->BeginPath();
+				pDC->MoveTo(m_kMiddle, m_kHighPos - 10);
+				pDC->LineTo(m_kLeft, m_kHighPos - 15);
+				pDC->LineTo(m_kRight, m_kHighPos - 15);
+				pDC->LineTo(m_kMiddle, m_kHighPos - 10);
+				pDC->EndPath();
+
+				pDC->StrokeAndFillPath();
+			}
 
 			//	»æÖÆ¼ýÍ·
 			if(tr.bBuy) 
