@@ -2,6 +2,7 @@
 #include "TickReader.h"
 #include "TradeFacility.h"
 #include "afxcmn.h"
+#include "afxwin.h"
 
 // CTradeDialog ¶Ô»°¿ò
 
@@ -26,6 +27,7 @@ public:
 	virtual BOOL OnInitDialog();
 	CListCtrl m_AccountInfo;
 	CListCtrl m_PositionInfo;
+	void EnableTrade(BOOL bEnable);
 	void UpdateAccountInfo(void);
 
 public:
@@ -37,4 +39,14 @@ public:
 	UINT m_nUnitsPerSlot;
 	UINT m_nSlots;
 	afx_msg void OnBnClickedButtonUpdateParam();
+
+private:
+
+	BOOL m_bEnableTrade;
+
+public:
+	CButton m_btnBuy;
+	CButton m_btnSell;
+	CButton m_btnClose;
+	CButton m_btnReverse;
 };

@@ -20,6 +20,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nSlots(0)
 {
 	EXCHANGE.SetTick(Tick());
+	m_bEnableTrade = FALSE;
 }
 
 CTradeDialog::~CTradeDialog()
@@ -36,6 +37,10 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_MARGIN, m_nMargin);
 	DDX_Text(pDX, IDC_EDIT_UNITS, m_nUnitsPerSlot);
 	DDX_Text(pDX, IDC_EDIT_SLOTS, m_nSlots);
+	DDX_Control(pDX, IDC_BUTTON_BUY, m_btnBuy);
+	DDX_Control(pDX, IDC_BUTTON_SELL, m_btnSell);
+	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_btnClose);
+	DDX_Control(pDX, IDC_BUTTON_REVERSE, m_btnReverse);
 }
 
 
@@ -107,8 +112,33 @@ BOOL CTradeDialog::OnInitDialog()
 
 	UpdateAccountInfo();
 
+	m_btnBuy.EnableWindow(FALSE);
+	m_btnSell.EnableWindow(FALSE);
+	m_btnClose.EnableWindow(FALSE);
+	m_btnReverse.EnableWindow(FALSE);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
+}
+
+void CTradeDialog::EnableTrade(BOOL bEnable)
+{
+	if(m_bEnableTrade && (!bEnable))
+	{
+		m_btnBuy.EnableWindow(FALSE);
+		m_btnSell.EnableWindow(FALSE);
+		m_btnClose.EnableWindow(FALSE);
+		m_btnReverse.EnableWindow(FALSE);
+	}
+	else if((!m_bEnableTrade) && bEnable)
+	{
+		m_btnBuy.EnableWindow(TRUE);
+		m_btnSell.EnableWindow(TRUE);
+		m_btnClose.EnableWindow(TRUE);
+		m_btnReverse.EnableWindow(TRUE);
+	}
+
+	m_bEnableTrade = bEnable;
 }
 
 void CTradeDialog::UpdateAccountInfo(void)

@@ -190,6 +190,10 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 
 	m_TradeRecords.clear();
 
+	//	强制平仓，防止价格错乱
+	EXCHANGE.SetTick(GetTick());
+	EXCHANGE.Close();
+
 	m_CurCsvFile = tmp;
 	m_CurDayFile = Utility::GetDayLinePath(m_CurCsvFile);
 
