@@ -469,6 +469,12 @@ void CKLinePrintView::OnPlaybackBegin()
 	if (!pDoc)
 		return;
 
+	EXCHANGE.SetTick(pDoc->GetTick());
+	EXCHANGE.Close();
+
+	if(m_pTradeDialog)
+		m_pTradeDialog->EnableTrade(FALSE);
+
 	pDoc->DisplayTill(0, klr_day.GetCurTime());
 }
 
@@ -483,6 +489,9 @@ void CKLinePrintView::OnPlaybackEnd()
 
 	EXCHANGE.SetTick(pDoc->GetTick());
 	EXCHANGE.Close();
+
+	if(m_pTradeDialog)
+		m_pTradeDialog->EnableTrade(FALSE);
 
 	pDoc->LoadNextDay();
 	pDoc->DisplayTill(PBCONFIG.nStartTime * 1000, klr_day.GetCurTime());
@@ -556,12 +565,23 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 			int next_tick_in_millisec = tick_next_2.time_ms;
 
 			if(next_tick_in_millisec - this_tick_in_millisec > 300 * 1000)
+			{
+				//	盘中休息暂停10s，强制平仓，期间不允许交易
+				EXCHANGE.SetTick(pDoc->GetTick());
+				EXCHANGE.Close();
+				m_pTradeDialog->UpdateAccountInfo();
+				m_pTradeDialog->EnableTrade(FALSE);
 				SetTimer(1, 10 * 1000, NULL);
+			}
 			else
+			{
 				SetTimer(1, (next_tick_in_millisec - this_tick_in_millisec) / PBCONFIG.nPlaySpeed, NULL); 
+				m_pTradeDialog->EnableTrade(TRUE);
+			}
 		}
 		else
 		{
+			m_pTradeDialog->EnableTrade(TRUE);
 			pDoc->PlayTillTime(pDoc->GetCurTickTime() + PBCONFIG.nPlaySpeed * 1000);
 			SetTimer(1,1000,NULL);
 		}
@@ -583,6 +603,9 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 
 void CKLinePrintView::OnPlaybackPause()
 {
+	//	暂停时禁止交易
+	if(m_pTradeDialog)
+		m_pTradeDialog->EnableTrade(FALSE);
 	KillTimer(1);
 }
 
@@ -633,7 +656,12 @@ void CKLinePrintView::OnPlaybackStop()
 
 	EXCHANGE.SetTick(pDoc->GetTick());
 	EXCHANGE.Close();
-	m_pTradeDialog->UpdateAccountInfo();
+	
+	if(m_pTradeDialog)
+	{
+		m_pTradeDialog->UpdateAccountInfo();
+		m_pTradeDialog->EnableTrade(FALSE);
+	}
 
 	KillTimer(1);
 	pDoc->DisplayTill(-1, -1);
