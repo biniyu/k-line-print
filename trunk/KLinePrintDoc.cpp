@@ -283,10 +283,14 @@ Tick CKLinePrintDoc::GetTick(int nOffset)
 {
 	Tick tmp;
 
+	memset(&tmp, 0, sizeof(tmp));
+
 	if(m_nCurrentTickIdx + nOffset < m_TickData.size())
 		return m_TickData[m_nCurrentTickIdx + nOffset];
 	else
 	{
+		if(!m_TickData.size()) return tmp;
+
 		tmp = m_TickData[m_TickData.size() - 1];
 		tmp.time_ms = 0;
 		return tmp;
