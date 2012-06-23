@@ -397,12 +397,14 @@ void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, L
 }
 
 //	读入账户/品种信息
-void Utility::ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, int& nUnitsPerSlot)
+void Utility::ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, 
+								 int& nUnitsPerSlot, int& nDefaultSlots)
 {
 	nBalance = GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
 	nFee = GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
 	nMargin = GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
 	nUnitsPerSlot = GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
+	nDefaultSlots = GetPrivateProfileIntA("Exchange","DefaultSlots", 1, CONFIG_FILE);
 }
 
 void Utility::WriteBalance(int nBalance)
@@ -410,11 +412,12 @@ void Utility::WriteBalance(int nBalance)
 	WritePrivateProfileIntA("Exchange","Balance", nBalance, CONFIG_FILE);
 }
 
-void Utility::WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot)
+void Utility::WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot, int nDefaultSlots)
 {
 	WritePrivateProfileIntA("Exchange","Fee", nFee, CONFIG_FILE);
 	WritePrivateProfileIntA("Exchange","Margin", nMargin, CONFIG_FILE);
 	WritePrivateProfileIntA("Exchange","UnitsPerSlot", nUnitsPerSlot, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","DefaultSlots", nDefaultSlots, CONFIG_FILE);
 }
 
 //	读入回放配置

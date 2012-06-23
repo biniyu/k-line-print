@@ -22,9 +22,11 @@ public:
 
 	//	读入回放配置
 	static PlaybackConfig ReadPlaybackConfig();
-	static void ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, int& nUnitsPerSlot);
+	
+	static void ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, 
+								   int& nUnitsPerSlot, int& nDefaultSlots);
 	static void WriteBalance(int nBalance);
-	static void WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot);
+	static void WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot, int nDefaultSlots);
 
 	//	保存回放配置
 	static void SavePlaybackConfig(PlaybackConfig pc);

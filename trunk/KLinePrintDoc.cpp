@@ -194,6 +194,9 @@ void CKLinePrintDoc::LoadKLineGroup(string targetCsvFile)
 	EXCHANGE.SetTick(GetTick());
 	EXCHANGE.Close();
 
+	//	重置盈亏.手续费等统计数据
+	EXCHANGE.ResetStats();
+
 	m_CurCsvFile = tmp;
 	m_CurDayFile = Utility::GetDayLinePath(m_CurCsvFile);
 

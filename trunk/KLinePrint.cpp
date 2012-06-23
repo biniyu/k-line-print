@@ -118,7 +118,8 @@ BOOL CKLinePrintApp::InitInstance()
 	Utility::ReadExchangeConfig(EXCHANGE.m_nBalance,
 								EXCHANGE.m_nFee,
 								EXCHANGE.m_nMargin,
-								EXCHANGE.m_nUnitsPerSlot);
+								EXCHANGE.m_nUnitsPerSlot,
+								EXCHANGE.m_nDefaultSlots);
 
 	srand(time(0));
 

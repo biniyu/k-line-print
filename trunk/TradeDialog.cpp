@@ -18,6 +18,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nMargin(0)
 	, m_nUnitsPerSlot(0)
 	, m_nSlots(0)
+	, m_nDefaultSlots(0)
 {
 	EXCHANGE.SetTick(Tick());
 	m_bEnableTrade = FALSE;
@@ -41,6 +42,7 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_SELL, m_btnSell);
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_btnClose);
 	DDX_Control(pDX, IDC_BUTTON_REVERSE, m_btnReverse);
+	DDX_Text(pDX, IDC_EDIT_DEFAULT_SLOTS, m_nDefaultSlots);
 }
 
 
@@ -94,16 +96,17 @@ BOOL CTradeDialog::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_AccountInfo.InsertColumn(0, CString("期初权益"), 0, 70);
 	m_AccountInfo.InsertColumn(1, CString("当前权益"), 0, 70);
-	m_AccountInfo.InsertColumn(2, CString("持仓保证金"), 0, 90);
-	m_AccountInfo.InsertColumn(3, CString("总盈亏"), 0, 70);
-	m_AccountInfo.InsertColumn(4, CString("总手续费"), 0, 70);
+	m_AccountInfo.InsertColumn(2, CString("保证金"), 0, 60);
+	m_AccountInfo.InsertColumn(3, CString("毛利"), 0, 60);
+	m_AccountInfo.InsertColumn(4, CString("手续费"), 0, 60);
+	m_AccountInfo.InsertColumn(5, CString("净利"), 0, 60);
 
 	m_PositionInfo.InsertColumn(0, CString("持仓量"), 0, 90);
 	m_PositionInfo.InsertColumn(1, CString("开仓价格"), 0, 90);
 	m_PositionInfo.InsertColumn(2, CString("当前价格"), 0, 90);
 	m_PositionInfo.InsertColumn(3, CString("浮动盈亏"), 0, 90);
 
-	m_nSlots = 1;
+	m_nDefaultSlots = m_nSlots = EXCHANGE.m_nDefaultSlots;
 	m_nFee = EXCHANGE.m_nFee;
 	m_nMargin = EXCHANGE.m_nMargin;
 	m_nUnitsPerSlot = EXCHANGE.m_nUnitsPerSlot;
@@ -147,8 +150,9 @@ void CTradeDialog::UpdateAccountInfo(void)
 	m_AccountInfo.InsertItem(0, IntToCString(EXCHANGE.m_nBalance));
 	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance));
 	m_AccountInfo.SetItemText(0, 2, IntToCString(0));
-	m_AccountInfo.SetItemText(0, 3, IntToCString(0));
-	m_AccountInfo.SetItemText(0, 4, IntToCString(0));
+	m_AccountInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTotalProfit));
+	m_AccountInfo.SetItemText(0, 4, IntToCString(EXCHANGE.m_nTotalFee));
+	m_AccountInfo.SetItemText(0, 5, IntToCString(EXCHANGE.m_nTotalProfit - EXCHANGE.m_nTotalFee));
 
 	m_PositionInfo.DeleteAllItems();
 	m_PositionInfo.InsertItem(0, IntToCString(EXCHANGE.m_nPosition.nSlot));
@@ -163,5 +167,5 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 {
 	UpdateData();
 	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
-	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot);
+	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, m_nDefaultSlots);
 }
