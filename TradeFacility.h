@@ -54,15 +54,24 @@ public:
 	int			m_nBalance;
 	int			m_nFee;
 	int			m_nMargin;
+	int			m_nDefaultSlots;
 	int			m_nUnitsPerSlot;
 	Tick		m_nTick;
 	Position	m_nPosition;
 	string		m_nFilePath;
 
+	int			m_nTotalFee;				//	当日手续费总额
+	int			m_nTotalProfit;				//	当日毛利润总额
+
 public:
 
 	TradeFacility(void);
 	~TradeFacility(void);
+
+	void ResetStats()
+	{
+		m_nTotalFee = m_nTotalProfit = 0;
+	}
 
 	//	设置账户余额	
 	void SetBalance(int nMoney) { m_nBalance = nMoney; }

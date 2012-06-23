@@ -135,6 +135,7 @@
 #define IDC_CHECK12                     1037
 #define IDC_EDIT1                       1038
 #define IDC_EDIT_GAP                    1038
+#define IDC_EDIT_DEFAULT_SLOTS          1038
 #define IDC_CHECK13                     1039
 #define IDC_CHECK_FLUNC_ABOVE           1039
 #define IDC_EDIT2                       1040

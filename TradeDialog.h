@@ -38,6 +38,7 @@ public:
 	UINT m_nMargin;
 	UINT m_nUnitsPerSlot;
 	UINT m_nSlots;
+	UINT m_nDefaultSlots;
 	afx_msg void OnBnClickedButtonUpdateParam();
 
 private:
