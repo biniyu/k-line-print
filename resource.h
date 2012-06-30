@@ -140,6 +140,7 @@
 #define IDC_CHECK_FLUNC_ABOVE           1039
 #define IDC_EDIT2                       1040
 #define IDC_EDIT_FLUNC_ABOVE            1040
+#define IDC_EDIT_MAXLOSS                1040
 #define IDC_CHECK14                     1041
 #define IDC_CHECK_FLUNC_BELOW           1041
 #define IDC_EDIT3                       1042
@@ -156,6 +157,8 @@
 #define IDC_LIST_FILE                   1052
 #define IDC_LIST4                       1053
 #define IDC_LIST_LOG                    1053
+#define IDC_EDIT_MAXPROFIT              1054
+#define IDC_EDIT4                       1054
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -183,7 +186,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32791
-#define _APS_NEXT_CONTROL_VALUE         1054
+#define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
