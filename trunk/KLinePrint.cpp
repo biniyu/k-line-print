@@ -119,7 +119,9 @@ BOOL CKLinePrintApp::InitInstance()
 								EXCHANGE.m_nFee,
 								EXCHANGE.m_nMargin,
 								EXCHANGE.m_nUnitsPerSlot,
-								EXCHANGE.m_nDefaultSlots);
+								EXCHANGE.m_nDefaultSlots,
+								EXCHANGE.m_nMaxLoss,
+								EXCHANGE.m_nMaxProfit);
 
 	srand(time(0));
 

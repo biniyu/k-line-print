@@ -19,6 +19,8 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nUnitsPerSlot(0)
 	, m_nSlots(0)
 	, m_nDefaultSlots(0)
+	, m_nMaxLoss(0)
+	, m_nMaxProfit(0)
 {
 	EXCHANGE.SetTick(Tick());
 	m_bEnableTrade = FALSE;
@@ -43,6 +45,8 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_btnClose);
 	DDX_Control(pDX, IDC_BUTTON_REVERSE, m_btnReverse);
 	DDX_Text(pDX, IDC_EDIT_DEFAULT_SLOTS, m_nDefaultSlots);
+	DDX_Text(pDX, IDC_EDIT_MAXLOSS, m_nMaxLoss);
+	DDX_Text(pDX, IDC_EDIT_MAXPROFIT, m_nMaxProfit);
 }
 
 
@@ -110,6 +114,8 @@ BOOL CTradeDialog::OnInitDialog()
 	m_nFee = EXCHANGE.m_nFee;
 	m_nMargin = EXCHANGE.m_nMargin;
 	m_nUnitsPerSlot = EXCHANGE.m_nUnitsPerSlot;
+	m_nMaxLoss = EXCHANGE.m_nMaxLoss;
+	m_nMaxProfit = EXCHANGE.m_nMaxProfit;
 
 	UpdateData(FALSE);
 
@@ -146,16 +152,34 @@ void CTradeDialog::EnableTrade(BOOL bEnable)
 
 void CTradeDialog::UpdateAccountInfo(void)
 {
-	m_AccountInfo.DeleteAllItems();
-	m_AccountInfo.InsertItem(0, IntToCString(EXCHANGE.m_nBalance));
+	// 如果当前盈亏超出最大止损止盈值，平仓并提示
+
+	TradeFacility& tf = EXCHANGE;
+
+	if(m_nMaxLoss && (EXCHANGE.m_nPosition.nProfit <= -m_nMaxLoss))
+	{
+		CURDOC->AppendTradeRecord(EXCHANGE.Close());
+	}
+
+	if(m_nMaxProfit && (EXCHANGE.m_nPosition.nProfit >= m_nMaxProfit))
+	{
+		CURDOC->AppendTradeRecord(EXCHANGE.Close());
+	}
+
+	if(m_AccountInfo.GetItemCount() == 0)
+		m_AccountInfo.InsertItem(0, IntToCString(EXCHANGE.m_nIntialBalance));
+	
+	m_AccountInfo.SetItemText(0, 0, IntToCString(EXCHANGE.m_nIntialBalance));
 	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance));
 	m_AccountInfo.SetItemText(0, 2, IntToCString(0));
 	m_AccountInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTotalProfit));
 	m_AccountInfo.SetItemText(0, 4, IntToCString(EXCHANGE.m_nTotalFee));
 	m_AccountInfo.SetItemText(0, 5, IntToCString(EXCHANGE.m_nTotalProfit - EXCHANGE.m_nTotalFee));
 
-	m_PositionInfo.DeleteAllItems();
-	m_PositionInfo.InsertItem(0, IntToCString(EXCHANGE.m_nPosition.nSlot));
+	if(m_PositionInfo.GetItemCount() == 0)
+		m_PositionInfo.InsertItem(0, IntToCString(EXCHANGE.m_nPosition.nSlot));
+
+	m_PositionInfo.SetItemText(0, 0, IntToCString(EXCHANGE.m_nPosition.nSlot));
 	m_PositionInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nPosition.nPrice));
 	m_PositionInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nTick.price));
 	m_PositionInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nPosition.nProfit));
@@ -167,5 +191,6 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 {
 	UpdateData();
 	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
-	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, m_nDefaultSlots);
+	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, 
+								m_nDefaultSlots, m_nMaxLoss, m_nMaxProfit);
 }

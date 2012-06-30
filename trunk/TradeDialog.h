@@ -50,4 +50,6 @@ public:
 	CButton m_btnSell;
 	CButton m_btnClose;
 	CButton m_btnReverse;
+	int m_nMaxLoss;
+	int m_nMaxProfit;
 };

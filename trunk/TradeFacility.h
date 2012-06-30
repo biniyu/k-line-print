@@ -51,11 +51,15 @@ class TradeFacility
 {
 public:
 
+	int			m_nIntialBalance;			//	µ±»’≥ı º”‡∂Ó
 	int			m_nBalance;
 	int			m_nFee;
 	int			m_nMargin;
 	int			m_nDefaultSlots;
 	int			m_nUnitsPerSlot;
+	int			m_nMaxLoss;
+	int			m_nMaxProfit;
+
 	Tick		m_nTick;
 	Position	m_nPosition;
 	string		m_nFilePath;
@@ -70,6 +74,7 @@ public:
 
 	void ResetStats()
 	{
+		m_nIntialBalance = m_nBalance;
 		m_nTotalFee = m_nTotalProfit = 0;
 	}
 
