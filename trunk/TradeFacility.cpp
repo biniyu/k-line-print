@@ -61,6 +61,7 @@ TradeRecord TradeFacility::Buy(int nSlot)
 		return TradeRecord();
 
 	m_nPosition.nPrice = m_nTick.priceS1;
+	m_nPosition.nTime = m_nTick.time_ms;
 	m_nPosition.nSlot = nSlot;
 	m_nPosition.nProfit = 0;
 
@@ -77,6 +78,7 @@ TradeRecord TradeFacility::Sell(int nSlot)
 		return TradeRecord();
 
 	m_nPosition.nPrice = m_nTick.priceB1;
+	m_nPosition.nTime = m_nTick.time_ms;
 	m_nPosition.nSlot = -nSlot;
 	m_nPosition.nProfit = 0;
 
@@ -120,6 +122,7 @@ TradeRecord TradeFacility::Close()
 	m_nTotalFee += nFee;
 	m_nTotalProfit += nProfit; 
 
+	m_nPosition.nTime = 0;
 	m_nPosition.nSlot = 0;
 	m_nPosition.nPrice = 0;
 	m_nPosition.nProfit = 0;

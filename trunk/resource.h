@@ -145,6 +145,7 @@
 #define IDC_CHECK_FLUNC_BELOW           1041
 #define IDC_EDIT3                       1042
 #define IDC_EDIT_FLUNC_BELOW            1042
+#define IDC_EDIT_TIMESTOP               1042
 #define IDC_RADIO_1YEAR                 1044
 #define IDC_RADIO_HALFYEAR              1045
 #define IDC_RADIO_3MONTH                1046
@@ -158,7 +159,6 @@
 #define IDC_LIST4                       1053
 #define IDC_LIST_LOG                    1053
 #define IDC_EDIT_MAXPROFIT              1054
-#define IDC_EDIT4                       1054
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -184,7 +184,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        317
 #define _APS_NEXT_COMMAND_VALUE         32791
 #define _APS_NEXT_CONTROL_VALUE         1055
 #define _APS_NEXT_SYMED_VALUE           312

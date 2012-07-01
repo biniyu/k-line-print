@@ -52,4 +52,5 @@ public:
 	CButton m_btnReverse;
 	int m_nMaxLoss;
 	int m_nMaxProfit;
+	UINT m_nTimeStop;
 };
