@@ -25,12 +25,12 @@ public:
 	
 	static void ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, 
 								   int& nUnitsPerSlot, int& nDefaultSlots,
-								   int& nMaxLoss, int& nMaxProfit);
+								   int& nMaxLoss, int& nMaxProfit, int& nTimeStop);
 
 	static void WriteBalance(int nBalance);
 	
 	static void WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot, 
-									int nDefaultSlots, int nMaxLoss, int nMaxProfit);
+									int nDefaultSlots, int nMaxLoss, int nMaxProfit, int nTimeStop);
 
 	//	±£¥Êªÿ∑≈≈‰÷√
 	static void SavePlaybackConfig(PlaybackConfig pc);

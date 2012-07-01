@@ -43,6 +43,7 @@ class Position
 {
 public:
 	int nSlot;		//	负数表示卖空
+	int nTime;		//	交易时间，用于时间止损
 	int nPrice;		//	开仓价格
 	int nProfit;	//	浮动盈亏
 };
@@ -57,8 +58,9 @@ public:
 	int			m_nMargin;
 	int			m_nDefaultSlots;
 	int			m_nUnitsPerSlot;
-	int			m_nMaxLoss;
-	int			m_nMaxProfit;
+	int			m_nMaxLoss;					//	最大止损
+	int			m_nMaxProfit;				//	最大止盈
+	int			m_nTimeStop;				//	时间止损
 
 	Tick		m_nTick;
 	Position	m_nPosition;

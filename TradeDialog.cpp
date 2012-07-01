@@ -21,6 +21,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nDefaultSlots(0)
 	, m_nMaxLoss(0)
 	, m_nMaxProfit(0)
+	, m_nTimeStop(0)
 {
 	EXCHANGE.SetTick(Tick());
 	m_bEnableTrade = FALSE;
@@ -47,6 +48,7 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_DEFAULT_SLOTS, m_nDefaultSlots);
 	DDX_Text(pDX, IDC_EDIT_MAXLOSS, m_nMaxLoss);
 	DDX_Text(pDX, IDC_EDIT_MAXPROFIT, m_nMaxProfit);
+	DDX_Text(pDX, IDC_EDIT_TIMESTOP, m_nTimeStop);
 }
 
 
@@ -105,10 +107,11 @@ BOOL CTradeDialog::OnInitDialog()
 	m_AccountInfo.InsertColumn(4, CString("手续费"), 0, 60);
 	m_AccountInfo.InsertColumn(5, CString("净利"), 0, 60);
 
-	m_PositionInfo.InsertColumn(0, CString("持仓量"), 0, 90);
-	m_PositionInfo.InsertColumn(1, CString("开仓价格"), 0, 90);
-	m_PositionInfo.InsertColumn(2, CString("当前价格"), 0, 90);
-	m_PositionInfo.InsertColumn(3, CString("浮动盈亏"), 0, 90);
+	m_PositionInfo.InsertColumn(0, CString("时间"), 0, 60);
+	m_PositionInfo.InsertColumn(1, CString("数量"), 0, 40);
+	m_PositionInfo.InsertColumn(2, CString("开仓价格"), 0, 90);
+	m_PositionInfo.InsertColumn(3, CString("当前价格"), 0, 90);
+	m_PositionInfo.InsertColumn(4, CString("浮动盈亏"), 0, 90);
 
 	m_nDefaultSlots = m_nSlots = EXCHANGE.m_nDefaultSlots;
 	m_nFee = EXCHANGE.m_nFee;
@@ -116,6 +119,7 @@ BOOL CTradeDialog::OnInitDialog()
 	m_nUnitsPerSlot = EXCHANGE.m_nUnitsPerSlot;
 	m_nMaxLoss = EXCHANGE.m_nMaxLoss;
 	m_nMaxProfit = EXCHANGE.m_nMaxProfit;
+	m_nTimeStop = EXCHANGE.m_nTimeStop;
 
 	UpdateData(FALSE);
 
@@ -159,15 +163,28 @@ void CTradeDialog::UpdateAccountInfo(void)
 	if(m_nMaxLoss && (EXCHANGE.m_nPosition.nProfit <= -m_nMaxLoss))
 	{
 		CURDOC->AppendTradeRecord(EXCHANGE.Close());
+		AfxMessageBox(_T("止损平仓!"));
 	}
 
 	if(m_nMaxProfit && (EXCHANGE.m_nPosition.nProfit >= m_nMaxProfit))
 	{
 		CURDOC->AppendTradeRecord(EXCHANGE.Close());
+		AfxMessageBox(_T("止盈平仓!"));
+	}
+
+	//	如果当前时间超过时间止损，且还处于亏损，强制平仓
+	if(tf.m_nPosition.nTime)
+	{
+		if(tf.m_nTick.time_ms - tf.m_nPosition.nTime > tf.m_nTimeStop * 1000
+			&& tf.m_nPosition.nProfit < 0 )
+		{
+			CURDOC->AppendTradeRecord(EXCHANGE.Close());
+			AfxMessageBox(_T("时间止损平仓!"));
+		}
 	}
 
 	if(m_AccountInfo.GetItemCount() == 0)
-		m_AccountInfo.InsertItem(0, IntToCString(EXCHANGE.m_nIntialBalance));
+		m_AccountInfo.InsertItem(0, IntToCString(0));
 	
 	m_AccountInfo.SetItemText(0, 0, IntToCString(EXCHANGE.m_nIntialBalance));
 	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance));
@@ -177,12 +194,22 @@ void CTradeDialog::UpdateAccountInfo(void)
 	m_AccountInfo.SetItemText(0, 5, IntToCString(EXCHANGE.m_nTotalProfit - EXCHANGE.m_nTotalFee));
 
 	if(m_PositionInfo.GetItemCount() == 0)
-		m_PositionInfo.InsertItem(0, IntToCString(EXCHANGE.m_nPosition.nSlot));
+		m_PositionInfo.InsertItem(0, IntToCString(0));
 
-	m_PositionInfo.SetItemText(0, 0, IntToCString(EXCHANGE.m_nPosition.nSlot));
-	m_PositionInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nPosition.nPrice));
-	m_PositionInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nTick.price));
-	m_PositionInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nPosition.nProfit));
+	int nDispTime = Utility::ConvContTimeToDispTime(EXCHANGE.m_nPosition.nTime / 1000);
+
+	CString tmp;
+	tmp.Format(_T("%02d:%02d:%02d"), 
+			nDispTime / 10000, 
+			nDispTime % 10000 / 100, 
+			nDispTime % 10000 % 100);
+
+	m_PositionInfo.SetItemText(0, 0, tmp);
+
+	m_PositionInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nPosition.nSlot));
+	m_PositionInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nPosition.nPrice));
+	m_PositionInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTick.price));
+	m_PositionInfo.SetItemText(0, 4, IntToCString(EXCHANGE.m_nPosition.nProfit));
 
 	Utility::WriteBalance(EXCHANGE.m_nBalance);
 }
@@ -192,5 +219,5 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 	UpdateData();
 	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
 	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, 
-								m_nDefaultSlots, m_nMaxLoss, m_nMaxProfit);
+								m_nDefaultSlots, m_nMaxLoss, m_nMaxProfit, m_nTimeStop);
 }
