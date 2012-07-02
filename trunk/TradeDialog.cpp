@@ -173,9 +173,9 @@ void CTradeDialog::UpdateAccountInfo(void)
 	}
 
 	//	如果当前时间超过时间止损，且还处于亏损，强制平仓
-	if(tf.m_nPosition.nTime)
+	if(m_nTimeStop && tf.m_nPosition.nTime)
 	{
-		if(tf.m_nTick.time_ms - tf.m_nPosition.nTime > tf.m_nTimeStop * 1000
+		if(tf.m_nTick.time_ms - tf.m_nPosition.nTime > m_nTimeStop * 1000
 			&& tf.m_nPosition.nProfit < 0 )
 		{
 			CURDOC->AppendTradeRecord(EXCHANGE.Close());
