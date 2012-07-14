@@ -194,6 +194,12 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		ToggleViewMode();
 
 
+	if(nChar == VK_F12)
+	{
+		if(m_pTradeDialog)
+			m_pTradeDialog->ShowWindow(SW_SHOW);
+	}
+
 	if(nChar == VK_PRIOR )
 	{
 		pDoc->ViewNeighborDate(TRUE);
@@ -325,6 +331,22 @@ void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 
 void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
+	if(EXCHANGE.m_nPosition.nSlot)
+	{
+		EXCHANGE.Close();
+	}
+	else
+	{
+		int price = klr_1min.GetMousePrice(point);
+
+		//	如果在当前价格之下，买入
+		if(price <= EXCHANGE.m_nTick.price)
+			EXCHANGE.Buy(1);
+		//	如果在当前价格之上，卖出
+		else
+			EXCHANGE.Sell(1);
+	}
+
 	CView::OnLButtonDblClk(nFlags, point);
 }
 
