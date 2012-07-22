@@ -69,6 +69,8 @@ protected:
 	KLineRenderer klr_1min;
 	KLineRenderer klr_day;
 
+	bool		m_bMouseDown;
+
 	CDC			m_MemDC;
 	CBitmap		m_MemBitmap;
 
@@ -95,6 +97,7 @@ public:
 	afx_msg void OnPlaybackFastrev();
 	afx_msg void OnPlaybackStop();
 	afx_msg void OnPlaybackConf();
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // KLinePrintView.cpp 中的调试版本

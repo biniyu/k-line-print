@@ -35,6 +35,10 @@ KLineRenderer::KLineRenderer(void)
     penBlue.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
     penBlack.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 
+	penRedBold.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
+    penGreenBold.CreatePen(PS_SOLID, 2, RGB(0, 180, 0));
+    penBlueBold.CreatePen(PS_SOLID, 2, RGB(0, 0, 255));
+
 	penGreyDotted.CreatePen(PS_DOT, 1, RGB(100, 100, 100));
 	penRedDotted.CreatePen(PS_DASH, 1, RGB(255, 0, 0));
     penGreenDotted.CreatePen(PS_DASH, 1, RGB(0, 180, 0));
@@ -43,6 +47,8 @@ KLineRenderer::KLineRenderer(void)
 	brRed.CreateSolidBrush(RGB(255,0,0));
 	brGreen.CreateSolidBrush(RGB(0,180,0));
 	brBlue.CreateSolidBrush(RGB(0,0,255));
+
+	m_bLossStopSelected = m_bProfitStopSelected = m_bTriggerSelected = FALSE;
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -138,6 +144,66 @@ void KLineRenderer::Select(CPoint pt)
 
 	if(m_bSelected)
 	{
+		//	选中止损止盈线
+		if(EXCHANGE.m_nPosition.nLossStop)
+		{
+			int nLossStopPos = GetPricePosition(EXCHANGE.m_nPosition.nLossStop);
+
+			if( pt.y < nLossStopPos + 5 && pt.y > nLossStopPos - 5
+				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x < m_Rect.right - RIGHT_MARGIN)
+
+			{
+				m_bLossStopSelected = true;
+				m_bProfitStopSelected = false;
+				m_bTriggerSelected = false;
+
+			}
+			else
+			{
+				m_bLossStopSelected = false;
+			}
+		}
+
+		if(EXCHANGE.m_nPosition.nProfitStop)
+		{
+			int nProfitStopPos = GetPricePosition(EXCHANGE.m_nPosition.nProfitStop);
+
+			if( pt.y < nProfitStopPos + 5 && pt.y > nProfitStopPos - 5
+				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x < m_Rect.right - RIGHT_MARGIN)
+
+			{
+				m_bProfitStopSelected = true;
+				m_bLossStopSelected = false;
+				m_bTriggerSelected = false;
+			}
+			else
+			{
+				m_bProfitStopSelected = false;
+			}
+		}
+
+		if(EXCHANGE.m_nPosition.nTrigger)
+		{
+			int nTriggerPos = GetPricePosition(EXCHANGE.m_nPosition.nTrigger);
+
+			if( pt.y < nTriggerPos + 5 && pt.y > nTriggerPos - 5
+				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x < m_Rect.right - RIGHT_MARGIN)
+
+			{
+				m_bLossStopSelected = false;
+				m_bProfitStopSelected = false;
+				m_bTriggerSelected = true;
+
+			}
+			else
+			{
+				m_bTriggerSelected = false;
+			}
+		}
+
 		//	计算K线的宽度
 		float m_kWidth = (m_Rect.Width() - LEFT_MARGIN - RIGHT_MARGIN - (m_nDisplayKLineCount + 1) * m_nKSpace)
 			/(float)m_nDisplayKLineCount;
@@ -264,25 +330,86 @@ float KLineRenderer::GetInterestPosition(int nInterest)
 
 void KLineRenderer::RenderPosition(CDC* pDC)
 {
-	if(EXCHANGE.m_nPosition.nSlot)
-	{
-		float prPos = GetPricePosition(EXCHANGE.m_nPosition.nPrice);
+	//	绘制成本价
+	float prPos = GetPricePosition(EXCHANGE.m_nPosition.nPrice);
 
-		if(EXCHANGE.m_nPosition.nSlot > 0)
-			pDC->SelectObject(&penRed);
+	pDC->SelectObject(&penBlue);
+
+	pDC->MoveTo(m_kMiddle + m_kWidth * 2, prPos);
+	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, prPos);	
+
+	CString tmp;
+	CSize sz;
+
+	tmp.Format(_T("成本:%d(%d手)"), EXCHANGE.m_nPosition.nPrice, EXCHANGE.m_nPosition.nSlot);
+
+	sz = pDC->GetTextExtent(tmp);
+	pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
+
+	//	绘制止损价
+	if(EXCHANGE.m_nPosition.nLossStop)
+	{
+		float stopLossPos = GetPricePosition(EXCHANGE.m_nPosition.nLossStop);
+
+		if(m_bLossStopSelected)
+			pDC->SelectObject(&penGreenBold);
 		else
 			pDC->SelectObject(&penGreen);
 
-		pDC->MoveTo(m_kMiddle + m_kWidth * 2, prPos);
-		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, prPos);	
+		pDC->MoveTo(m_kMiddle + m_kWidth * 2, stopLossPos);
+		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, stopLossPos);	
 
 		CString tmp;
 		CSize sz;
 
-		tmp.Format(_T("成本:%d(%d手)"), EXCHANGE.m_nPosition.nPrice, EXCHANGE.m_nPosition.nSlot);
+		tmp.Format(_T("止损:%d"), EXCHANGE.m_nPosition.nLossStop);
 
 		sz = pDC->GetTextExtent(tmp);
-		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
+		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, stopLossPos + 1, tmp);
+	}
+
+	//	绘制止盈价
+	if(EXCHANGE.m_nPosition.nProfitStop)
+	{
+		float stopProfitPos = GetPricePosition(EXCHANGE.m_nPosition.nProfitStop);
+
+		if(m_bProfitStopSelected)
+			pDC->SelectObject(&penRedBold);
+		else
+			pDC->SelectObject(&penRed);
+
+		pDC->MoveTo(m_kMiddle + m_kWidth * 2, stopProfitPos);
+		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, stopProfitPos);	
+
+		CString tmp;
+		CSize sz;
+
+		tmp.Format(_T("止盈:%d"), EXCHANGE.m_nPosition.nProfitStop);
+
+		sz = pDC->GetTextExtent(tmp);
+		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, stopProfitPos + 1, tmp);
+	}
+
+	//	绘制触发价
+	if(EXCHANGE.m_nPosition.nTrigger)
+	{
+		float triggerPos = GetPricePosition(EXCHANGE.m_nPosition.nTrigger);
+
+		if(m_bTriggerSelected)
+			pDC->SelectObject(&penBlueBold);
+		else
+			pDC->SelectObject(&penBlue);
+
+		pDC->MoveTo(m_kMiddle + m_kWidth * 2, triggerPos);
+		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, triggerPos);	
+
+		CString tmp;
+		CSize sz;
+
+		tmp.Format(_T("触发:%d"), EXCHANGE.m_nPosition.nTrigger);
+
+		sz = pDC->GetTextExtent(tmp);
+		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, triggerPos + 1, tmp);
 	}
 }
 
@@ -947,6 +1074,63 @@ void KLineRenderer::Render(CDC* pDC)
 	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
 }
 
+void KLineRenderer::SetLossStopPrice(int price)
+{
+	TradeFacility& ex = EXCHANGE;
+
+	if(m_bLossStopSelected)
+	{
+		ex.m_nPosition.nLossStop = price;
+	}
+	else if((!ex.m_nPosition.nLossStop)
+		&& (ex.m_nPosition.nSlot || ex.m_nPosition.nTrigger)
+		&& (!m_bTriggerSelected)
+		&& (!m_bProfitStopSelected))
+	{
+		ex.m_nPosition.nLossStop = price;
+		m_bLossStopSelected = true;
+		m_bProfitStopSelected = false;
+		m_bTriggerSelected = false;
+	}
+}
+
+void KLineRenderer::SetProfitStopPrice(int price)
+{
+	if(m_bProfitStopSelected) 
+	{
+		EXCHANGE.m_nPosition.nProfitStop = price;
+	}
+	else if((!EXCHANGE.m_nPosition.nProfitStop) 
+		&& EXCHANGE.m_nPosition.nLossStop
+		&&(!m_bLossStopSelected)
+		&&(!m_bTriggerSelected))
+	{
+		EXCHANGE.m_nPosition.nProfitStop = price;
+		m_bLossStopSelected = false;
+		m_bProfitStopSelected = true;
+		m_bTriggerSelected = false;
+
+	}
+}
+
+void KLineRenderer::SetTriggerPrice(int price)
+{
+	//	已经有头寸了，不能再设置触发单
+	if(EXCHANGE.m_nPosition.nSlot) return;
+
+	if(m_bTriggerSelected)
+	{
+		EXCHANGE.m_nPosition.nTrigger = price;
+	}
+	else if((!EXCHANGE.m_nPosition.nSlot) && (!EXCHANGE.m_nPosition.nTrigger))
+	{
+		EXCHANGE.m_nPosition.nTrigger = price;
+		m_bLossStopSelected = false;
+		m_bProfitStopSelected = false;
+		m_bTriggerSelected = true;
+	}
+}
+
 void KLineRenderer::SetSelectedPrice(int price)
 {
 	m_nSelectedPrice = price;
@@ -961,7 +1145,7 @@ int KLineRenderer::GetSelectedClosePrice()
 	return (*m_pKLines)[m_nSelectedIndex].close;
 }
 
-int KLineRenderer::GetMousePrice(CPoint pt)
+int KLineRenderer::GetPriceByPosition(CPoint pt)
 {
 	if(!m_bSelected) return 0;
 	if(!m_Rect.PtInRect(pt)) return 0;

@@ -41,6 +41,7 @@ BEGIN_MESSAGE_MAP(CKLinePrintView, CView)
 	ON_COMMAND(ID_PLAYBACK_FASTREV, &CKLinePrintView::OnPlaybackFastrev)
 	ON_COMMAND(ID_PLAYBACK_STOP, &CKLinePrintView::OnPlaybackStop)
 	ON_COMMAND(ID_PLAYBACK_CONF, &CKLinePrintView::OnPlaybackConf)
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 // CKLinePrintView 构造/析构
@@ -50,6 +51,7 @@ CKLinePrintView::CKLinePrintView()
 	m_bLocked = TRUE;
 	m_enViewMode = ViewMode1Min;
 	m_pTradeDialog = 0;
+	m_bMouseDown = FALSE;
 }
 
 CKLinePrintView::~CKLinePrintView()
@@ -311,18 +313,12 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 {
-	// 如果1min图处于Mouse跟踪模式，获取Mouse所在的价格，在其他图上选择该价格
-
-	if(klr_1min.GetTrackingMode() == KLineRenderer::enMouseTMode)
+	if(m_bMouseDown)
 	{
-		int price = klr_1min.GetMousePrice(point);
-
-		if(price)
-		{
-			klr_day.SetSelectedPrice(price);
-			klr_5sec.SetSelectedPrice(price);
-		}
-
+		int pr = klr_1min.GetPriceByPosition(point);
+		klr_1min.SetTriggerPrice(pr);
+		klr_1min.SetLossStopPrice(pr);
+		klr_1min.SetProfitStopPrice(pr);
 		Render();
 	}
 
@@ -339,14 +335,18 @@ void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		int price = klr_1min.GetMousePrice(point);
+		int price = klr_1min.GetPriceByPosition(point);
 
 		//	如果在当前价格之下，买入
 		if(price <= EXCHANGE.m_nTick.price)
-			pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots));
+		{
+			pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots, price));
+		}
 		//	如果在当前价格之上，卖出
 		else
-			pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots));
+		{
+			pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots, price));
+		}
 	}
 
 	CView::OnLButtonDblClk(nFlags, point);
@@ -452,12 +452,22 @@ void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
 	CView::OnSize(nType, cx, cy);
 }
 
+void CKLinePrintView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	m_bMouseDown = false;
+
+	CView::OnLButtonUp(nFlags, point);
+}
+
 void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CKLinePrintDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
 	if (!pDoc)
 		return;
+
+	m_bMouseDown = true;
 
 	klr_1min.Select(point);
 	if(klr_1min.IsSelected() && m_bLocked)
@@ -707,3 +717,5 @@ void CKLinePrintView::OnPlaybackConf()
 		pDoc->LoadPlaybackCalendar(PBCONFIG);
 	}
 }
+
+

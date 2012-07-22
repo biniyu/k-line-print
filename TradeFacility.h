@@ -46,6 +46,10 @@ public:
 	int nTime;		//	交易时间，用于时间止损
 	int nPrice;		//	开仓价格
 	int nProfit;	//	浮动盈亏
+	int nLossStop;	//	止损价
+	int nProfitStop;//	止盈价
+	int nTimeStop;	//	时间止损
+	int nTrigger;	//	触发价
 };
 
 class TradeFacility
@@ -95,8 +99,8 @@ public:
 	void SetTick(Tick tick);
 
 	//	开仓
-	TradeRecord Buy(int nSlot);
-	TradeRecord Sell(int nSlot);
+	TradeRecord Buy(int nSlot, int nLossStop = 0);
+	TradeRecord Sell(int nSlot, int nLossStop = 0);
 
 	//	平仓
 	TradeRecord Close();
