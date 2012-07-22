@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "KLinePrint.h"
 #include "KLineRenderer.h"
 #include "KLineCollection.h"
 #include "Utility.h"
@@ -261,6 +262,30 @@ float KLineRenderer::GetInterestPosition(int nInterest)
 	return m_Rect.bottom - (nInterest + m_interestMax) * m_pixelPerInterest;
 }
 
+void KLineRenderer::RenderPosition(CDC* pDC)
+{
+	if(EXCHANGE.m_nPosition.nSlot)
+	{
+		float prPos = GetPricePosition(EXCHANGE.m_nPosition.nPrice);
+
+		if(EXCHANGE.m_nPosition.nSlot > 0)
+			pDC->SelectObject(&penRed);
+		else
+			pDC->SelectObject(&penGreen);
+
+		pDC->MoveTo(m_kMiddle + m_kWidth * 2, prPos);
+		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, prPos);	
+
+		CString tmp;
+		CSize sz;
+
+		tmp.Format(_T("成本:%d(%d手)"), EXCHANGE.m_nPosition.nPrice, EXCHANGE.m_nPosition.nSlot);
+
+		sz = pDC->GetTextExtent(tmp);
+		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
+	}
+}
+
 void KLineRenderer::RenderKeyPrice(CDC* pDC)
 {
 	//	绘制关键价格线(文本需要错开，以免互相覆盖)
@@ -289,19 +314,24 @@ void KLineRenderer::RenderMaxMinPrice(CDC* pDC)
 
 	pDC->SelectObject(&penRed);
 	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, maxPricePos);
-	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, maxPricePos);	
+	pDC->LineTo(m_kMiddle, maxPricePos);	
 
 	CString tmp;
+	CSize sz;
 
 	tmp.Format(_T("%d"), m_pKLines->m_nMaxPrice);
-	pDC->TextOutW(m_Rect.right - RIGHT_MARGIN + 4, maxPricePos, tmp);
+
+	sz = pDC->GetTextExtent(tmp);
+	pDC->TextOutW(m_kMiddle - sz.cx, maxPricePos - sz.cy, tmp);
 
 	pDC->SelectObject(&penGreen);
 	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, minPricePos);
-	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, minPricePos);	
+	pDC->LineTo(m_kMiddle, minPricePos);	
 
 	tmp.Format(_T("%d"), m_pKLines->m_nMinPrice);
-	pDC->TextOutW(m_Rect.right - RIGHT_MARGIN + 4, minPricePos, tmp);
+
+	sz = pDC->GetTextExtent(tmp);
+	pDC->TextOutW(m_kMiddle - sz.cx, minPricePos + 1, tmp);
 }
 
 void KLineRenderer::RenderAxis(CDC* pDC)
@@ -538,9 +568,6 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurPos);
 			pDC->LineTo(m_kMiddle - m_kWidth * 2, kCurPos);
 
-			pDC->MoveTo(m_kMiddle + m_kWidth * 2, kCurPos);
-			pDC->LineTo(m_Rect.right - RIGHT_MARGIN, kCurPos);
-
 			pDC->MoveTo(m_kMiddle, m_Rect.top);
 			pDC->LineTo(m_kMiddle, m_kHighPos - 10);
 
@@ -551,7 +578,7 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 
 			tmp.Format(_T("%d"), kline.close);
 
-			pDC->TextOutW(m_Rect.right - RIGHT_MARGIN + 4, kCurPos, tmp);
+			pDC->TextOutW(m_kMiddle + m_kWidth * 2, kCurPos, tmp);
 		}
 		else if(m_enTrackingMode == enHighLowTMode)
 		{
@@ -910,6 +937,9 @@ void KLineRenderer::Render(CDC* pDC)
 	//	绘制中轴线
 	if(m_enRenderMode == enAxisMode)
 		RenderAxis(pDC);
+
+	//	绘制头寸信息
+	RenderPosition(pDC);
 
 	//	显示价格百分比范围
 	CString strPercent;

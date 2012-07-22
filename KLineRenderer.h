@@ -119,6 +119,9 @@ private:
 
 	void RenderGraphFrame(CDC* pDC);
 
+	//	ªÊ÷∆≥÷≤÷
+	void RenderPosition(CDC* pDC);
+
 	void RenderKeyPrice(CDC* pDC);
 	void RenderMaxMinPrice(CDC* pDC);
 	void RenderAxis(CDC* pDC);
@@ -131,6 +134,7 @@ private:
 	void RenderAvg(CDC* pDC, int nKIdx);
 	void RenderMA(CDC* pDC, int nKIdx);
 	void RenderVol(CDC* pDC, int nKIdx);
+
 
 public:
 
