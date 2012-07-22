@@ -218,6 +218,10 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 {
 	UpdateData();
 	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
+	EXCHANGE.m_nDefaultSlots = m_nDefaultSlots;
+	EXCHANGE.m_nMaxLoss = m_nMaxLoss;
+	EXCHANGE.m_nMaxProfit = m_nMaxProfit;
+	EXCHANGE.m_nTimeStop = m_nTimeStop;
 	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, 
 								m_nDefaultSlots, m_nMaxLoss, m_nMaxProfit, m_nTimeStop);
 }

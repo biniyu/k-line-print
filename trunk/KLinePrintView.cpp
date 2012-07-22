@@ -331,9 +331,11 @@ void CKLinePrintView::OnMouseMove(UINT nFlags, CPoint point)
 
 void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
+	CKLinePrintDoc* pDoc = GetDocument();
+
 	if(EXCHANGE.m_nPosition.nSlot)
 	{
-		EXCHANGE.Close();
+		pDoc->AppendTradeRecord(EXCHANGE.Close());
 	}
 	else
 	{
@@ -341,10 +343,10 @@ void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 		//	如果在当前价格之下，买入
 		if(price <= EXCHANGE.m_nTick.price)
-			EXCHANGE.Buy(1);
+			pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots));
 		//	如果在当前价格之上，卖出
 		else
-			EXCHANGE.Sell(1);
+			pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots));
 	}
 
 	CView::OnLButtonDblClk(nFlags, point);
