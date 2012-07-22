@@ -627,6 +627,48 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 
 	EXCHANGE.SetTick(pDoc->GetTick());
 
+	int nPrevPrice = pDoc->GetTick(-1).price;
+	int nCurPrice = pDoc->GetTick().price;
+
+	/* 执行触发单 */
+	if(EXCHANGE.m_nPosition.nTrigger)
+	{
+		if((nPrevPrice - EXCHANGE.m_nPosition.nTrigger) * (nCurPrice - EXCHANGE.m_nPosition.nTrigger) < 0
+			|| nCurPrice == EXCHANGE.m_nPosition.nTrigger)
+		{
+			//	必须设置止损才能触发
+			if(EXCHANGE.m_nPosition.nLossStop)
+			{
+				if(EXCHANGE.m_nPosition.nLossStop < EXCHANGE.m_nPosition.nTrigger)
+				{
+					pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));
+					AfxMessageBox(_T("触发买入!"));
+				}
+				else if(EXCHANGE.m_nPosition.nLossStop > EXCHANGE.m_nPosition.nTrigger)
+				{
+					pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));					
+					AfxMessageBox(_T("触发卖出!"));
+				}
+			}
+		}
+	}
+
+	if(EXCHANGE.m_nPosition.nSlot && EXCHANGE.m_nPosition.nLossStop &&
+		((nPrevPrice - EXCHANGE.m_nPosition.nLossStop) * (nCurPrice - EXCHANGE.m_nPosition.nLossStop) < 0
+		|| nCurPrice == EXCHANGE.m_nPosition.nLossStop))
+	{
+		pDoc->AppendTradeRecord(EXCHANGE.Close());
+		AfxMessageBox(_T("止损平仓!"));
+	}
+
+	if(EXCHANGE.m_nPosition.nSlot && EXCHANGE.m_nPosition.nProfitStop &&
+		((nPrevPrice - EXCHANGE.m_nPosition.nProfitStop) * (nCurPrice - EXCHANGE.m_nPosition.nProfitStop) < 0
+		|| nCurPrice == EXCHANGE.m_nPosition.nProfitStop))
+	{
+		pDoc->AppendTradeRecord(EXCHANGE.Close());
+		AfxMessageBox(_T("止盈平仓!"));
+	}
+
 	klr_1min.SelectLastK();
 	klr_5sec.SelectLastK();
 	klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
