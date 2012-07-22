@@ -26,6 +26,15 @@ private:
 
 	TrackingMode m_enTrackingMode;
 
+	//	选中止损线
+	bool m_bLossStopSelected;
+
+	//	选中止盈线
+	bool m_bProfitStopSelected;
+
+	//	选中触发线
+	bool m_bTriggerSelected;
+
 //=================================================//
 
 	//	视图显示的K线数量
@@ -112,6 +121,7 @@ private:
 
 	CPen penRed, penGreen, penBlue, penBlack, penGreyDotted;
 	CPen penRedDotted, penGreenDotted, penBlueDotted;
+	CPen penRedBold, penGreenBold, penBlueBold;
 
 	CBrush brRed, brGreen, brBlue;
 
@@ -209,12 +219,16 @@ public:
 
 	void ToggleKeyPrice() { m_bShowKeyPrice = !m_bShowKeyPrice; }
 
+	void SetLossStopPrice(int price);
+	void SetProfitStopPrice(int price);
+	void SetTriggerPrice(int price);
+
 	void SetSelectedPrice(int price);
 
 	int GetSelectedClosePrice();
 
 	//	获取鼠标所在位置的价格
-	int GetMousePrice(CPoint pt);
+	int GetPriceByPosition(CPoint pt);
 
 	TrackingMode GetTrackingMode() { return m_enTrackingMode; }
 
