@@ -150,7 +150,7 @@ void KLineRenderer::Select(CPoint pt)
 			int nLossStopPos = GetPricePosition(EXCHANGE.m_nPosition.nLossStop);
 
 			if( pt.y < nLossStopPos + 5 && pt.y > nLossStopPos - 5
-				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x > m_Rect.left + LEFT_MARGIN
 				&& pt.x < m_Rect.right - RIGHT_MARGIN)
 
 			{
@@ -170,7 +170,7 @@ void KLineRenderer::Select(CPoint pt)
 			int nProfitStopPos = GetPricePosition(EXCHANGE.m_nPosition.nProfitStop);
 
 			if( pt.y < nProfitStopPos + 5 && pt.y > nProfitStopPos - 5
-				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x > m_Rect.left + LEFT_MARGIN
 				&& pt.x < m_Rect.right - RIGHT_MARGIN)
 
 			{
@@ -189,7 +189,7 @@ void KLineRenderer::Select(CPoint pt)
 			int nTriggerPos = GetPricePosition(EXCHANGE.m_nPosition.nTrigger);
 
 			if( pt.y < nTriggerPos + 5 && pt.y > nTriggerPos - 5
-				&& pt.x > m_kMiddle + m_kWidth * 2
+				&& pt.x > m_Rect.left + LEFT_MARGIN
 				&& pt.x < m_Rect.right - RIGHT_MARGIN)
 
 			{
@@ -328,6 +328,23 @@ float KLineRenderer::GetInterestPosition(int nInterest)
 	return m_Rect.bottom - (nInterest + m_interestMax) * m_pixelPerInterest;
 }
 
+void KLineRenderer::DelTrigger()
+{
+	if(m_bTriggerSelected)
+	{
+		EXCHANGE.m_nPosition.nTrigger = EXCHANGE.m_nPosition.nLossStop
+			= EXCHANGE.m_nPosition.nProfitStop = 0;
+	}
+	else if(m_bProfitStopSelected)
+	{
+		EXCHANGE.m_nPosition.nProfitStop = 0;
+	}
+	else if(m_bLossStopSelected)
+	{
+		EXCHANGE.m_nPosition.nLossStop = 0;
+	}
+}
+
 void KLineRenderer::RenderPosition(CDC* pDC)
 {
 	//	绘制成本价
@@ -356,7 +373,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		else
 			pDC->SelectObject(&penGreen);
 
-		pDC->MoveTo(m_kMiddle + m_kWidth * 2, stopLossPos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, stopLossPos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, stopLossPos);	
 
 		CString tmp;
@@ -378,7 +395,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		else
 			pDC->SelectObject(&penRed);
 
-		pDC->MoveTo(m_kMiddle + m_kWidth * 2, stopProfitPos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, stopProfitPos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, stopProfitPos);	
 
 		CString tmp;
@@ -400,7 +417,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		else
 			pDC->SelectObject(&penBlue);
 
-		pDC->MoveTo(m_kMiddle + m_kWidth * 2, triggerPos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, triggerPos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, triggerPos);	
 
 		CString tmp;

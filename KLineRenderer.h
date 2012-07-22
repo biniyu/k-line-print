@@ -158,6 +158,9 @@ public:
 
 	void MoveNext();
 
+	//	É¾³ý´¥·¢Æ÷
+	void DelTrigger();
+
 public:
 	
 	KLineRenderer(void);
