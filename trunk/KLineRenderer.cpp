@@ -334,14 +334,18 @@ void KLineRenderer::DelTrigger()
 	{
 		EXCHANGE.m_nPosition.nTrigger = EXCHANGE.m_nPosition.nLossStop
 			= EXCHANGE.m_nPosition.nProfitStop = 0;
+
+		m_bTriggerSelected = m_bProfitStopSelected = m_bLossStopSelected = false;
 	}
 	else if(m_bProfitStopSelected)
 	{
 		EXCHANGE.m_nPosition.nProfitStop = 0;
+		m_bProfitStopSelected = false;
 	}
 	else if(m_bLossStopSelected)
 	{
 		EXCHANGE.m_nPosition.nLossStop = 0;
+		m_bLossStopSelected = false;
 	}
 }
 
