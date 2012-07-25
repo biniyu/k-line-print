@@ -45,7 +45,7 @@ void KLineCollection::Clear()
 void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, 
 									   int& nMaxVol, int& nMaxInterest)
 {
-	int high = 0, low = 0, maxvol = 0, maxint = 50000;
+	int high = 0, low = 0, maxvol = 0, maxint = 5000;
 
 	for(int i = nStartIdx; i <= nEndIdx; i++)
 	{

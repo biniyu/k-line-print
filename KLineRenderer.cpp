@@ -910,6 +910,19 @@ void KLineRenderer::RenderGraphFrame(CDC* pDC)
 	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, timeLinePos);
 	pDC->LineTo(m_Rect.right - RIGHT_MARGIN, timeLinePos);
 
+	CString tmp;
+	CSize sz;
+
+	//	显示最大成交量
+	tmp.Format(_T("%d"), m_volMax);
+	sz = pDC->GetTextExtent(tmp);
+	pDC->TextOutW(m_Rect.left + LEFT_MARGIN - sz.cx, timeLinePos, tmp);
+
+	//	显示最大持仓
+	tmp.Format(_T("%d"), m_interestMax);
+	sz = pDC->GetTextExtent(tmp);
+	pDC->TextOutW(m_Rect.right - RIGHT_MARGIN, timeLinePos, tmp);
+
 	//	绘制时间线
 	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
 	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);

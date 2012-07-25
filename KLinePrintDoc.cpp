@@ -332,8 +332,11 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 			tmp.time_ms = nDate;
 			m_DayData.Quote(tmp);
 
-			//	有可能数据缺失，虚拟的Quote一次
+			//	有可能数据缺失，虚拟的Quote一次，不记录持仓变化和成交量
 			tmp.time_ms = nTillMilliTime;
+			tmp.interest = 0;
+			tmp.vol = 0;
+			tmp.totalvol = 0;
 
 			m_1MinData.Quote(tmp);
 			m_15SecData.Quote(tmp);
@@ -372,7 +375,7 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 
 	//	不关注前日的开盘价
 	prevDayKLine.open = prevDayKLine.close;
-	prevDayKLine.time = 0;
+	prevDayKLine.start_time = prevDayKLine.time = 0;
 	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
 	prevDayKLine.interest = 0;
 
