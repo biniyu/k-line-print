@@ -362,7 +362,10 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 	CString tmp;
 	CSize sz;
 
-	tmp.Format(_T("成本:%d(%d手)"), EXCHANGE.m_nPosition.nPrice, EXCHANGE.m_nPosition.nSlot);
+	tmp.Format(_T("成本:%d(%d手) 盈亏%d"), 
+				EXCHANGE.m_nPosition.nPrice, 
+				EXCHANGE.m_nPosition.nSlot,
+				EXCHANGE.m_nPosition.nProfit);
 
 	sz = pDC->GetTextExtent(tmp);
 	pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
@@ -709,56 +712,30 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 	}
 	else	//	选中
 	{
-		if(m_enTrackingMode == enCloseTMode)
-		{
-			float kCurPos = GetPricePosition(kline.close);
+		float kCurPos = GetPricePosition(kline.close);
 
-			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurPos);
-			pDC->LineTo(m_kMiddle - m_kWidth * 2, kCurPos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurPos);
+		pDC->LineTo(m_kMiddle - m_kWidth * 2, kCurPos);
 
-			pDC->MoveTo(m_kMiddle, m_Rect.top);
-			pDC->LineTo(m_kMiddle, m_kHighPos - 10);
+		pDC->MoveTo(m_kMiddle, m_Rect.top);
+		pDC->LineTo(m_kMiddle, m_kHighPos - 10);
 
-			pDC->MoveTo(m_kMiddle, m_kLowPos + 10);
-			pDC->LineTo(m_kMiddle, m_Rect.bottom);
+		pDC->MoveTo(m_kMiddle, m_kLowPos + 10);
+		pDC->LineTo(m_kMiddle, m_Rect.bottom);
 
-			CString tmp;
+		CString tmp;
 
-			tmp.Format(_T("%d"), kline.close);
+		tmp.Format(_T("%d"), kline.close);
+		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kCurPos, tmp);
 
-			pDC->TextOutW(m_kMiddle + m_kWidth * 2, kCurPos, tmp);
-		}
-		else if(m_enTrackingMode == enHighLowTMode)
-		{
-			float kCurHighPos = GetPricePosition(kline.high);
-			float kCurLowPos = GetPricePosition(kline.low);
+		//	绘制持仓量线
+		float kInterestPos = GetInterestPosition(kline.interest);
 
-			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurHighPos);
-			pDC->LineTo(m_kMiddle - m_kWidth * 2, kCurHighPos);
-			pDC->MoveTo(m_kMiddle + m_kWidth * 2, kCurHighPos);
-			pDC->LineTo(m_Rect.right, kCurHighPos);
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kInterestPos);
+		pDC->LineTo(m_kMiddle - m_kWidth * 2, kInterestPos);
 
-			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kCurLowPos);
-			pDC->LineTo(m_kMiddle - m_kWidth * 2, kCurLowPos);
-			pDC->MoveTo(m_kMiddle + m_kWidth * 2, kCurLowPos);
-			pDC->LineTo(m_Rect.right, kCurLowPos);
-
-			pDC->MoveTo(m_kMiddle, m_Rect.top);
-			pDC->LineTo(m_kMiddle, m_kHighPos - 10);
-			pDC->MoveTo(m_kMiddle, m_kLowPos + 10);
-			pDC->LineTo(m_kMiddle, m_Rect.bottom);
-		}
-		else if(m_enTrackingMode == enMouseTMode)
-		{
-			//	绘制当前鼠标所在位置的跟踪线
-			pDC->MoveTo(m_Rect.left + LEFT_MARGIN, m_cp.y);
-			pDC->LineTo(m_Rect.right, m_cp.y);
-
-			pDC->MoveTo(m_kMiddle, m_Rect.top);
-			pDC->LineTo(m_kMiddle, m_kHighPos - 10);
-			pDC->MoveTo(m_kMiddle, m_kLowPos + 10);
-			pDC->LineTo(m_kMiddle, m_Rect.bottom);
-		}
+		tmp.Format(_T("%d"), kline.interest);
+		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kInterestPos, tmp);
 	}
 
 	// 显示时间和价格
