@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KLinePrint", "KLinePrint.vcproj", "{12408ED7-70F2-410B-9577-993EBB1C43A7}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KLinePrintSetup", "install\KLinePrintSetup\KLinePrintSetup.vdproj", "{E14A5264-40C9-4766-BB92-9A94B497E199}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12408ED7-70F2-410B-9577-993EBB1C43A7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12408ED7-70F2-410B-9577-993EBB1C43A7}.Debug|Win32.Build.0 = Debug|Win32
+		{12408ED7-70F2-410B-9577-993EBB1C43A7}.Release|Win32.ActiveCfg = Release|Win32
+		{12408ED7-70F2-410B-9577-993EBB1C43A7}.Release|Win32.Build.0 = Release|Win32
+		{E14A5264-40C9-4766-BB92-9A94B497E199}.Debug|Win32.ActiveCfg = Debug
+		{E14A5264-40C9-4766-BB92-9A94B497E199}.Release|Win32.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
