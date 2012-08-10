@@ -2,6 +2,8 @@
 #include "TradeFacility.h"
 #include "Utility.h"
 
+TradeParam	gTradeParam;					//	交易参数
+
 TradeFacility::TradeFacility(void)
 {
 	m_nPosition.nPrice = 0;
@@ -22,7 +24,7 @@ void TradeFacility::SetTick(Tick tick)
 
 	if(m_nPosition.nSlot)
 	{
-		m_nPosition.nProfit = (m_nTick.price - m_nPosition.nPrice) * m_nPosition.nSlot * m_nUnitsPerSlot;
+		m_nPosition.nProfit = (m_nTick.price - m_nPosition.nPrice) * m_nPosition.nSlot * TP.nUnitsPerSlot;
 	}
 }
 
@@ -61,6 +63,27 @@ TradeRecord TradeFacility::Buy(int nSlot, int nLossStop)
 	if(m_nPosition.nSlot != 0) 
 		return TradeRecord();
 
+	//	检查保证金是否足够
+	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
+
+	if(m_nBalance < margin)
+	{
+		AfxMessageBox(_T("保证金不足"));
+		return TradeRecord();
+	}
+
+	if(m_nOpenTimes >= TP.nMaxOpenTimes)
+	{
+		AfxMessageBox(_T("达到日内最大开仓次数"));
+		return TradeRecord();
+	}
+
+	if(m_nTotalFee - m_nTotalProfit > TP.nMaxLossPerDay)
+	{
+		AfxMessageBox(_T("达到日内最大亏损额度"));
+		return TradeRecord();
+	}
+
 	m_nPosition.nPrice = m_nTick.priceS1;
 	m_nPosition.nTime = m_nTick.time_ms;
 	m_nPosition.nSlot = nSlot;
@@ -68,17 +91,42 @@ TradeRecord TradeFacility::Buy(int nSlot, int nLossStop)
 	m_nPosition.nLossStop = nLossStop;
 	m_nPosition.nTrigger = 0;
 
-	m_nBalance -= (nSlot * m_nFee);
-	m_nTotalFee += nSlot * m_nFee;
+	m_nMargin = margin;
+
+	m_nBalance -= (nSlot * TP.nFee);
+	m_nTotalFee += nSlot * TP.nFee;
+
+	m_nOpenTimes++;
 
 	return Log(m_nTick.time_ms, true, true, 
-			   m_nTick.priceS1, nSlot, nSlot * m_nFee, 0);
+			   m_nTick.priceS1, nSlot, nSlot * TP.nFee, 0);
 }
 
 TradeRecord TradeFacility::Sell(int nSlot, int nLossStop)
 {
 	if(m_nPosition.nSlot != 0) 
 		return TradeRecord();
+
+	//	检查保证金是否足够
+	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
+
+	if(m_nBalance < margin)
+	{
+		AfxMessageBox(_T("保证金不足"));
+		return TradeRecord();
+	}
+
+	if(m_nOpenTimes >= TP.nMaxOpenTimes)
+	{
+		AfxMessageBox(_T("达到日内最大开仓次数"));
+		return TradeRecord();
+	}
+
+	if(m_nTotalFee - m_nTotalProfit > TP.nMaxLossPerDay)
+	{
+		AfxMessageBox(_T("达到日内最大亏损额度"));
+		return TradeRecord();
+	}
 
 	m_nPosition.nPrice = m_nTick.priceB1;
 	m_nPosition.nTime = m_nTick.time_ms;
@@ -87,11 +135,15 @@ TradeRecord TradeFacility::Sell(int nSlot, int nLossStop)
 	m_nPosition.nLossStop = nLossStop;
 	m_nPosition.nTrigger = 0;
 
-	m_nBalance -= (nSlot * m_nFee);
-	m_nTotalFee += nSlot * m_nFee;
+	m_nMargin = margin;
+
+	m_nBalance -= (nSlot * TP.nFee);
+	m_nTotalFee += nSlot * TP.nFee;
+
+	m_nOpenTimes++;
 
 	return Log(m_nTick.time_ms, false, true, 
-			   m_nTick.priceB1, nSlot, nSlot * m_nFee, 0);
+			   m_nTick.priceB1, nSlot, nSlot * TP.nFee, 0);
 }
 
 //	平仓
@@ -102,11 +154,11 @@ TradeRecord TradeFacility::Close()
 
 	if(m_nPosition.nSlot == 0) return TradeRecord();
 
-	nFee = (abs(m_nPosition.nSlot) * m_nFee);
+	nFee = (abs(m_nPosition.nSlot) * TP.nFee);
 
 	if(m_nPosition.nSlot > 0)
 	{
-		nProfit = (m_nTick.priceB1 - m_nPosition.nPrice) * m_nPosition.nSlot * m_nUnitsPerSlot;
+		nProfit = (m_nTick.priceB1 - m_nPosition.nPrice) * m_nPosition.nSlot * TP.nUnitsPerSlot;
 		m_nBalance += nProfit;
 
 		//	卖出平仓
@@ -115,7 +167,7 @@ TradeRecord TradeFacility::Close()
 	}
 	else
 	{
-		nProfit = (m_nTick.priceS1 - m_nPosition.nPrice) * m_nPosition.nSlot * m_nUnitsPerSlot;
+		nProfit = (m_nTick.priceS1 - m_nPosition.nPrice) * m_nPosition.nSlot * TP.nUnitsPerSlot;
 		m_nBalance += nProfit;
 
 		//	买入平仓
@@ -132,6 +184,8 @@ TradeRecord TradeFacility::Close()
 	m_nPosition.nPrice = 0;
 	m_nPosition.nProfit = 0;
 	m_nPosition.nLossStop = m_nPosition.nProfitStop = m_nPosition.nTrigger = 0;
+
+	m_nMargin = 0;
 
 	return rec;
 }

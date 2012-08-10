@@ -344,12 +344,12 @@ void CKLinePrintView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		//	如果在当前价格之下，买入
 		if(price <= EXCHANGE.m_nTick.price)
 		{
-			pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots, price));
+			pDoc->AppendTradeRecord(EXCHANGE.Buy(TP.nDefaultSlots, price));
 		}
 		//	如果在当前价格之上，卖出
 		else
 		{
-			pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots, price));
+			pDoc->AppendTradeRecord(EXCHANGE.Sell(TP.nDefaultSlots, price));
 		}
 	}
 
@@ -641,12 +641,12 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 			{
 				if(EXCHANGE.m_nPosition.nLossStop < EXCHANGE.m_nPosition.nTrigger)
 				{
-					pDoc->AppendTradeRecord(EXCHANGE.Buy(EXCHANGE.m_nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));
+					pDoc->AppendTradeRecord(EXCHANGE.Buy(TP.nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));
 					AfxMessageBox(_T("触发买入!"));
 				}
 				else if(EXCHANGE.m_nPosition.nLossStop > EXCHANGE.m_nPosition.nTrigger)
 				{
-					pDoc->AppendTradeRecord(EXCHANGE.Sell(EXCHANGE.m_nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));					
+					pDoc->AppendTradeRecord(EXCHANGE.Sell(TP.nDefaultSlots, EXCHANGE.m_nPosition.nLossStop));					
 					AfxMessageBox(_T("触发卖出!"));
 				}
 			}

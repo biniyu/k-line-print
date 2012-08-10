@@ -53,4 +53,6 @@ public:
 	int m_nMaxLoss;
 	int m_nMaxProfit;
 	UINT m_nTimeStop;
+	int m_nMaxLossPerDay;
+	int m_nMaxOpenTimes;
 };

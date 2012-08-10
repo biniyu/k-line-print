@@ -146,8 +146,12 @@
 #define IDC_EDIT3                       1042
 #define IDC_EDIT_FLUNC_BELOW            1042
 #define IDC_EDIT_TIMESTOP               1042
+#define IDC_EDIT_MAXOPENTIMES           1043
 #define IDC_RADIO_1YEAR                 1044
+#define IDC_EDIT_MAXLOSSPERDAY          1044
 #define IDC_RADIO_HALFYEAR              1045
+#define IDC_EDIT_MAXLOSSPERDAY2         1045
+#define IDC_EDIT_NOSAMEDIROPEN          1045
 #define IDC_RADIO_3MONTH                1046
 #define IDC_RADIO_DATE_RANGE            1047
 #define IDC_RADIO1                      1048

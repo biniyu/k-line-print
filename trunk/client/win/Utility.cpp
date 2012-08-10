@@ -396,19 +396,9 @@ void WritePrivateProfileIntA(LPCSTR lpAppName, LPCSTR lpKeyName, INT nDefault, L
 	WritePrivateProfileStringA(lpAppName, lpKeyName, buf, lpFileName);
 }
 
-//	读入账户/品种信息
-void Utility::ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, 
-								 int& nUnitsPerSlot, int& nDefaultSlots,
-								 int& nMaxLoss, int& nMaxProfit, int& nTimeStop)
+int Utility::ReadBalance()
 {
-	nBalance = GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
-	nFee = GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
-	nMargin = GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
-	nUnitsPerSlot = GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
-	nDefaultSlots = GetPrivateProfileIntA("Exchange","DefaultSlots", 1, CONFIG_FILE);
-	nMaxLoss = GetPrivateProfileIntA("Trade","MaxLoss", 200, CONFIG_FILE);
-	nMaxProfit = GetPrivateProfileIntA("Trade","MaxProfit", 200, CONFIG_FILE);
-	nTimeStop = GetPrivateProfileIntA("Trade","TimeStop", 120, CONFIG_FILE);
+	return GetPrivateProfileIntA("Exchange","Balance", 50000, CONFIG_FILE);
 }
 
 void Utility::WriteBalance(int nBalance)
@@ -416,16 +406,35 @@ void Utility::WriteBalance(int nBalance)
 	WritePrivateProfileIntA("Exchange","Balance", nBalance, CONFIG_FILE);
 }
 
-void Utility::WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot, 
-								  int nDefaultSlots, int nMaxLoss, int nMaxProfit, int nTimeStop)
+//	读入交易参数
+TradeParam Utility::ReadExchangeConfig()
 {
-	WritePrivateProfileIntA("Exchange","Fee", nFee, CONFIG_FILE);
-	WritePrivateProfileIntA("Exchange","Margin", nMargin, CONFIG_FILE);
-	WritePrivateProfileIntA("Exchange","UnitsPerSlot", nUnitsPerSlot, CONFIG_FILE);
-	WritePrivateProfileIntA("Exchange","DefaultSlots", nDefaultSlots, CONFIG_FILE);
-	WritePrivateProfileIntA("Trade","MaxLoss", nMaxLoss, CONFIG_FILE);
-	WritePrivateProfileIntA("Trade","MaxProfit", nMaxProfit, CONFIG_FILE);
-	WritePrivateProfileIntA("Trade","TimeStop", nTimeStop, CONFIG_FILE);
+	TradeParam tp;
+
+	tp.nFee = GetPrivateProfileIntA("Exchange","Fee", 10, CONFIG_FILE);
+	tp.nMarginRate = GetPrivateProfileIntA("Exchange","Margin", 12, CONFIG_FILE);
+	tp.nUnitsPerSlot = GetPrivateProfileIntA("Exchange","UnitsPerSlot", 5, CONFIG_FILE);
+	tp.nDefaultSlots = GetPrivateProfileIntA("Exchange","DefaultSlots", 1, CONFIG_FILE);
+	tp.nMaxLossStop = GetPrivateProfileIntA("Trade","MaxLoss", 200, CONFIG_FILE);
+	tp.nMaxProfitStop = GetPrivateProfileIntA("Trade","MaxProfit", 200, CONFIG_FILE);
+	tp.nTimeStop = GetPrivateProfileIntA("Trade","TimeStop", 120, CONFIG_FILE);
+	tp.nMaxOpenTimes = GetPrivateProfileIntA("Trade","MaxOpenTimes", 3, CONFIG_FILE);
+	tp.nMaxLossPerDay = GetPrivateProfileIntA("Trade","MaxLossPerDay", 1000, CONFIG_FILE);
+
+	return tp;
+}
+
+void Utility::WriteExchangeConfig(TradeParam tp)
+{
+	WritePrivateProfileIntA("Exchange","Fee", tp.nFee, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","Margin", tp.nMarginRate, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","UnitsPerSlot", tp.nUnitsPerSlot, CONFIG_FILE);
+	WritePrivateProfileIntA("Exchange","DefaultSlots", tp.nDefaultSlots, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","MaxLoss", tp.nMaxLossStop, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","MaxProfit", tp.nMaxProfitStop, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","TimeStop", tp.nTimeStop, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","MaxOpenTimes", tp.nMaxOpenTimes, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","MaxLossPerDay", tp.nMaxLossPerDay, CONFIG_FILE);
 }
 
 //	读入回放配置

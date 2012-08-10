@@ -22,6 +22,8 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nMaxLoss(0)
 	, m_nMaxProfit(0)
 	, m_nTimeStop(0)
+	, m_nMaxLossPerDay(0)
+	, m_nMaxOpenTimes(0)
 {
 	EXCHANGE.SetTick(Tick());
 	m_bEnableTrade = FALSE;
@@ -49,6 +51,8 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_MAXLOSS, m_nMaxLoss);
 	DDX_Text(pDX, IDC_EDIT_MAXPROFIT, m_nMaxProfit);
 	DDX_Text(pDX, IDC_EDIT_TIMESTOP, m_nTimeStop);
+	DDX_Text(pDX, IDC_EDIT_MAXOPENTIMES, m_nMaxOpenTimes);
+	DDX_Text(pDX, IDC_EDIT_MAXLOSSPERDAY, m_nMaxLossPerDay);
 }
 
 
@@ -113,13 +117,15 @@ BOOL CTradeDialog::OnInitDialog()
 	m_PositionInfo.InsertColumn(3, CString("当前价格"), 0, 90);
 	m_PositionInfo.InsertColumn(4, CString("浮动盈亏"), 0, 90);
 
-	m_nDefaultSlots = m_nSlots = EXCHANGE.m_nDefaultSlots;
-	m_nFee = EXCHANGE.m_nFee;
-	m_nMargin = EXCHANGE.m_nMargin;
-	m_nUnitsPerSlot = EXCHANGE.m_nUnitsPerSlot;
-	m_nMaxLoss = EXCHANGE.m_nMaxLoss;
-	m_nMaxProfit = EXCHANGE.m_nMaxProfit;
-	m_nTimeStop = EXCHANGE.m_nTimeStop;
+	m_nDefaultSlots = m_nSlots = TP.nDefaultSlots;
+	m_nFee = TP.nFee;
+	m_nMargin = TP.nMarginRate;
+	m_nUnitsPerSlot = TP.nUnitsPerSlot;
+	m_nMaxLoss = TP.nMaxLossStop;
+	m_nMaxProfit = TP.nMaxProfitStop;
+	m_nTimeStop = TP.nTimeStop;
+	m_nMaxOpenTimes = TP.nMaxOpenTimes;
+	m_nMaxLossPerDay = TP.nMaxLossPerDay;
 
 	UpdateData(FALSE);
 
@@ -187,11 +193,11 @@ void CTradeDialog::UpdateAccountInfo(void)
 		m_AccountInfo.InsertItem(0, IntToCString(0));
 	
 	m_AccountInfo.SetItemText(0, 0, IntToCString(EXCHANGE.m_nIntialBalance));
-	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance));
-	m_AccountInfo.SetItemText(0, 2, IntToCString(0));
-	m_AccountInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTotalProfit));
+	m_AccountInfo.SetItemText(0, 1, IntToCString(EXCHANGE.m_nBalance + EXCHANGE.m_nPosition.nProfit));
+	m_AccountInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nMargin));
+	m_AccountInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTotalProfit + EXCHANGE.m_nPosition.nProfit));
 	m_AccountInfo.SetItemText(0, 4, IntToCString(EXCHANGE.m_nTotalFee));
-	m_AccountInfo.SetItemText(0, 5, IntToCString(EXCHANGE.m_nTotalProfit - EXCHANGE.m_nTotalFee));
+	m_AccountInfo.SetItemText(0, 5, IntToCString(EXCHANGE.m_nTotalProfit - EXCHANGE.m_nTotalFee + EXCHANGE.m_nPosition.nProfit));
 
 	if(m_PositionInfo.GetItemCount() == 0)
 		m_PositionInfo.InsertItem(0, IntToCString(0));
@@ -217,11 +223,17 @@ void CTradeDialog::UpdateAccountInfo(void)
 void CTradeDialog::OnBnClickedButtonUpdateParam()
 {
 	UpdateData();
-	EXCHANGE.SetParam(m_nFee, m_nMargin, m_nUnitsPerSlot);
-	EXCHANGE.m_nDefaultSlots = m_nDefaultSlots;
-	EXCHANGE.m_nMaxLoss = m_nMaxLoss;
-	EXCHANGE.m_nMaxProfit = m_nMaxProfit;
-	EXCHANGE.m_nTimeStop = m_nTimeStop;
-	Utility::WriteExchangeConfig(m_nFee, m_nMargin, m_nUnitsPerSlot, 
-								m_nDefaultSlots, m_nMaxLoss, m_nMaxProfit, m_nTimeStop);
+
+	TP.nFee = m_nFee;
+	TP.nMarginRate = m_nMargin;
+	TP.nUnitsPerSlot = m_nUnitsPerSlot;
+
+	TP.nDefaultSlots = m_nDefaultSlots;
+	TP.nMaxLossStop = m_nMaxLoss;
+	TP.nMaxProfitStop = m_nMaxProfit;
+	TP.nTimeStop = m_nTimeStop;
+	TP.nMaxOpenTimes = m_nMaxOpenTimes;
+	TP.nMaxLossPerDay = m_nMaxLossPerDay;
+
+	Utility::WriteExchangeConfig(TP);
 }
