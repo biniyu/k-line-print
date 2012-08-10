@@ -115,14 +115,8 @@ BOOL CKLinePrintApp::InitInstance()
 	cg.Generate("J:\\FutureData\\ZZ", m_cal);
 
 	//	读入账户/品种信息
-	Utility::ReadExchangeConfig(EXCHANGE.m_nBalance,
-								EXCHANGE.m_nFee,
-								EXCHANGE.m_nMargin,
-								EXCHANGE.m_nUnitsPerSlot,
-								EXCHANGE.m_nDefaultSlots,
-								EXCHANGE.m_nMaxLoss,
-								EXCHANGE.m_nMaxProfit,
-								EXCHANGE.m_nTimeStop);
+	EXCHANGE.SetBalance(Utility::ReadBalance());
+	TP = Utility::ReadExchangeConfig();
 
 	srand(time(0));
 

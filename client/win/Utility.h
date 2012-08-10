@@ -23,14 +23,11 @@ public:
 	//	读入回放配置
 	static PlaybackConfig ReadPlaybackConfig();
 	
-	static void ReadExchangeConfig(int& nBalance, int& nFee, int& nMargin, 
-								   int& nUnitsPerSlot, int& nDefaultSlots,
-								   int& nMaxLoss, int& nMaxProfit, int& nTimeStop);
-
+	static int ReadBalance();
 	static void WriteBalance(int nBalance);
-	
-	static void WriteExchangeConfig(int nFee, int nMargin, int nUnitsPerSlot, 
-									int nDefaultSlots, int nMaxLoss, int nMaxProfit, int nTimeStop);
+
+	static TradeParam ReadExchangeConfig();
+	static void WriteExchangeConfig(TradeParam tp);
 
 	//	保存回放配置
 	static void SavePlaybackConfig(PlaybackConfig pc);

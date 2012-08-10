@@ -52,27 +52,24 @@ public:
 	int nTrigger;	//	触发价
 };
 
-class TradeFacility
+class TradeParam
 {
 public:
 
-	int			m_nIntialBalance;			//	当日初始余额
-	int			m_nBalance;
-	int			m_nFee;
-	int			m_nMargin;
-	int			m_nDefaultSlots;
-	int			m_nUnitsPerSlot;
-	int			m_nMaxLoss;					//	最大止损
-	int			m_nMaxProfit;				//	最大止盈
-	int			m_nTimeStop;				//	时间止损
+	int			nFee;
+	int			nMarginRate;				//	保证金率
+	int			nDefaultSlots;
+	int			nUnitsPerSlot;
 
-	Tick		m_nTick;
-	Position	m_nPosition;
-	string		m_nFilePath;
+	int			nMaxLossStop;				//	最大止损
+	int			nMaxProfitStop;			//	最大止盈
+	int			nTimeStop;				//	时间止损
+	int			nMaxOpenTimes;			//	最大开仓次数
+	int			nMaxLossPerDay;			//	每日最大允许亏损额
+};	
 
-	int			m_nTotalFee;				//	当日手续费总额
-	int			m_nTotalProfit;				//	当日毛利润总额
-
+class TradeFacility
+{
 public:
 
 	TradeFacility(void);
@@ -82,18 +79,11 @@ public:
 	{
 		m_nIntialBalance = m_nBalance;
 		m_nTotalFee = m_nTotalProfit = 0;
+		m_nOpenTimes = 0;
 	}
 
 	//	设置账户余额	
 	void SetBalance(int nMoney) { m_nBalance = nMoney; }
-
-	//	设置合约参数
-	void SetParam(int nFee, int nMargin, int nUnitsPerSlot)
-	{
-		m_nFee = nFee;
-		m_nMargin = nMargin;
-		m_nUnitsPerSlot = nUnitsPerSlot;
-	}
 
 	//	设置当前分笔数据，并且更新浮动盈亏等
 	void SetTick(Tick tick);
@@ -112,4 +102,20 @@ public:
 	TradeRecord Log(int nTime, bool bBuy, bool bOpen, 
 					int nPrice, int nSlot, int nFee, int nProfit);
 
+public:
+
+	Tick		m_nTick;
+	Position	m_nPosition;
+	string		m_nFilePath;
+
+	int			m_nIntialBalance;			//	当日初始余额
+	int			m_nOpenTimes;				//	当日开仓次数
+	float		m_nMargin;					//	当前保证金
+	int			m_nBalance;					//	当前账户余额
+	int			m_nTotalFee;				//	当日手续费总额
+	int			m_nTotalProfit;				//	当日毛利润总额
+
 };
+
+extern TradeParam gTradeParam;
+#define TP gTradeParam	
