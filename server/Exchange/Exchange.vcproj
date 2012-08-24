@@ -177,12 +177,20 @@
 				RelativePath=".\Exchange.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ExchangeService.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="头文件"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\ExchangeService.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
