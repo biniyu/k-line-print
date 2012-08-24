@@ -4,9 +4,13 @@
 
 void ExchangeService::open(ACE_HANDLE h, ACE_Message_Block&)
 {
+	memset(buffer_, 0, sizeof(buffer_));
+
+	buffer_start = buffer_end = 0;
+
 	this->handle (h);
 	if (this->reader_.open (*this) != 0 ||
-	this->writer_.open (*this) != 0   )
+		this->writer_.open (*this) != 0 )
 	{
 		ACE_ERROR ((LM_ERROR, ACE_TEXT ("%p\n"),
 				  ACE_TEXT ("HA_Proactive_Service open")));
@@ -47,6 +51,31 @@ void ExchangeService::handle_read_stream(const ACE_Asynch_Read_Stream::Result &r
 	}
 	else
 	{
+		//	检查剩余空间
+		memcpy(&buffer_[buffer_end], mb.rd_ptr(), BUFFER_SIZE - buffer_end);
+
+		if(BUFFER_SIZE - buffer_end < mb.length())
+		{
+			memcpy(&buffer_[0], 
+					mb.rd_ptr() + BUFFER_SIZE - buffer_end, 
+					mb.length() - (BUFFER_SIZE - buffer_end));
+
+			buffer_end = mb.length() - (BUFFER_SIZE - buffer_end);
+		}
+		else
+		{
+			buffer_end += mb.length();	
+		}
+
+		//	处理命令
+
+		//	0xEE 0xAD MSGID(2bytes) LEN(2bytes) data....
+
+
+
+
+		
+
 		if (this->writer_.write (mb, mb.length ()) != 0)
 		{
 			ACE_ERROR ((LM_ERROR,
@@ -69,4 +98,9 @@ void ExchangeService::handle_write_stream(const ACE_Asynch_Write_Stream::Result 
 {
 	result.message_block ().release ();
 	return;
+}
+
+void ExchangeService::handle_time_out(const ACE_Time_Value &tv, const void *act)
+{
+
 }
