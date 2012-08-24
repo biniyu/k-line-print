@@ -51,15 +51,17 @@ Exchange_Proactive_Service::open (ACE_HANDLE h, ACE_Message_Block&)
       return;
     }
 
-  ACE_Message_Block *mb;
-  ACE_NEW_NORETURN (mb, ACE_Message_Block (1024));
-  if (this->reader_.read (*mb, mb->space ()) != 0)
+  char buffer[100] = {'3',};
+  ACE_Message_Block *mb = new ACE_Message_Block (buffer,100);
+
+  mb->copy("hello");
+
+  if (this->writer_.write (*mb, mb->length()) != 0)
     {
-      ACE_ERROR ((LM_ERROR, ACE_TEXT ("%p\n"),
-                  ACE_TEXT ("HA_Proactive_Service begin read")));
+      ACE_ERROR ((LM_ERROR,
+                  ACE_TEXT ("%p\n"),
+                  ACE_TEXT ("starting write")));
       mb->release ();
-      delete this;
-      return;
     }
 
   // mb is now controlled by Proactor framework.
