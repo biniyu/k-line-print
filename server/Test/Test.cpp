@@ -51,10 +51,11 @@ Exchange_Proactive_Service::open (ACE_HANDLE h, ACE_Message_Block&)
       return;
     }
 
-  char buffer[100] = {'3',};
-  ACE_Message_Block *mb = new ACE_Message_Block (buffer,100);
+  ACE_Message_Block *mb = new ACE_Message_Block(100);
 
-  mb->copy("hello");
+  unsigned char buffer[100] = {0xEE,0xAD,0x00,0x03, 0x1,0x2,0x3 };
+
+  mb->copy((char*)buffer, 7);
 
   if (this->writer_.write (*mb, mb->length()) != 0)
     {
