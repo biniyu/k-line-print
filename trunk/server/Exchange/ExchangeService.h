@@ -34,10 +34,14 @@ private:
 	ACE_Asynch_Write_Stream writer_;
 
 	//	消息接收队列 - 内部循环队列
-	char buffer_[BUFFER_SIZE];
+	int buffer_start, buffer_end;
+	unsigned char buffer_[BUFFER_SIZE];
 	
-	//	
-	int buffer_start;
-	int buffer_end;
+	//	组装缓存
+	unsigned char bufHead[16], bufData[2048];
+
+	int GetDataLen();
+	void ReadFromBuffer(unsigned char* tmpbuf, int nsize);
+	void ProcessPack(unsigned char* buf, int nsize);
 
 };
