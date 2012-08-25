@@ -2,6 +2,8 @@
 #include "ace/Message_Block.h"
 #include "ace/Proactor.h"
 
+CommandDispatch g_dispatch;
+
 void ExchangeService::open(ACE_HANDLE h, ACE_Message_Block&)
 {
 	memset(buffer_, 0, sizeof(buffer_));
@@ -70,7 +72,7 @@ void ExchangeService::handle_read_stream(const ACE_Asynch_Read_Stream::Result &r
 
 		//	´¦ÀíÃüÁî
 
-		//	0xEE 0xAD LEN(2bytes) MSGID(2bytes) data....
+		//	0xEE 0xAD LEN(2bytes) MSGID(4bytes) data....
 		
 		while(1)
 		{
@@ -126,7 +128,21 @@ void ExchangeService::ReadFromBuffer(unsigned char* tmpbuf, int nsize)
 
 void ExchangeService::ProcessPack(unsigned char* tmpbuf, int nsize)
 {
-	
+	int ackLen = sizeof(send_buffer);
+
+	g_dispatch.Execute(*(int*)tmpbuf, tmpbuf + sizeof(int), nsize - sizeof(int),
+					send_buffer, ackLen);
+
+    ACE_Message_Block& mb = *(new ACE_Message_Block(ackLen));
+	mb.copy((const char*)send_buffer, ackLen);
+
+	if (this->writer_.write (mb, mb.length ()) != 0)
+	{
+		ACE_ERROR ((LM_ERROR,
+				  ACE_TEXT ("%p\n"),
+				  ACE_TEXT ("starting write")));
+		mb.release();
+	}	
 }
 
 void ExchangeService::handle_write_stream(const ACE_Asynch_Write_Stream::Result &result)
