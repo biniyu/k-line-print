@@ -36,6 +36,8 @@ public:
 private:
   ACE_Asynch_Read_Stream reader_;
   ACE_Asynch_Write_Stream writer_;
+
+  int nCurSize; 
 };
 
 void
@@ -51,7 +53,9 @@ Exchange_Proactive_Service::open (ACE_HANDLE h, ACE_Message_Block&)
       return;
     }
 
-  ACE_Message_Block *mb = new ACE_Message_Block(100);
+  nCurSize = 100;
+
+  ACE_Message_Block *mb = new ACE_Message_Block(nCurSize);
 
   unsigned char buffer[100] = {0xEE,0xAD,0x00,0x03, 0x1,0x2,0x3 };
 

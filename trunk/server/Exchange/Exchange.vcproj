@@ -174,11 +174,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CommandDispatch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Exchange.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ExchangeService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LoginHandler.cpp"
 				>
 			</File>
 		</Filter>
@@ -188,7 +200,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\CommandDispatch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CommandHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ExchangeService.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LoginHandler.h"
 				>
 			</File>
 		</Filter>

@@ -2,6 +2,7 @@
 
 #include "ace/OS.h"
 #include "ace/Asynch_IO.h"
+#include "CommandDispatch.h"
 
 #define BUFFER_SIZE		2048
 
@@ -44,4 +45,9 @@ private:
 	void ReadFromBuffer(unsigned char* tmpbuf, int nsize);
 	void ProcessPack(unsigned char* buf, int nsize);
 
+	//	·¢ËÍ»º´æ
+	unsigned char send_buffer[BUFFER_SIZE];
+
 };
+
+extern CommandDispatch g_dispatch;
