@@ -41,13 +41,19 @@ private:
 	//	×é×°»º´æ
 	unsigned char bufHead[16], bufData[2048];
 
+	//	·¢ËÍ»º´æ
+	unsigned char send_buffer[BUFFER_SIZE];
+
+private:
+
 	int GetDataLen();
 	void ReadFromBuffer(unsigned char* tmpbuf, int nsize);
 	void ProcessPack(unsigned char* buf, int nsize);
 
-	//	·¢ËÍ»º´æ
-	unsigned char send_buffer[BUFFER_SIZE];
-
+	void ProcessLogin(unsigned char* buf, int nsize);
+	void ProcessNextDay(unsigned char* buf, int nsize);
+	void ProcessPlay(unsigned char* buf, int nsize);
+	void ProcessTrade(unsigned char* buf, int nsize);
 };
 
 extern CommandDispatch g_dispatch;
