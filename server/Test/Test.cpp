@@ -57,9 +57,12 @@ Exchange_Proactive_Service::open (ACE_HANDLE h, ACE_Message_Block&)
 
   ACE_Message_Block *mb = new ACE_Message_Block(nCurSize);
 
-  unsigned char buffer[100] = {0xEE,0xAD,0x00,0x03, 0x1,0x2,0x3 };
+  unsigned char buffer[100] = {0xEE,0xAD, 0, 20, };
 
-  mb->copy((char*)buffer, 7);
+
+  *(int*)(&buffer[4]) = 1;
+
+  mb->copy((char*)buffer, 100);
 
   if (this->writer_.write (*mb, mb->length()) != 0)
     {

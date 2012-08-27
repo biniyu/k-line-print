@@ -1,3 +1,4 @@
+#include "Exchange.h"
 #include "ExchangeService.h"
 #include "ace/Message_Block.h"
 #include "ace/Proactor.h"
@@ -55,10 +56,10 @@ void ExchangeService::handle_read_stream(const ACE_Asynch_Read_Stream::Result &r
 	else
 	{
 		//	检查剩余空间
-		memcpy(&buffer_[buffer_end], mb.rd_ptr(), BUFFER_SIZE - buffer_end);
 
 		if(BUFFER_SIZE - buffer_end < mb.length())
 		{
+			memcpy(&buffer_[buffer_end], mb.rd_ptr(), BUFFER_SIZE - buffer_end);
 			memcpy(&buffer_[0], 
 					mb.rd_ptr() + BUFFER_SIZE - buffer_end, 
 					mb.length() - (BUFFER_SIZE - buffer_end));
@@ -67,6 +68,7 @@ void ExchangeService::handle_read_stream(const ACE_Asynch_Read_Stream::Result &r
 		}
 		else
 		{
+			memcpy(&buffer_[buffer_end], mb.rd_ptr(), mb.length());
 			buffer_end += mb.length();	
 		}
 
@@ -128,21 +130,46 @@ void ExchangeService::ReadFromBuffer(unsigned char* tmpbuf, int nsize)
 
 void ExchangeService::ProcessPack(unsigned char* tmpbuf, int nsize)
 {
-	int ackLen = sizeof(send_buffer);
+	int nMsgId = *(int*)tmpbuf;
 
-	g_dispatch.Execute(*(int*)tmpbuf, tmpbuf + sizeof(int), nsize - sizeof(int),
-					send_buffer, ackLen);
-
-    ACE_Message_Block& mb = *(new ACE_Message_Block(ackLen));
-	mb.copy((const char*)send_buffer, ackLen);
-
-	if (this->writer_.write (mb, mb.length ()) != 0)
+	switch(nMsgId)
 	{
-		ACE_ERROR ((LM_ERROR,
-				  ACE_TEXT ("%p\n"),
-				  ACE_TEXT ("starting write")));
-		mb.release();
-	}	
+	case CMDID_LOGIN:
+		ProcessLogin(tmpbuf + sizeof(int), nsize - sizeof(int));
+		break;
+	case CMDID_NEXTDAY:
+		ProcessNextDay(tmpbuf + sizeof(int), nsize - sizeof(int));
+		break;
+	case CMDID_PLAY:
+		ProcessPlay(tmpbuf + sizeof(int), nsize - sizeof(int));
+		break;
+	case CMDID_TRADE:
+		ProcessTrade(tmpbuf + sizeof(int), nsize - sizeof(int));
+		break;
+	}
+}
+
+void ExchangeService::ProcessLogin(unsigned char* buf, int nsize)
+{
+	//	读取用户参数，创建账户对象
+	//	定时发送账户状态
+}
+
+void ExchangeService::ProcessNextDay(unsigned char* buf, int nsize)
+{
+	//	品种
+	//	加载分时数据
+	//	前日1分钟线，日K线等
+}
+
+void ExchangeService::ProcessPlay(unsigned char* buf, int nsize)
+{
+	//	播放、暂停、加速、减速	
+}
+
+void ExchangeService::ProcessTrade(unsigned char* buf, int nsize)
+{
+	//	开仓，平仓
 }
 
 void ExchangeService::handle_write_stream(const ACE_Asynch_Write_Stream::Result &result)

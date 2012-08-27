@@ -208,6 +208,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Exchange.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ExchangeService.h"
 				>
 			</File>
