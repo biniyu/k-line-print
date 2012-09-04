@@ -12,6 +12,8 @@ KLineRenderer::KLineRenderer(void)
 {
 	m_nKVolRatio = 3;						//	K图与成交量图的高度为3:1
 	m_nKSpace = 2;							//	K线间的像素数
+
+	m_bShowTimeLine = false;
 	m_bShowVol = true;
 	m_bShowKeyPrice = false;
 	m_bShowAvg = false;
@@ -34,6 +36,7 @@ KLineRenderer::KLineRenderer(void)
     penGreen.CreatePen(PS_SOLID, 1, RGB(0, 180, 0));
     penBlue.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
     penBlack.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+	penOrange.CreatePen(PS_SOLID,1, RGB(250, 128, 10));
 
 	penRedBold.CreatePen(PS_SOLID, 2, RGB(255, 0, 0));
     penGreenBold.CreatePen(PS_SOLID, 2, RGB(0, 180, 0));
@@ -57,6 +60,7 @@ KLineRenderer::~KLineRenderer(void)
     penRed.DeleteObject();
     penBlue.DeleteObject();
 	penBlack.DeleteObject();
+	penOrange.DeleteObject();
 	penGreyDotted.DeleteObject();
 	penRedDotted.DeleteObject();
     penGreenDotted.DeleteObject();
@@ -809,7 +813,7 @@ void KLineRenderer::RenderAvg(CDC* pDC, int nKIdx)
 
 		float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
 
-		pDC->SelectObject(&penBlack);
+		pDC->SelectObject(&penOrange);
 		pDC->MoveTo(kLastMiddle, kLastAvgPos);
 		pDC->LineTo(m_kMiddle, kAvgPos);
 	}
@@ -855,17 +859,26 @@ void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 	//	成交量线
 	float kVolPos = GetVolPosition(kline.vol); 
 
-	if(kline.open > kline.close)
-		pDC->SelectObject(&penGreen);
-	else if(kline.open < kline.close)
-		pDC->SelectObject(&penRed);
+	if(m_bShowTimeLine)
+	{
+		pDC->SelectObject(penBlue);
+		pDC->MoveTo(m_kMiddle - 2, m_Rect.bottom);
+		pDC->LineTo(m_kMiddle - 2, kVolPos);
+	}
 	else
-		pDC->SelectObject(&penBlue);
+	{
+		if(kline.open > kline.close)
+			pDC->SelectObject(&penGreen);
+		else if(kline.open < kline.close)
+			pDC->SelectObject(&penRed);
+		else
+			pDC->SelectObject(&penBlue);
 
-	pDC->MoveTo(m_kLeft, m_Rect.bottom);
-	pDC->LineTo(m_kLeft, kVolPos);
-	pDC->LineTo(m_kRight, kVolPos);
-	pDC->LineTo(m_kRight, m_Rect.bottom);
+		pDC->MoveTo(m_kLeft, m_Rect.bottom);
+		pDC->LineTo(m_kLeft, kVolPos);
+		pDC->LineTo(m_kRight, kVolPos);
+		pDC->LineTo(m_kRight, m_Rect.bottom);
+	}
 
 	//	日内持仓量线
 	int nInterest, nPrevInterest;
@@ -1010,6 +1023,22 @@ void KLineRenderer::CalculateKLineLayout(int nKIdx)
 	m_kClosePos = GetPricePosition(kline.close);
 }
 
+void KLineRenderer::RenderTimeLine(CDC* pDC, int nKIdx)
+{
+	if(nKIdx <= 1) return;
+
+	KLine& prev_kline = (*m_pKLines)[nKIdx-1];
+	KLine& kline = (*m_pKLines)[nKIdx];
+
+	float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
+	float kLastClose = GetPricePosition(prev_kline.close);
+
+	pDC->SelectObject(&penBlue);
+
+	pDC->MoveTo(kLastMiddle, kLastClose);
+	pDC->LineTo(m_kMiddle, m_kClosePos);
+}
+
 void KLineRenderer::Render(CDC* pDC)
 {
 	if(!m_pKLines || !m_pKLines->size() || (m_Rect == CRect(0,0,0,0))) 
@@ -1048,8 +1077,15 @@ void KLineRenderer::Render(CDC* pDC)
 		if(m_bShowCriticalTime)
 			RenderCriticalTime(pDC, i);
 
-		//	绘制K线
-		RenderKLine(pDC, i);
+		if(m_bShowTimeLine)		//	显示分时线
+		{
+			RenderTimeLine(pDC,i);
+		}
+		else
+		{
+			//	绘制K线
+			RenderKLine(pDC, i);
+		}
 
 		//	绘制交易记录
 		if(m_pTradeRecords)

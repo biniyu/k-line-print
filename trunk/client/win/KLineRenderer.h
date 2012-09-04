@@ -55,6 +55,9 @@ private:
 	//	显示区域
 	CRect m_Rect;
 
+	//	是否显示分时线
+	bool m_bShowTimeLine;
+
 	//	是否显示成交量
 	bool m_bShowVol;
 
@@ -119,7 +122,7 @@ private:
 
 	CFont font;
 
-	CPen penRed, penGreen, penBlue, penBlack, penGreyDotted;
+	CPen penRed, penGreen, penBlue, penBlack, penGreyDotted, penOrange;
 	CPen penRedDotted, penGreenDotted, penBlueDotted;
 	CPen penRedBold, penGreenBold, penBlueBold;
 
@@ -138,6 +141,7 @@ private:
 
 	void RenderTradeRecord(CDC* pDC, int nKIdx);
 	void RenderKLine(CDC* pDC, int nKIdx);
+	void RenderTimeLine(CDC* pDC, int nKIdx);
 	void RenderCriticalTime(CDC* pDC, int nKIdx);
 	void RenderHighLowPrice(CDC* pDC, int nKIdx);
 	void RenderSelection(CDC* pDC, int nKIdx);
@@ -221,6 +225,8 @@ public:
 	void ToggleTrackingMode();
 
 	void ToggleKeyPrice() { m_bShowKeyPrice = !m_bShowKeyPrice; }
+
+	void ToggleTimeLine() { m_bShowTimeLine = !m_bShowTimeLine; }
 
 	void SetLossStopPrice(int price);
 	void SetProfitStopPrice(int price);

@@ -200,6 +200,11 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		klr_1min.DelTrigger();
 	}
 
+	if(nChar == VK_F5)
+	{
+		klr_1min.ToggleTimeLine();
+	}
+
 	if(nChar == VK_F12)
 	{
 		if(m_pTradeDialog)
