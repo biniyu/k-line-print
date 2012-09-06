@@ -320,6 +320,7 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 
 			m_1MinData.Quote(tickToQuote);
 			m_15SecData.Quote(tickToQuote);
+			m_Strategy.Quote(tickToQuote);
 
 			lastQuote = tickToQuote;
 			m_nCurrentTickTime = tickToQuote.time_ms;
@@ -340,6 +341,7 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 
 			m_1MinData.Quote(tmp);
 			m_15SecData.Quote(tmp);
+			m_Strategy.Quote(tmp);
 
 			//	如果相差的时间大于5分钟，应该是盘中休息时间，跳过
 
@@ -416,6 +418,9 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 	m_DayData.StartQuote(tmp);
 	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
+
+	//	对每tick执行策略
+	m_Strategy.Quote(m_TickData[m_nCurrentTickIdx]);
 
 	//	记录下当前时间
 	m_nCurrentTickTime = m_TickData[m_nCurrentTickIdx].time_ms;
