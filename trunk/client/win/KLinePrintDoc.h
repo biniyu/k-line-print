@@ -8,6 +8,7 @@
 #include "PlaybackConfig.h"
 #include "CalendarGenerator.h"
 #include "TradeFacility.h"
+#include "Strategy.h"
 
 using namespace std;
 
@@ -28,6 +29,8 @@ private:
 	KLineCollection			m_15SecData;
 	KLineCollection			m_1MinData;
 	KLineCollection			m_DayData;
+
+	Strategy				m_Strategy;
 
 	//	当前交易记录
 	TradeRecordCollection	m_TradeRecords;

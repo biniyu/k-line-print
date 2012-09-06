@@ -251,6 +251,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Strategy.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TickReader.cpp"
 				>
 			</File>
@@ -338,6 +342,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Strategy.h"
 				>
 			</File>
 			<File
