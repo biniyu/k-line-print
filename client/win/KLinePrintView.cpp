@@ -63,6 +63,7 @@ void CKLinePrintView::Set5SecData(KLineCollection* pData)
 { 
 	klr_5sec.SetKLineData(pData, 120); 
 	klr_5sec.SetOpenIndex(0);
+	klr_5sec.SetShowAvg(true);
 }
 
 void CKLinePrintView::Set1MinData(KLineCollection* pData) 
