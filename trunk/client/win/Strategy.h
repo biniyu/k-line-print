@@ -21,4 +21,6 @@ private:
 
 	KLineCollection* m_p1MinData;
 	KLineCollection* m_p5SecData;
+
+	int m_lasttime;
 };
