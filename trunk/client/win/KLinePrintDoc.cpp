@@ -579,10 +579,23 @@ KLine CKLinePrintDoc::GenerateDayLineFromQuoteData(string path, int date)
 
 void CKLinePrintDoc::OnStrategy()
 {
+	char buf[256];
 	//	根据回放日期范围，依次回放所有交易日
 	int nCurDate = Utility::GetDateByPath(m_CurCsvFile);
 
 	//  TODO : 显示进度信息/可以多线程同时测试
+	time_t rawtime;
+	struct tm * timeinfo;
+
+	time ( &rawtime );
+	timeinfo = localtime ( &rawtime );
+
+	int nDate = (1900 + timeinfo->tm_year) * 10000 + (timeinfo->tm_mon + 1) * 100 + timeinfo->tm_mday;
+	int nTime = timeinfo->tm_hour * 10000 + timeinfo->tm_min * 100 + timeinfo->tm_sec;
+
+	sprintf(buf, "%d-%d.log.txt", nDate, nTime);
+
+	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\" + buf);
 
 	while(1)
 	{
@@ -596,4 +609,6 @@ void CKLinePrintDoc::OnStrategy()
 
 		nCurDate = m_FilteredCalendar.GetNext(nCurDate);
 	}	
+
+	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\manual.log.txt");
 }

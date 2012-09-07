@@ -118,6 +118,9 @@ BOOL CKLinePrintApp::InitInstance()
 	EXCHANGE.SetBalance(Utility::ReadBalance());
 	TP = Utility::ReadExchangeConfig();
 
+	//	设置默认交易日志文件
+	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\manual.log.txt");
+
 	srand(time(0));
 
 	//	自动打开上次的文件

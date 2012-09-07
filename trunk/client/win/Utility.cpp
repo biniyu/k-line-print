@@ -490,12 +490,11 @@ void Utility::SavePlaybackConfig(PlaybackConfig pc)
 	WritePrivateProfileIntA("Playback","FluctuationBelow", (int)pc.fLastDayFluctuationBelow, CONFIG_FILE);
 }
 
-void Utility::WriteLog(TradeRecord tr)
+void Utility::WriteLog(string path, TradeRecord tr)
 {
 	ofstream outfile;
-	string logfile = GetProgramPath() + "tradelog.txt";
 
-	outfile.open(logfile.c_str(),ios::app);
+	outfile.open(path.c_str(),ios::app);
 	
 	outfile << tr.nRealDate << " " << tr.nRealTime << " " << tr.sFileName << " " 
 		<< tr.nSimuTime << " " << tr.nPrice << " " 
@@ -505,7 +504,7 @@ void Utility::WriteLog(TradeRecord tr)
 	outfile.close();
 }
 
-void Utility::ReadLog(vector<TradeRecord>& trs)
+void Utility::ReadLog(string path, vector<TradeRecord>& trs)
 {
 #define SZ 1024
 
@@ -514,9 +513,7 @@ void Utility::ReadLog(vector<TradeRecord>& trs)
 	char buf[SZ];
 	TradeRecord tr;
 
-	string logfile = GetProgramPath() + "tradelog.txt";
-
-	in.open(logfile.c_str());
+	in.open(path.c_str());
 
 	while(in.getline(buf,SZ))
 	{
