@@ -26,6 +26,7 @@ public:
 	CListBox m_ctlListDate;
 	CListBox m_ctlListFile;
 	CListCtrl m_ctlListLog;
+	CComboBox m_comboLogFiles;
 
 private:
 	map<int, map<string, TradeRecordCollection>> m_trs;
@@ -35,4 +36,5 @@ public:
 	afx_msg void OnLbnSelchangeListFile();
 	afx_msg void OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnLvnItemchangedListLog(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnCbnSelchangeComboLogfile();
 };

@@ -29,6 +29,7 @@ void CTradeLogDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_DATE, m_ctlListDate);
 	DDX_Control(pDX, IDC_LIST_FILE, m_ctlListFile);
 	DDX_Control(pDX, IDC_LIST_LOG, m_ctlListLog);
+	DDX_Control(pDX, IDC_COMBO_LOGFILE, m_comboLogFiles);
 }
 
 
@@ -37,6 +38,7 @@ BEGIN_MESSAGE_MAP(CTradeLogDialog, CDialog)
 	ON_LBN_SELCHANGE(IDC_LIST_FILE, &CTradeLogDialog::OnLbnSelchangeListFile)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_LOG, &CTradeLogDialog::OnNMClickListLog)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_LOG, &CTradeLogDialog::OnLvnItemchangedListLog)
+	ON_CBN_SELCHANGE(IDC_COMBO_LOGFILE, &CTradeLogDialog::OnCbnSelchangeComboLogfile)
 END_MESSAGE_MAP()
 
 
@@ -46,22 +48,16 @@ BOOL CTradeLogDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	TradeRecordCollection logs;
-	Utility::ReadLog(logs);
+	vector<string> vecFiles;
 
-	for(int i = 0; i < logs.size(); i++)
-	{
-		TradeRecord tmp = logs[i];
-		m_trs[tmp.nRealDate][tmp.sFileName].push_back(tmp);
-	}
+	string logPath = Utility::GetProgramPath() + "log\\";
 
-	//	先填入练习日期
-	map<int, map<string, TradeRecordCollection>>::reverse_iterator it;
-	for(it = m_trs.rbegin(); it != m_trs.rend(); it++)
+	//	所有日志文件
+	vecFiles = GetFiles(logPath, "*.log.txt", false);
+
+	for(int i = 0; i < vecFiles.size(); i++)
 	{
-		CString tmp;
-		tmp.Format(_T("%d"),it->first); 
-		m_ctlListDate.AddString(tmp);
+		m_comboLogFiles.AddString(CString(vecFiles[i].c_str()));
 	}
 
 	m_ctlListLog.InsertColumn(0, _T("时间"), 0, 60);
@@ -241,4 +237,40 @@ void CTradeLogDialog::OnLvnItemchangedListLog(NMHDR *pNMHDR, LRESULT *pResult)
 	pDoc->UpdateAllViews(0);
 
 	*pResult = 0;
+}
+
+void CTradeLogDialog::OnCbnSelchangeComboLogfile()
+{
+	CString tmp;
+
+	m_comboLogFiles.GetWindowTextW(tmp);
+
+	string filename = CStringTostring(tmp);
+
+	filename = Utility::GetProgramPath() + "log\\" + filename;
+
+	TradeRecordCollection logs;
+
+	Utility::ReadLog(filename, logs);
+
+	m_trs.clear();
+
+	m_ctlListDate.ResetContent();
+	m_ctlListFile.ResetContent();
+	m_ctlListLog.DeleteAllItems();
+
+	for(int i = 0; i < logs.size(); i++)
+	{
+		TradeRecord tmp = logs[i];
+		m_trs[tmp.nRealDate][tmp.sFileName].push_back(tmp);
+	}
+
+	//	先填入练习日期
+	map<int, map<string, TradeRecordCollection>>::reverse_iterator it;
+	for(it = m_trs.rbegin(); it != m_trs.rend(); it++)
+	{
+		CString tmp;
+		tmp.Format(_T("%d"),it->first); 
+		m_ctlListDate.AddString(tmp);
+	}	
 }

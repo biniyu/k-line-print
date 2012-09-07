@@ -51,7 +51,7 @@ TradeRecord TradeFacility::Log(int nTime, bool bBuy, bool bOpen,
 	tr.nFee = nFee;
 	tr.nProfit = nProfit;
 
-	Utility::WriteLog(tr);
+	Utility::WriteLog(m_strLogPath, tr);
 
 	return tr;
 }

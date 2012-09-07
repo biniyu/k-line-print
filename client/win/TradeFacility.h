@@ -102,11 +102,15 @@ public:
 	TradeRecord Log(int nTime, bool bBuy, bool bOpen, 
 					int nPrice, int nSlot, int nFee, int nProfit);
 
+	void SetLogFile(string path) { m_strLogPath = path; }
+
 public:
 
 	Tick		m_nTick;
 	Position	m_nPosition;
 	string		m_nFilePath;
+
+	string		m_strLogPath;				//	日志路径
 
 	int			m_nIntialBalance;			//	当日初始余额
 	int			m_nOpenTimes;				//	当日开仓次数
