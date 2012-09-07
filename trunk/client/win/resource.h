@@ -164,6 +164,7 @@
 #define IDC_LIST_LOG                    1053
 #define IDC_EDIT_MAXPROFIT              1054
 #define IDC_COMBO_LOGFILE               1055
+#define IDC_STATIC_CAPITAL              1056
 #define ID_32771                        32771
 #define ID_SEARCH_CONTRACT              32772
 #define ID_32773                        32773
@@ -193,7 +194,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        317
 #define _APS_NEXT_COMMAND_VALUE         32793
-#define _APS_NEXT_CONTROL_VALUE         1056
+#define _APS_NEXT_CONTROL_VALUE         1057
 #define _APS_NEXT_SYMED_VALUE           312
 #endif
 #endif
