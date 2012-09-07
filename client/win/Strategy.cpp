@@ -5,6 +5,7 @@
 
 Strategy::Strategy(void)
 {
+	m_lasttime = 0;
 }
 
 Strategy::~Strategy(void)
@@ -19,19 +20,38 @@ void Strategy::Quote(Tick tick)
 	//	9-10Çø¼äÍ»ÆÆ
 
 	int curtime = Utility::ConvContTimeToDispTime(tick.time_ms/1000);
+	int position = EXCHANGE.m_nPosition.nSlot;
 
-	if(EXCHANGE.m_nPosition.nSlot == 0 && curtime > 91000 && curtime < 91500)
+	static int high = 0,low = 0;
+
+	if(curtime < m_lasttime || m_lasttime == 0)
 	{
-		EXCHANGE.Buy(1);
+		high = low = tick.price;
 	}
 
-	if(EXCHANGE.m_nPosition.nSlot && curtime > 92000)
+	if(curtime > 90000 && curtime < 100000)
+	{
+		if(tick.price > high) high = tick.price;
+		if(tick.price < low) low = tick.price;
+	}
+
+	if(curtime > 100001 && curtime < 145500)
+	{
+		if(tick.price > high && position == 0)
+		{
+			EXCHANGE.Buy(1);
+		}
+
+		if(tick.price < low && position == 0)
+		{
+			EXCHANGE.Sell(1);
+		}
+	}
+
+	if(curtime > 145500 && position)
 	{
 		EXCHANGE.Close();
 	}
 
-//	EXCHANGE.Buy(1);
-//	EXCHANGE.Close();
-
-	kline.avg;
+	m_lasttime = curtime;
 }
