@@ -17,8 +17,8 @@ void Strategy::Quote(Tick tick)
 
 	//	9-10Çø¼äÍ»ÆÆ
 
-	EXCHANGE.Buy(1);
-	EXCHANGE.Close();
+//	EXCHANGE.Buy(1);
+//	EXCHANGE.Close();
 
 	kline.avg;
 }

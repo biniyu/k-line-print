@@ -92,11 +92,11 @@ public:
 
 	/* nTillTime		:	-1是播放所有，0是播放首tick，其他是播放至目标时间 */
 	/* nTillDate(日线)	:	-1是播放所有日期，其他是播放至目标日期 */
-
-	void DisplayTill(int nTillMilliTime = -1, int nTillDate = -1);
+	/* bTest : 策略测试 */
+	void DisplayTill(int nTillMilliTime = -1, int nTillDate = -1, bool bTest = false);
 
 	/* 播放至某个时点 */
-	void PlayTillTime(int nTillMilliTime);
+	void PlayTillTime(int nTillMilliTime, bool bTest = false);
 
 	//	获取当前价格(0为当前tick)
 	Tick GetTick(int nOffset = 0);

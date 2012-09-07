@@ -53,12 +53,16 @@ BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;
 
 	char InfoString[256];    
+
+	
 	  
 	// 转换后的数据存放在InfoString数组中   
 	if (!WideCharToMultiByte(CP_ACP,0, lpszPathName,-1, InfoString,100,NULL,NULL))    
 	{    
 		return FALSE;    
 	} 
+
+	m_Strategy.SetData(&m_1MinData, &m_15SecData);
 
 	LoadKLineGroup(InfoString);
 	DisplayTill(-1, -1);
@@ -301,7 +305,7 @@ Tick CKLinePrintDoc::GetTick(int nOffset)
 	}
 }
 
-void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
+void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 {
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
@@ -321,7 +325,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 
 			m_1MinData.Quote(tickToQuote);
 			m_15SecData.Quote(tickToQuote);
-			m_Strategy.Quote(tickToQuote);
+			if(bTest)
+				m_Strategy.Quote(tickToQuote);
 
 			lastQuote = tickToQuote;
 			m_nCurrentTickTime = tickToQuote.time_ms;
@@ -342,7 +347,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 
 			m_1MinData.Quote(tmp);
 			m_15SecData.Quote(tmp);
-			m_Strategy.Quote(tmp);
+			if(bTest)
+				m_Strategy.Quote(tmp);
 
 			//	如果相差的时间大于5分钟，应该是盘中休息时间，跳过
 
@@ -356,10 +362,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime)
 	}
 }
 
-void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
+void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 {
-	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
-
 	m_DayData.Clear();
 	m_15SecData.Clear();
 	m_1MinData.Clear();
@@ -367,43 +371,46 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 	//	当前日期
 	int nDate = Utility::GetDateByPath(m_CurCsvFile);
 
-	DWORD before = GetTickCount();
-	m_KLineReader.Read(m_CurDayFile, m_DayData, nTillDate/**/);
-	DWORD after = GetTickCount();
-	TRACE("\nday line %s read, use %d ticks", m_CurDayFile.c_str(), after - before);
+	if(!bTest)
+	{
+		DWORD before = GetTickCount();
+		m_KLineReader.Read(m_CurDayFile, m_DayData, nTillDate/**/);
+		DWORD after = GetTickCount();
+		TRACE("\nday line %s read, use %d ticks", m_CurDayFile.c_str(), after - before);
 
-	//  获取前一交易日日K线
-	KLine prevDayKLine;
-	prevDayKLine = m_DayData.GetKLineByTime(CALENDAR.GetPrev(nDate));
+		//  获取前一交易日日K线
+		KLine prevDayKLine;
+		prevDayKLine = m_DayData.GetKLineByTime(CALENDAR.GetPrev(nDate));
 
-	//	不关注前日的开盘价
-	prevDayKLine.open = prevDayKLine.close;
-	prevDayKLine.start_time = prevDayKLine.time = 0;
-	prevDayKLine.vol = prevDayKLine.vol_acc = 0;
-	prevDayKLine.interest = 0;
+		//	不关注前日的开盘价
+		prevDayKLine.open = prevDayKLine.close;
+		prevDayKLine.start_time = prevDayKLine.time = 0;
+		prevDayKLine.vol = prevDayKLine.vol_acc = 0;
+		prevDayKLine.interest = 0;
 
-	m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
-	m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
-	m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
-	m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
+		m_1MinData.AddKeyPrice(prevDayKLine.avg,  "AVG1");
+		m_1MinData.AddKeyPrice(prevDayKLine.close, "C1");
+		m_1MinData.AddKeyPrice(prevDayKLine.high, "H1");
+		m_1MinData.AddKeyPrice(prevDayKLine.low, "L1");
 
-	m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
-	m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
-	m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
-	m_1MinData.AddKeyPrice(prevDayKLine.ma60, "MA60");
+		m_1MinData.AddKeyPrice(prevDayKLine.ma5, "MA5");
+		m_1MinData.AddKeyPrice(prevDayKLine.ma10, "MA10");
+		m_1MinData.AddKeyPrice(prevDayKLine.ma20, "MA20");
+		m_1MinData.AddKeyPrice(prevDayKLine.ma60, "MA60");
 
-	m_1MinData.AddKeyPrice(prevDayKLine.high5, "H5");
-	m_1MinData.AddKeyPrice(prevDayKLine.high10, "H10");
-	m_1MinData.AddKeyPrice(prevDayKLine.high20, "H20");
-	m_1MinData.AddKeyPrice(prevDayKLine.high60, "H60");
+		m_1MinData.AddKeyPrice(prevDayKLine.high5, "H5");
+		m_1MinData.AddKeyPrice(prevDayKLine.high10, "H10");
+		m_1MinData.AddKeyPrice(prevDayKLine.high20, "H20");
+		m_1MinData.AddKeyPrice(prevDayKLine.high60, "H60");
 
-	m_1MinData.AddKeyPrice(prevDayKLine.low5, "L5");
-	m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
-	m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
-	m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
+		m_1MinData.AddKeyPrice(prevDayKLine.low5, "L5");
+		m_1MinData.AddKeyPrice(prevDayKLine.low10, "L10");
+		m_1MinData.AddKeyPrice(prevDayKLine.low20, "L20");
+		m_1MinData.AddKeyPrice(prevDayKLine.low60, "L60");
 
-	/* 前日日K */
-	m_1MinData.AddToTail(prevDayKLine);
+		/* 前日日K */
+		m_1MinData.AddToTail(prevDayKLine);
+	}
 	
 	//	生成本日第一条K线
 	m_nCurrentTickIdx = 0;
@@ -412,31 +419,43 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate)
 	m_1MinData.SetPeriod(60 * 1000);
 	m_15SecData.SetPeriod(15 * 1000);
 
-	//	需要override时间
-	Tick tmp = m_TickData[m_nCurrentTickIdx];
-	tmp.time_ms = nDate;
 
-	m_DayData.StartQuote(tmp);
+	if(!bTest)
+	{
+		//	需要override时间
+		Tick tmp = m_TickData[m_nCurrentTickIdx];
+		tmp.time_ms = nDate;
+
+		m_DayData.StartQuote(tmp);
+	}
+
 	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
-	//	对每tick执行策略
-	m_Strategy.Quote(m_TickData[m_nCurrentTickIdx]);
+	if(bTest)
+		//	对每tick执行策略
+		m_Strategy.Quote(m_TickData[m_nCurrentTickIdx]);
 
 	//	记录下当前时间
 	m_nCurrentTickTime = m_TickData[m_nCurrentTickIdx].time_ms;
 
 	//	继续生成
-	PlayTillTime(nTillMilliTime);
+	PlayTillTime(nTillMilliTime, bTest);
 
-	//	设置数据
-	pView->SetDayData(&m_DayData, nDate);
-	pView->Set1MinData(&m_1MinData);
-	pView->Set5SecData(&m_15SecData);
 
-	//	显示
-	pView->Render();	
-	this->UpdateAllViews(0);
+//	if(!bTest)
+	{
+		CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
+
+		//	设置数据
+		pView->SetDayData(&m_DayData, nDate);
+		pView->Set1MinData(&m_1MinData);
+		pView->Set5SecData(&m_15SecData);
+
+		//	显示
+		pView->Render();	
+		this->UpdateAllViews(0);
+	}
 }
 
 void CKLinePrintDoc::OnGenDayline()
@@ -597,7 +616,7 @@ void CKLinePrintDoc::OnStrategy()
 
 	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\" + buf);
 
-	while(1)
+	while(nCurDate > 0)
 	{
 		string tmp = Utility::GetPathByDate(m_CurCsvFile, nCurDate);
 
