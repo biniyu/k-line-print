@@ -86,34 +86,21 @@ void CTradeLogDialog::OnLbnSelchangeListDate()
 
 	if(nSelIdx < 0) return;
 
-	for(int i = m_ctlListFile.GetCount() - 1; i >=0; i--)
-	{
-		m_ctlListFile.DeleteString(i);
-	}
-
+	m_ctlListFile.ResetContent();
 	m_ctlListLog.DeleteAllItems();
 
 	m_ctlListDate.GetText(nSelIdx, strSelText);
 
 	int nDate = CStringToInt(strSelText);
 
+	map<string, TradeRecordCollection>::reverse_iterator rit;
 	map<string, TradeRecordCollection> trs;
 
 	trs = m_trs[nDate];
 
-	//	需要按照练习时间的顺序排列
-	map<int, string> timeVsfile;
-	map<int, string>::reverse_iterator rit;
-
-	map<string, TradeRecordCollection>::iterator it;
-	for(it = trs.begin(); it != trs.end(); it++)
+	for(rit = trs.rbegin(); rit != trs.rend(); rit++)
 	{
-		timeVsfile[it->second[0].nRealTime] = it->first;
-	}
-
-	for(rit = timeVsfile.rbegin(); rit != timeVsfile.rend(); rit++)
-	{
-		m_ctlListFile.AddString(CString(rit->second.c_str()));
+		m_ctlListFile.AddString(CString(rit->first.c_str()));
 	}
 }
 
@@ -138,10 +125,10 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 
 	m_ctlListLog.DeleteAllItems();
 
-	string filename = CStringTostring(strSelText);
+	m_curfile = CStringTostring(strSelText);
 
 	TradeRecordCollection trs;
-	trs = m_trs[nDate][filename];
+	trs = m_trs[nDate][m_curfile];
 
 	CKLinePrintDoc* pDoc = (CKLinePrintDoc*)((CMainFrame*)AfxGetMainWnd())->GetActiveDocument();
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)AfxGetMainWnd())->GetActiveView();
@@ -210,6 +197,8 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 
 	tmp.Format(_T("%d"), nTotalProfit);
 	m_ctlListLog.SetItemText(i, 6, tmp);
+
+	Invalidate(FALSE);
 }
 
 void CTradeLogDialog::OnNMClickListLog(NMHDR *pNMHDR, LRESULT *pResult)
@@ -263,11 +252,36 @@ void CTradeLogDialog::OnCbnSelchangeComboLogfile()
 	m_ctlListFile.ResetContent();
 	m_ctlListLog.DeleteAllItems();
 
+	int capital = 0;
+	string lastfile;
+
+	m_capital.clear();
+
+	int date = 0;
+
 	for(int i = 0; i < logs.size(); i++)
 	{
 		TradeRecord tmp = logs[i];
 		m_trs[tmp.nRealDate][tmp.sFileName].push_back(tmp);
+
+		if((tmp.sFileName != lastfile) && lastfile.size())
+		{
+			date = Utility::GetDateByPath(lastfile);		
+			m_capital[date] = capital;
+		}
+
+		if(!tmp.bOpen)
+		{
+			capital += tmp.nProfit;
+		}
+
+		capital -= tmp.nFee;
+
+		lastfile = tmp.sFileName;
 	}
+
+	date = Utility::GetDateByPath(lastfile);		
+	m_capital[date] = capital;
 
 	//	先填入练习日期
 	map<int, map<string, TradeRecordCollection>>::reverse_iterator it;
@@ -277,18 +291,78 @@ void CTradeLogDialog::OnCbnSelchangeComboLogfile()
 		tmp.Format(_T("%d"),it->first); 
 		m_ctlListDate.AddString(tmp);
 	}	
-}
+
+	this->Invalidate(FALSE);
+ }
 
 void CTradeLogDialog::OnPaint()
 {
+	CRect rc;
 	CPaintDC dc(this); // device context for painting
-	// TODO: 在此处添加消息处理程序代码
-	// 不为绘图消息调用 CDialog::OnPaint()
+
 	CWnd * pWnd = GetDlgItem(IDC_STATIC_CAPITAL);   //IDC_STATIC1 specified in the dialog editor
-     CDC * pControlDC = pWnd->GetDC();
-     pWnd->Invalidate();
-     pWnd->UpdateWindow();
-     pControlDC->SelectStockObject(BLACK_BRUSH);
-     pControlDC->Rectangle(0,0,10,10);
-     pWnd->ReleaseDC(pControlDC);
+
+#define DEFAULT_DAYS  100
+	
+	int maxabs = 0;
+	int ndays = DEFAULT_DAYS;
+
+	map<int,int>::iterator it2;
+	for(it2 = m_capital.begin(); it2!= m_capital.end(); it2++)
+	{
+		TRACE("\n%d %d", it2->first, it2->second);
+
+		if(abs(it2->second) > maxabs) 
+			maxabs = abs(it2->second);
+	}
+
+	CDC * pControlDC = pWnd->GetDC();
+	pWnd->Invalidate();
+	pWnd->UpdateWindow();
+
+	pWnd->GetClientRect(&rc);
+	pControlDC->SelectStockObject(GRAY_BRUSH);
+	pControlDC->Rectangle(rc);
+
+	if(m_capital.size() > DEFAULT_DAYS) 
+		ndays = m_capital.size();
+
+	pControlDC->SelectStockObject(BLACK_PEN);
+
+	pControlDC->MoveTo(0, rc.Height() / 2);
+	pControlDC->LineTo(rc.Width(), rc.Height() / 2);
+	
+	float pixPerProfit = rc.Height() / (-2.0f * maxabs);
+	float pixPerDay = rc.Width() / ndays;
+
+	float x, y, lastx, lasty;
+	pControlDC->SelectStockObject(WHITE_PEN);
+
+	ndays = 0;
+	for(it2 = m_capital.begin(); it2!= m_capital.end(); it2++)
+	{
+		x = pixPerDay * ndays;
+		y = rc.Height() / 2 + it2->second * pixPerProfit;
+
+		if(it2->first == Utility::GetDateByPath(m_curfile))
+		{
+			pControlDC->SelectStockObject(BLACK_PEN);
+			pControlDC->MoveTo(x, 0);
+			pControlDC->LineTo(x, rc.Height());
+		}
+
+		if(it2 !=  m_capital.begin())
+		{
+			pControlDC->SelectStockObject(WHITE_PEN);
+			pControlDC->MoveTo(lastx, lasty);
+			pControlDC->LineTo(x, y);
+		}
+
+		lastx = x;
+		lasty = y;
+
+		ndays++;
+	}
+
+	pWnd->ReleaseDC(pControlDC);
 }

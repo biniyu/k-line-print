@@ -30,6 +30,8 @@ public:
 
 private:
 	map<int, map<string, TradeRecordCollection>> m_trs;
+	map<int, int>	m_capital;
+	string			m_curfile;
 
 public:
 	afx_msg void OnLbnSelchangeListDate();
