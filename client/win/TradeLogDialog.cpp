@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CTradeLogDialog, CDialog)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_LOG, &CTradeLogDialog::OnNMClickListLog)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_LOG, &CTradeLogDialog::OnLvnItemchangedListLog)
 	ON_CBN_SELCHANGE(IDC_COMBO_LOGFILE, &CTradeLogDialog::OnCbnSelchangeComboLogfile)
+	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
 
@@ -273,4 +274,18 @@ void CTradeLogDialog::OnCbnSelchangeComboLogfile()
 		tmp.Format(_T("%d"),it->first); 
 		m_ctlListDate.AddString(tmp);
 	}	
+}
+
+void CTradeLogDialog::OnPaint()
+{
+	CPaintDC dc(this); // device context for painting
+	// TODO: 在此处添加消息处理程序代码
+	// 不为绘图消息调用 CDialog::OnPaint()
+	CWnd * pWnd = GetDlgItem(IDC_STATIC_CAPITAL);   //IDC_STATIC1 specified in the dialog editor
+     CDC * pControlDC = pWnd->GetDC();
+     pWnd->Invalidate();
+     pWnd->UpdateWindow();
+     pControlDC->SelectStockObject(BLACK_BRUSH);
+     pControlDC->Rectangle(0,0,10,10);
+     pWnd->ReleaseDC(pControlDC);
 }
