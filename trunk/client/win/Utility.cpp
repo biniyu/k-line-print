@@ -511,7 +511,7 @@ void Utility::ReadLog(string path, vector<TradeRecord>& trs)
 	ifstream in;
 
 	char buf[SZ];
-	TradeRecord tr;
+	TradeRecord tr(TRADE_CODE_SUCCESS);
 
 	in.open(path.c_str());
 
