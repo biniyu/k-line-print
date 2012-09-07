@@ -61,6 +61,9 @@ BOOL CTradeLogDialog::OnInitDialog()
 		m_comboLogFiles.AddString(CString(vecFiles[i].c_str()));
 	}
 
+	m_comboLogFiles.SetCurSel(0);
+	OnCbnSelchangeComboLogfile();
+
 	m_ctlListLog.InsertColumn(0, _T("时间"), 0, 60);
 	m_ctlListLog.InsertColumn(1, _T("买/卖"), 0, 40);
 	m_ctlListLog.InsertColumn(2, _T("开/平"), 0, 40);
