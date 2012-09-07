@@ -311,6 +311,22 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 
 	Tick lastQuote = m_TickData[m_nCurrentTickIdx];
 
+	if(bTest)
+	{
+		while(m_nCurrentTickIdx + 1 < m_TickData.size())
+		{
+			//	检查下一个尚未播放的tick
+			Tick tickToQuote = m_TickData[m_nCurrentTickIdx + 1];
+			m_1MinData.Quote(tickToQuote);
+			m_15SecData.Quote(tickToQuote);
+			EXCHANGE.SetTick(tickToQuote);
+			m_Strategy.Quote(tickToQuote);
+			m_nCurrentTickIdx++;
+		}
+
+		return;
+	}
+
 	while(m_nCurrentTickIdx + 1 < m_TickData.size())
 	{
 		//	检查下一个尚未播放的tick
@@ -325,8 +341,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 
 			m_1MinData.Quote(tickToQuote);
 			m_15SecData.Quote(tickToQuote);
-			if(bTest)
-				m_Strategy.Quote(tickToQuote);
 
 			lastQuote = tickToQuote;
 			m_nCurrentTickTime = tickToQuote.time_ms;
@@ -347,8 +361,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 
 			m_1MinData.Quote(tmp);
 			m_15SecData.Quote(tmp);
-			if(bTest)
-				m_Strategy.Quote(tmp);
 
 			//	如果相差的时间大于5分钟，应该是盘中休息时间，跳过
 
@@ -433,8 +445,11 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
 	if(bTest)
+	{
 		//	对每tick执行策略
+		EXCHANGE.SetTick(m_TickData[m_nCurrentTickIdx]);
 		m_Strategy.Quote(m_TickData[m_nCurrentTickIdx]);
+	}
 
 	//	记录下当前时间
 	m_nCurrentTickTime = m_TickData[m_nCurrentTickIdx].time_ms;
@@ -624,7 +639,9 @@ void CKLinePrintDoc::OnStrategy()
 
 		LoadKLineGroup(tmp);
 		int nDate = Utility::GetDateByPath(tmp);
-		DisplayTill(0, nDate);
+		DisplayTill(0, nDate, true);
+
+		EXCHANGE.ResetStats();
 
 		nCurDate = m_FilteredCalendar.GetNext(nCurDate);
 	}	
