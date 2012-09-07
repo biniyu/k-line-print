@@ -279,6 +279,8 @@ int Utility::GetDateByPath(string path)
 	int date;
 	string rootdir, contract, market;
 
+	if(!path.size()) return -1;
+
 	GetInfoByPath(path, rootdir, market, contract, date);
 	return date;
 }
