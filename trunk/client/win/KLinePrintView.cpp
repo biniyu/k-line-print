@@ -770,4 +770,3 @@ void CKLinePrintView::OnPlaybackConf()
 	}
 }
 
-

@@ -113,6 +113,7 @@ protected:
 public:
 	virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	afx_msg void OnGenDayline();
+	afx_msg void OnStrategy();
 };
 
 

@@ -24,6 +24,7 @@ IMPLEMENT_DYNCREATE(CKLinePrintDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(CKLinePrintDoc, CDocument)
 	ON_COMMAND(ID_GEN_DAYLINE, &CKLinePrintDoc::OnGenDayline)
+	ON_COMMAND(ID_STRATEGY, &CKLinePrintDoc::OnStrategy)
 END_MESSAGE_MAP()
 
 
@@ -574,4 +575,25 @@ KLine CKLinePrintDoc::GenerateDayLineFromQuoteData(string path, int date)
 	kline.avg = (int)(totalPrice / kline.vol);
 
 	return kline;
+}
+
+void CKLinePrintDoc::OnStrategy()
+{
+	//	根据回放日期范围，依次回放所有交易日
+	int nCurDate = Utility::GetDateByPath(m_CurCsvFile);
+
+	//  TODO : 显示进度信息/可以多线程同时测试
+
+	while(1)
+	{
+		string tmp = Utility::GetPathByDate(m_CurCsvFile, nCurDate);
+
+		if(!tmp.size()) return;
+
+		LoadKLineGroup(tmp);
+		int nDate = Utility::GetDateByPath(tmp);
+		DisplayTill(0, nDate);
+
+		nCurDate = m_FilteredCalendar.GetNext(nCurDate);
+	}	
 }

@@ -230,6 +230,7 @@ BEGIN
         MENUITEM "交易记录",                        ID_TRADE_LOG
         MENUITEM "搜索合约",                        ID_SEARCH_CONTRACT
         MENUITEM "日线生成",                        ID_GEN_DAYLINE
+        MENUITEM "策略测试",                        ID_STRATEGY
     END
     POPUP "视图(&V)"
     BEGIN
