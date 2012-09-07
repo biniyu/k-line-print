@@ -63,7 +63,29 @@ public:
 	void SetSelTradeIdx(int nSelIdx) { m_TradeRecords.SetSelIdx(nSelIdx); }
 
 	//	添加交易记录
-	void AppendTradeRecord(TradeRecord tr) { m_TradeRecords.push_back(tr); }
+	void AppendTradeRecord(TradeRecord tr) 
+	{
+		switch(tr.nCode)
+		{
+		case TRADE_CODE_SUCCESS:
+			m_TradeRecords.push_back(tr); 
+			break;
+		case TRADE_CODE_NO_MONEY:
+			AfxMessageBox(_T("保证金不足"));
+			break;
+		case TRADE_CODE_MAX_OPEN:
+			AfxMessageBox(_T("达到日内最大开仓次数"));
+			break;
+		case TRADE_CODE_MAX_LOSS:
+			AfxMessageBox(_T("达到日内最大亏损额度"));
+			break;
+		case TRADE_CODE_OPPOSITE:
+			AfxMessageBox(_T("反向开仓请先平仓"));
+			break;
+		default:
+			break;
+		}
+	}
 
 	//	清除交易记录
 	void ClearTradeRecord() { m_TradeRecords.clear(); }

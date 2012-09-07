@@ -31,7 +31,7 @@ void TradeFacility::SetTick(Tick tick)
 TradeRecord TradeFacility::Log(int nTime, bool bBuy, bool bOpen, 
 						int nPrice, int nSlot, int nFee, int nProfit)
 {
-	TradeRecord tr;
+	TradeRecord tr(TRADE_CODE_SUCCESS);
 
 	time_t rawtime;
 	struct tm * timeinfo;
@@ -61,27 +61,24 @@ TradeRecord TradeFacility::Buy(int nSlot, int nLossStop)
 {
 	//	必须先平仓后再开
 	if(m_nPosition.nSlot != 0) 
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_OPPOSITE);
 
 	//	检查保证金是否足够
 	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
 
 	if(m_nBalance < margin)
 	{
-		AfxMessageBox(_T("保证金不足"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_NO_MONEY);
 	}
 
 	if(m_nOpenTimes >= TP.nMaxOpenTimes)
 	{
-		AfxMessageBox(_T("达到日内最大开仓次数"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_MAX_OPEN);
 	}
 
 	if(m_nTotalFee - m_nTotalProfit > TP.nMaxLossPerDay)
 	{
-		AfxMessageBox(_T("达到日内最大亏损额度"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_MAX_LOSS);
 	}
 
 	m_nPosition.nPrice = m_nTick.priceS1;
@@ -105,27 +102,24 @@ TradeRecord TradeFacility::Buy(int nSlot, int nLossStop)
 TradeRecord TradeFacility::Sell(int nSlot, int nLossStop)
 {
 	if(m_nPosition.nSlot != 0) 
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_OPPOSITE);
 
 	//	检查保证金是否足够
 	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
 
 	if(m_nBalance < margin)
 	{
-		AfxMessageBox(_T("保证金不足"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_NO_MONEY);
 	}
 
 	if(m_nOpenTimes >= TP.nMaxOpenTimes)
 	{
-		AfxMessageBox(_T("达到日内最大开仓次数"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_MAX_OPEN);
 	}
 
 	if(m_nTotalFee - m_nTotalProfit > TP.nMaxLossPerDay)
 	{
-		AfxMessageBox(_T("达到日内最大亏损额度"));
-		return TradeRecord();
+		return TradeRecord(TRADE_CODE_MAX_LOSS);
 	}
 
 	m_nPosition.nPrice = m_nTick.priceB1;
@@ -150,9 +144,9 @@ TradeRecord TradeFacility::Sell(int nSlot, int nLossStop)
 TradeRecord TradeFacility::Close()
 {
 	int nProfit = 0, nFee = 0;
-	TradeRecord rec;
+	TradeRecord rec(TRADE_CODE_SUCCESS);
 
-	if(m_nPosition.nSlot == 0) return TradeRecord();
+	if(m_nPosition.nSlot == 0) return TradeRecord(TRADE_CODE_SUCCESS);
 
 	nFee = (abs(m_nPosition.nSlot) * TP.nFee);
 

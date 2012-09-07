@@ -6,8 +6,18 @@
 
 using namespace std;
 
+#define TRADE_CODE_SUCCESS		0
+#define TRADE_CODE_NO_MONEY		1
+#define TRADE_CODE_MAX_OPEN		2
+#define TRADE_CODE_MAX_LOSS		3
+#define TRADE_CODE_OPPOSITE		4
+
 class TradeRecord
 {
+public:
+
+	TradeRecord(int code) { nCode = code; }
+
 public:
 	int		nRealDate;
 	int		nRealTime;
@@ -19,6 +29,7 @@ public:
 	int		nSlot;				//	手数
 	int		nFee;				//	手续费
 	int		nProfit;			//	平仓盈亏
+	int		nCode;				//	成交结果
 };
 
 class TradeRecordCollection : public vector<TradeRecord>
