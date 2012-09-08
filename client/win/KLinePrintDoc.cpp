@@ -624,10 +624,9 @@ void CKLinePrintDoc::OnStrategy()
 	time ( &rawtime );
 	timeinfo = localtime ( &rawtime );
 
-	int nDate = (1900 + timeinfo->tm_year) * 10000 + (timeinfo->tm_mon + 1) * 100 + timeinfo->tm_mday;
-	int nTime = timeinfo->tm_hour * 10000 + timeinfo->tm_min * 100 + timeinfo->tm_sec;
-
-	sprintf(buf, "%d-%d.log.txt", nDate, nTime);
+	sprintf(buf, "%4d%02d%02d-%02d%02d%02d.log.txt", 
+			1900 + timeinfo->tm_year, timeinfo->tm_mon + 1, timeinfo->tm_mday,
+			timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_min);
 
 	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\" + buf);
 

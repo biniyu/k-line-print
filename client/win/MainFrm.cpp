@@ -45,6 +45,7 @@ CMainFrame::CMainFrame()
 {
 	// TODO: 在此添加成员初始化代码
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_OFF_2007_AQUA);
+	m_pTradeLogDlg = 0;
 }
 
 CMainFrame::~CMainFrame()
@@ -323,7 +324,12 @@ void CMainFrame::OnSearchContract()
 
 void CMainFrame::OnTradeLog()
 {
-	CTradeLogDialog tld;
+	if(!m_pTradeLogDlg)
+	{
+		m_pTradeLogDlg = new CTradeLogDialog;
+		m_pTradeLogDlg->Create(IDD_TRADE_LOG,NULL);
+	}
 
-	tld.DoModal();
+	m_pTradeLogDlg->CenterWindow();
+	m_pTradeLogDlg->ShowWindow(SW_SHOW); 
 }
