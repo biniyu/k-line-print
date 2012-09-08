@@ -50,6 +50,7 @@ void TickReader::Read(string path, TickCollection& ticks)
 			&tick.priceS1, &tick.volS1, &tick.priceS2, &tick.volS2, &tick.priceS3, &tick.volS3,
 			&tick.bs);
 
+		tick.date = year*10000 + month*100 + day;
 		tick.time_ms = (hour*3600 + minute* 60 + second) * 1000;
 
 		if(lasttime/1000 != tick.time_ms/1000)

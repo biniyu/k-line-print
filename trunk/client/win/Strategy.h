@@ -23,4 +23,5 @@ private:
 	KLineCollection* m_p5SecData;
 
 	int m_lasttime;
+	int m_lastprice;
 };

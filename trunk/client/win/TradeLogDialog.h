@@ -40,4 +40,5 @@ public:
 	afx_msg void OnLvnItemchangedListLog(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnCbnSelchangeComboLogfile();
 	afx_msg void OnPaint();
+	afx_msg void OnCbnDropdownComboLogfile();
 };

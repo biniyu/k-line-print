@@ -4,6 +4,8 @@
 
 #pragma once
 
+class CTradeLogDialog;
+
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -36,6 +38,8 @@ protected:  // 控件条嵌入成员
 	CMFCToolBar       m_wndPlaybackBar;
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
+	CTradeLogDialog*  m_pTradeLogDlg;
+
 
 // 生成的消息映射函数
 protected:

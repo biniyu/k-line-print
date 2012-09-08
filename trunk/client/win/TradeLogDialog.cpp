@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(CTradeLogDialog, CDialog)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_LOG, &CTradeLogDialog::OnLvnItemchangedListLog)
 	ON_CBN_SELCHANGE(IDC_COMBO_LOGFILE, &CTradeLogDialog::OnCbnSelchangeComboLogfile)
 	ON_WM_PAINT()
+	ON_CBN_DROPDOWN(IDC_COMBO_LOGFILE, &CTradeLogDialog::OnCbnDropdownComboLogfile)
 END_MESSAGE_MAP()
 
 
@@ -48,21 +49,6 @@ END_MESSAGE_MAP()
 BOOL CTradeLogDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	vector<string> vecFiles;
-
-	string logPath = Utility::GetProgramPath() + "log\\";
-
-	//	所有日志文件
-	vecFiles = GetFiles(logPath, "*.log.txt", false);
-
-	for(int i = 0; i < vecFiles.size(); i++)
-	{
-		m_comboLogFiles.AddString(CString(vecFiles[i].c_str()));
-	}
-
-	m_comboLogFiles.SetCurSel(0);
-	OnCbnSelchangeComboLogfile();
 
 	m_ctlListLog.InsertColumn(0, _T("时间"), 0, 60);
 	m_ctlListLog.InsertColumn(1, _T("买/卖"), 0, 40);
@@ -365,4 +351,22 @@ void CTradeLogDialog::OnPaint()
 	}
 
 	pWnd->ReleaseDC(pControlDC);
+}
+
+void CTradeLogDialog::OnCbnDropdownComboLogfile()
+{
+	vector<string> vecFiles;
+
+	string logPath = Utility::GetProgramPath() + "log\\";
+
+	//	所有日志文件
+	vecFiles = GetFiles(logPath, "*.log.txt", false);
+
+	m_comboLogFiles.ResetContent();
+
+	for(int i = 0; i < vecFiles.size(); i++)
+	{
+		m_comboLogFiles.AddString(CString(vecFiles[i].c_str()));
+	}
+
 }
