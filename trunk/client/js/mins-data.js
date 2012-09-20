@@ -12,7 +12,7 @@
                     amount: 38621178573
                 },
                 mins: [
-{price:2500.45,volume:49499299,amount:459279327},
+{price:2239.45,volume:49499299,amount:459279327},
 {price:2240.16,volume:21086600,amount:193157609},
 {price:2241.1,volume:22370800,amount:207656862},
 {price:2241.97,volume:21646700,amount:193507747},
@@ -252,7 +252,7 @@
 {price:2227.82,volume:37651400,amount:321678667},
 {price:2227.89,volume:49544600,amount:422608198},
 {price:2229.21,volume:56921900,amount:499025558},
-{price:1000,volume:4809300,amount:42537241}
+{price:2228.53,volume:4809300,amount:42537241}
 
         ]
             };
