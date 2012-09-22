@@ -34,19 +34,19 @@ void Strategy::Quote(Tick tick)
 		m_lastprice = tick.price;
 	}
 
-	if(curtime > 90000 && curtime < 100000)
+	if(curtime > 90000 && curtime < 111000)
 	{
 		if(tick.price > high) high = tick.price;
 		if(tick.price < low) low = tick.price;
 	}
 
-	if(curtime > 100000 && curtime < 145500)
+	if(curtime > 111000 && curtime < 145500)
 	{
 		if(m_lastprice <= high + 6 && tick.price > high + 6)
 		{
 			if(position == 0)
 			{
-				if(EXCHANGE.m_nOpenTimes == 0 && kline.interest > 20000)
+				if(kline.interest > 10000)
 					EXCHANGE.Buy(1);
 			}
 			else if(position < 0)
@@ -63,7 +63,7 @@ void Strategy::Quote(Tick tick)
 		{
 			if(position == 0)
 			{
-				if(EXCHANGE.m_nOpenTimes == 0 && kline.interest > 20000)
+				if(kline.interest > 10000)
 					EXCHANGE.Sell(1);
 			}
 			else if(position > 0)
