@@ -1,17 +1,21 @@
 
-        function getQuote() {
-            return {
-                quote: {
-                    time: 20111214150106,
-                    open: 2241.390,
-                    preClose: 2248.590,
-                    highest: 2256.740,
-                    lowest: 2224.730,
-                    price: 2228.530,
-                    volume: 4407982200,
-                    amount: 38621178573
-                },
-                mins: [
+function getQuote() {
+    return {
+        quote: {
+            time: 20111214150106,
+            open: 2241.390,
+            preClose: 2248.590,
+            highest: 2256.740,
+            lowest: 2224.730,
+            price: 2228.530,
+            volume: 4407982200,
+            amount: 38621178573
+        },
+        mins: []
+       };
+}
+
+var storedQuote = [
 {price:2239.45,volume:49499299,amount:459279327},
 {price:2240.16,volume:21086600,amount:193157609},
 {price:2241.1,volume:22370800,amount:207656862},
@@ -253,7 +257,4 @@
 {price:2227.89,volume:49544600,amount:422608198},
 {price:2229.21,volume:56921900,amount:499025558},
 {price:2228.53,volume:4809300,amount:42537241}
-
-        ]
-            };
-        }
+];

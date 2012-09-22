@@ -23,7 +23,10 @@
         <p>
             你的浏览器不支持html5哟</p>
     </canvas>
+    
     <input type="button" value="Go Fullscreen" id="fsbutton" />
+    <input type="button" value="Play" id="playbutton" />
+    
     <div id="debug"></div>
     <!--
     options:{
@@ -66,29 +69,55 @@
                 yScaler: { font: '12px Arial', region: { x: .5, y: 242.5, width: 50.5, height: 60 }, color: 'black', align: 'right', fontHeight: 12, textBaseline: 'top' }
             }
         });
+
+        var curQuoteIdx = 0;
+        
+        var quote = new Array();
+        
+        function onTimer()
+        {
+					quote.push(storedQuote[curQuoteIdx]);
+					curQuoteIdx++;    			
+					
+					var data = getQuote();
+					data.quote.price = storedQuote[curQuoteIdx].price; 
+					data.mins = quote;
+					chart.paint(data);       						
+        }
+        
+        function onPlay()
+        {
+        		setInterval("onTimer()",1000);
+        }
+        
         var data = getQuote();
+        
+        data.mins = quote;
+        
         chart.paint(data);
 
-		// do something interesting with fullscreen support
-		var fsButton = document.getElementById('fsbutton');
-		var fsCanvas = document.getElementById('canvas');
-
-		if (window.fullScreenApi.supportsFullScreen) {
-
-			// handle button click
-			fsButton.addEventListener('click', function() {
-				window.fullScreenApi.requestFullScreen(fsCanvas);
-			}, true);	
-		} 
+		    // do something interesting with fullscreen support
+		   	var fsButton = document.getElementById('fsbutton');
+		   	var playButton = document.getElementById('playbutton');
+		    var fsCanvas = document.getElementById('canvas');
+		    
+		    playButton.addEventListener('click', onPlay);
+		
+		    if (window.fullScreenApi.supportsFullScreen) {
+		
+		      // handle button click
+		      fsButton.addEventListener('click', function() {
+		        window.fullScreenApi.requestFullScreen(fsCanvas);
+		      }, true); 
+		      
+		      
+		    } 
+		    
     </script>
 
     <style>
     pre{padding: 60px 0 0 30px;color: gray;font-size: .8em;line-height: 20px;}
     </style>
     <p><a href="./index.html">返回列表页</a></p>
-    <pre>
-Author:yukaizhao http://www.cnblogs.com/yukaizhao/ http://weibo.com/yukaizhao/
-参与项目或技术交流：<a href="mailto:yukaizhao@gmail.com">yukaizhao@gmail.com</a>
-    </pre>
 </body>
 </html>
