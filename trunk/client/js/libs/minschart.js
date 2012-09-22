@@ -80,6 +80,7 @@ minsChart.prototype = {
     }
     */
     paint: function (data) {
+    	  this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.fillTopText(data);
         this.paintChart(data);
         this.paintxAxis();
