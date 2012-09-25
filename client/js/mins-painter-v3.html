@@ -14,8 +14,8 @@
     <script src="libs/axis-y.js?a" type="text/javascript" charset="GBK"></script>
     <script src="libs/chartEventHelper.js?a" type="text/javascript" charset="GBK"></script>
     <script src="libs/fullscreen.js" type="text/javascript" charset="GBK"></script>
-    <script src="libs/minschart.js" type="text/javascript" charset="GBK"></script>
-    
+    <script src="libs/minschart.js" type="text/javascript" charset="GBK"></script>  
+    <script src="libs/jquery-1.8.1.min.js" type="text/javascript" charset="GBK"></script> 
 </head>
 <body>
     <canvas id="canvas" width="414" height="310" style="z-index: 3; background: transparent;
@@ -23,10 +23,15 @@
         <p>
             你的浏览器不支持html5哟</p>
     </canvas>
-    
-    <input type="button" value="Go Fullscreen" id="fsbutton" />
-    <input type="button" value="Play" id="playbutton" />
-    
+
+    <p>    
+    <input type="button" value="全屏" id="fsbutton" />
+    <input type="button" value="下一交易日" id="nextbutton" />
+    <input type="button" value="播放" id="playbutton" />
+    <input type="button" value="加速" id="fastbutton" />
+    <input type="button" value="减速" id="slowbutton" />
+  </p>
+
     <div id="debug"></div>
     <!--
     options:{
@@ -70,25 +75,72 @@
             }
         });
 
+				var timerId, interval = 1000;
+				var bIsPlaying = false;
         var curQuoteIdx = 0;
         
         var quote = new Array();
         
         function onTimer()
         {
+        	if(curQuoteIdx > storedQuote.length)
+        	{
+        		 onPlay();
+        	}
+        	
 					quote.push(storedQuote[curQuoteIdx]);
 					curQuoteIdx++;    			
 					
 					var data = getQuote();
 					data.quote.price = storedQuote[curQuoteIdx].price; 
 					data.mins = quote;
-					chart.paint(data);       						
+					chart.paint(data);  
+					
+					//	预读取10分钟的数据     						
         }
         
         function onPlay()
         {
-        		setInterval("onTimer()",1000);
+					 var playButton = document.getElementById('playbutton');        	
+        	 
+        	 if(!bIsPlaying)
+        	 {
+        			timerId = setInterval("onTimer()", interval);
+        			bIsPlaying = true;
+        			playButton.value = "暂停";
+        	 }
+        	 else
+        	 {
+        	 	  clearInterval(timerId);
+        	 	  bIsPlaying = false;
+        			playButton.value = "播放";        	 	  
+        	 }
         }
+        
+        function onNextDay()
+        {
+        	
+        }
+        
+        function onFast()
+        {
+        	 if(interval > 200) interval-=100;
+        	 if(bIsPlaying)
+        	 {
+        	 		clearInterval(timerId);
+        	 		timerId = setInterval("onTimer()", interval);
+        	 }
+        }
+        
+        function onSlow()
+        {
+        	 interval+=100;
+        	 if(bIsPlaying)
+        	 {
+        	 		clearInterval(timerId);
+        	 		timerId = setInterval("onTimer()", interval);
+        	 }
+        }        
         
         var data = getQuote();
         
@@ -100,8 +152,14 @@
 		   	var fsButton = document.getElementById('fsbutton');
 		   	var playButton = document.getElementById('playbutton');
 		    var fsCanvas = document.getElementById('canvas');
-		    
+		    var nextButton = document.getElementById('nextbutton');
+		    var fastButton = document.getElementById('fastbutton');
+		    var slowButton = document.getElementById('slowbutton');
+		    		    		    
 		    playButton.addEventListener('click', onPlay);
+		    nextButton.addEventListener('click', onNextDay);
+		    fastButton.addEventListener('click', onFast);
+		    slowButton.addEventListener('click', onSlow);		    		    
 		
 		    if (window.fullScreenApi.supportsFullScreen) {
 		
@@ -114,7 +172,7 @@
 		    } 
 		    
     </script>
-
+    <script src="libs/websocket.js" type="text/javascript"></script>  
     <style>
     pre{padding: 60px 0 0 30px;color: gray;font-size: .8em;line-height: 20px;}
     </style>
