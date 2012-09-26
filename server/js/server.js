@@ -1,23 +1,8 @@
-var ws = require('websocket-server');
+var io = require('socket.io').listen(8000);
 
-//Web Socket server
-var server = ws.createServer();
-
-// Handle WebSocket Requests
-server.addListener("connection", function(conn){
-	console.log('connection got', conn.id);
-  conn.send('hello world!'); //发送后台数据
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
 });
-
-server.addListener("error", function(){
- console.log(Array.prototype.join.call(arguments, ", "));
-});
-
-server.addListener("disconnected", function(conn){
-  console.log("disconnected");
-});
-
-server.listen(8000);
-
-console.log('WebSocket server is running.');
-console.log('Listening to port 8000.');
