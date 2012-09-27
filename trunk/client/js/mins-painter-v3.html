@@ -76,71 +76,88 @@
             }
         });
 
-				var timerId, interval = 1000;
-				var bIsPlaying = false;
+        var timerId, interval = 1000;
+        var bIsPlaying = false, bIsLoadingData = false;
         var curQuoteIdx = 0;
+        var nLoadCountDown;
+        var curTickTime;
         
         var quote = new Array();
         
         function onTimer()
         {
-        	if(curQuoteIdx > storedQuote.length)
-        	{
-        		 onPlay();
-        	}
-        	
-					quote.push(storedQuote[curQuoteIdx]);
-					curQuoteIdx++;    			
-					
-					var data = getQuote();
-					data.quote.price = storedQuote[curQuoteIdx].price; 
-					data.mins = quote;
-					chart.paint(data);  
-					
-					//	预读取10分钟的数据     						
+            if(curQuoteIdx > storedQuote.length)
+            {
+                onPlay();
+            }
+
+            quote.push(storedQuote[curQuoteIdx]);
+            curQuoteIdx++;          
+
+            var data = getQuote();
+            data.quote.price = storedQuote[curQuoteIdx].price; 
+            data.mins = quote;
+            chart.paint(data);  
+
+            //  提前5分钟开始预读取   
+            if(!bIsLoadingData && curTickTime > storedQuote[storedQuote.length-1].time - 300)
+            {
+                socket.emit('get ticks', { time : storedQuote[storedQuote.length-1].time });
+                bIsLoadingData = true;
+                nLoadCountDown = 10;
+            }
+            
+            //  读取数据超时
+            if(bIsLoadingData)
+            {
+                nLoadCountDown--;
+                
+                if(nLoadCountDown == 0)
+                    bIsLoadingData = false;
+            }
         }
         
         function onPlay()
         {
-					 var playButton = document.getElementById('playbutton');        	
-        	 
-        	 if(!bIsPlaying)
-        	 {
-        			timerId = setInterval("onTimer()", interval);
-        			bIsPlaying = true;
-        			playButton.value = "暂停";
-        	 }
-        	 else
-        	 {
-        	 	  clearInterval(timerId);
-        	 	  bIsPlaying = false;
-        			playButton.value = "播放";        	 	  
-        	 }
+           var playButton = document.getElementById('playbutton');          
+           
+           if(!bIsPlaying)
+           {
+              timerId = setInterval("onTimer()", interval);
+              bIsPlaying = true;
+              playButton.value = "暂停";
+           }
+           else
+           {
+              clearInterval(timerId);
+              bIsPlaying = false;
+              playButton.value = "播放";              
+           }
         }
         
         function onNextDay()
         {
-        	
+            socket.emit('next day', {});
         }
         
         function onFast()
         {
-        	 if(interval > 200) interval-=100;
-        	 if(bIsPlaying)
-        	 {
-        	 		clearInterval(timerId);
-        	 		timerId = setInterval("onTimer()", interval);
-        	 }
+           if(interval > 200) interval-=100;
+           if(bIsPlaying)
+           {
+              clearInterval(timerId);
+              timerId = setInterval("onTimer()", interval);
+           }
         }
         
         function onSlow()
         {
-        	 interval+=100;
-        	 if(bIsPlaying)
-        	 {
-        	 		clearInterval(timerId);
-        	 		timerId = setInterval("onTimer()", interval);
-        	 }
+           interval+=100;
+           if(bIsPlaying)
+           {
+              clearInterval(timerId);
+              timerId = setInterval("onTimer()", interval);
+           }
         }        
         
         var data = getQuote();
@@ -149,35 +166,44 @@
         
         chart.paint(data);
 
-		    // do something interesting with fullscreen support
-		   	var fsButton = document.getElementById('fsbutton');
-		   	var playButton = document.getElementById('playbutton');
-		    var fsCanvas = document.getElementById('canvas');
-		    var nextButton = document.getElementById('nextbutton');
-		    var fastButton = document.getElementById('fastbutton');
-		    var slowButton = document.getElementById('slowbutton');
-		    		    		    
-		    playButton.addEventListener('click', onPlay);
-		    nextButton.addEventListener('click', onNextDay);
-		    fastButton.addEventListener('click', onFast);
-		    slowButton.addEventListener('click', onSlow);		    		    
-		
-		    if (window.fullScreenApi.supportsFullScreen) {
-		
-		      // handle button click
-		      fsButton.addEventListener('click', function() {
-		        window.fullScreenApi.requestFullScreen(fsCanvas);
-		      }, true); 
-		      
-		      
-		    }
-		    
-			  var socket = io.connect('http://localhost:8000');
-			  socket.on('news', function (data) {
-			    console.log(data);
-			    socket.emit('my other event', { my: 'data' });
-			  });
-		    
+        // do something interesting with fullscreen support
+        var fsButton = document.getElementById('fsbutton');
+        var playButton = document.getElementById('playbutton');
+        var fsCanvas = document.getElementById('canvas');
+        var nextButton = document.getElementById('nextbutton');
+        var fastButton = document.getElementById('fastbutton');
+        var slowButton = document.getElementById('slowbutton');
+                        
+        playButton.addEventListener('click', onPlay);
+        nextButton.addEventListener('click', onNextDay);
+        fastButton.addEventListener('click', onFast);
+        slowButton.addEventListener('click', onSlow);               
+    
+        if (window.fullScreenApi.supportsFullScreen) {
+    
+          // handle button click
+          fsButton.addEventListener('click', function() {
+            window.fullScreenApi.requestFullScreen(fsCanvas);
+          }, true); 
+          
+          
+        }
+        
+        var socket = io.connect('http://localhost:8000');
+        
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', { my: 'data' });
+        });
+        
+        //  接收到tick数据
+        socket.on('tick data', function (data) {
+        
+            //  缓存数据
+            console.log(data);
+            bIsLoadingData = false;
+        });
+        
     </script> 
     <style>
     pre{padding: 60px 0 0 30px;color: gray;font-size: .8em;line-height: 20px;}
