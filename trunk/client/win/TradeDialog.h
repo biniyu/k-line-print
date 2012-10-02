@@ -56,4 +56,5 @@ public:
 	int m_nMaxLossPerDay;
 	int m_nMaxOpenTimes;
 	CEdit m_ctlMaxSlot;
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

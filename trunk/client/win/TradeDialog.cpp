@@ -244,3 +244,23 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 
 	Utility::WriteExchangeConfig(TP);
 }
+
+BOOL CTradeDialog::PreTranslateMessage(MSG* pMsg)
+{
+	if(pMsg->message == WM_KEYDOWN) 
+	{
+		switch(pMsg->wParam)
+		{
+			case VK_F1:
+			case VK_F2:
+			case VK_F3:
+			case VK_F4:
+
+				CWnd* pWnd = ((CMainFrame*)AfxGetMainWnd())->GetActiveView();
+				::PostMessage(pWnd->m_hWnd, WM_KEYDOWN, pMsg->wParam, pMsg->lParam);
+				break;
+		}
+	}
+
+	return CDialog::PreTranslateMessage(pMsg);
+}

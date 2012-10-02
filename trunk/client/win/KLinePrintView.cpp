@@ -578,7 +578,7 @@ void CKLinePrintView::OnPlaybackForward()
 	if(!m_pTradeDialog)
 	{
 		m_pTradeDialog = new CTradeDialog;
-		m_pTradeDialog->Create(IDD_TRADE,NULL);
+		m_pTradeDialog->Create(IDD_TRADE,this);
 		m_pTradeDialog->CenterWindow();
 		m_pTradeDialog->ShowWindow(SW_SHOW); 
 	}
