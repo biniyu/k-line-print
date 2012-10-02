@@ -100,8 +100,8 @@ public:
 	void SetTick(Tick tick);
 
 	//	¿ª²Ö
-	TradeRecord Buy(int nSlot, int nLossStop = 0);
-	TradeRecord Sell(int nSlot, int nLossStop = 0);
+	TradeRecord Buy(int nSlot = 0, int nLossStop = 0);
+	TradeRecord Sell(int nSlot = 0, int nLossStop = 0);
 
 	//	Æ½²Ö
 	TradeRecord Close();

@@ -63,6 +63,10 @@ TradeRecord TradeFacility::Buy(int nSlot, int nLossStop)
 	if(m_nPosition.nSlot != 0) 
 		return TradeRecord(TRADE_CODE_OPPOSITE);
 
+	if(!nSlot) 
+		nSlot = (m_nBalance + m_nPosition.nProfit - m_nMargin) 
+		/ ((float)m_nTick.price * TP.nUnitsPerSlot * TP.nMarginRate / 100);
+
 	//	检查保证金是否足够
 	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
 
@@ -103,6 +107,10 @@ TradeRecord TradeFacility::Sell(int nSlot, int nLossStop)
 {
 	if(m_nPosition.nSlot != 0) 
 		return TradeRecord(TRADE_CODE_OPPOSITE);
+
+	if(!nSlot) 
+		nSlot = (m_nBalance + m_nPosition.nProfit - m_nMargin) 
+		/ ((float)m_nTick.price * TP.nUnitsPerSlot * TP.nMarginRate / 100);
 
 	//	检查保证金是否足够
 	float margin = nSlot * m_nTick.priceS1 * TP.nUnitsPerSlot * TP.nMarginRate / 100.0;
