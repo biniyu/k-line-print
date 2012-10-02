@@ -57,4 +57,5 @@ public:
 	int m_nMaxOpenTimes;
 	CEdit m_ctlMaxSlot;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	BOOL m_bCloseOnBreak;
 };

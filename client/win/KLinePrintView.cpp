@@ -634,8 +634,13 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 			if(next_tick_in_millisec - this_tick_in_millisec > 300 * 1000)
 			{
 				//	盘中休息暂停10s，强制平仓，期间不允许交易
-				EXCHANGE.SetTick(pDoc->GetTick());
-				EXCHANGE.Close();
+
+				if(TP.bForceCloseOnBreak)
+				{
+					EXCHANGE.SetTick(pDoc->GetTick());
+					EXCHANGE.Close();
+				}
+
 				m_pTradeDialog->UpdateAccountInfo();
 				m_pTradeDialog->EnableTrade(FALSE);
 				SetTimer(1, 10 * 1000, NULL);
