@@ -55,4 +55,5 @@ public:
 	UINT m_nTimeStop;
 	int m_nMaxLossPerDay;
 	int m_nMaxOpenTimes;
+	CEdit m_ctlMaxSlot;
 };
