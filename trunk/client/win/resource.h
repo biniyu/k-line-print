@@ -118,6 +118,7 @@
 #define IDC_DATETIMEPICKER_TO           1025
 #define IDC_CHECK1                      1026
 #define IDC_CHECK_ALLWEEK               1026
+#define IDC_CHECK_CLOSE_ON_BREAK        1026
 #define IDC_CHECK2                      1027
 #define IDC_CHECK_MONDAY                1027
 #define IDC_CHECK3                      1028

@@ -422,6 +422,7 @@ TradeParam Utility::ReadExchangeConfig()
 	tp.nTimeStop = GetPrivateProfileIntA("Trade","TimeStop", 120, CONFIG_FILE);
 	tp.nMaxOpenTimes = GetPrivateProfileIntA("Trade","MaxOpenTimes", 3, CONFIG_FILE);
 	tp.nMaxLossPerDay = GetPrivateProfileIntA("Trade","MaxLossPerDay", 1000, CONFIG_FILE);
+	tp.bForceCloseOnBreak = GetPrivateProfileIntA("Trade","CloseOnBreak", 1, CONFIG_FILE);
 
 	return tp;
 }
@@ -437,6 +438,7 @@ void Utility::WriteExchangeConfig(TradeParam tp)
 	WritePrivateProfileIntA("Trade","TimeStop", tp.nTimeStop, CONFIG_FILE);
 	WritePrivateProfileIntA("Trade","MaxOpenTimes", tp.nMaxOpenTimes, CONFIG_FILE);
 	WritePrivateProfileIntA("Trade","MaxLossPerDay", tp.nMaxLossPerDay, CONFIG_FILE);
+	WritePrivateProfileIntA("Trade","CloseOnBreak", tp.bForceCloseOnBreak, CONFIG_FILE);
 }
 
 //	∂¡»Îªÿ∑≈≈‰÷√

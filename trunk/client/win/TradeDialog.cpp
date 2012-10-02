@@ -24,6 +24,7 @@ CTradeDialog::CTradeDialog(CWnd* pParent /*=NULL*/)
 	, m_nTimeStop(0)
 	, m_nMaxLossPerDay(0)
 	, m_nMaxOpenTimes(0)
+	, m_bCloseOnBreak(FALSE)
 {
 	EXCHANGE.SetTick(Tick());
 	m_bEnableTrade = FALSE;
@@ -54,6 +55,7 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_MAXOPENTIMES, m_nMaxOpenTimes);
 	DDX_Text(pDX, IDC_EDIT_MAXLOSSPERDAY, m_nMaxLossPerDay);
 	DDX_Control(pDX, IDC_EDIT_MAX_SLOT, m_ctlMaxSlot);
+	DDX_Check(pDX, IDC_CHECK_CLOSE_ON_BREAK, m_bCloseOnBreak);
 }
 
 
@@ -127,6 +129,7 @@ BOOL CTradeDialog::OnInitDialog()
 	m_nTimeStop = TP.nTimeStop;
 	m_nMaxOpenTimes = TP.nMaxOpenTimes;
 	m_nMaxLossPerDay = TP.nMaxLossPerDay;
+	m_bCloseOnBreak = TP.bForceCloseOnBreak;
 
 	UpdateData(FALSE);
 
@@ -241,6 +244,7 @@ void CTradeDialog::OnBnClickedButtonUpdateParam()
 	TP.nTimeStop = m_nTimeStop;
 	TP.nMaxOpenTimes = m_nMaxOpenTimes;
 	TP.nMaxLossPerDay = m_nMaxLossPerDay;
+	TP.bForceCloseOnBreak = m_bCloseOnBreak;
 
 	Utility::WriteExchangeConfig(TP);
 }

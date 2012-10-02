@@ -68,15 +68,16 @@ class TradeParam
 public:
 
 	int			nFee;
-	int			nMarginRate;				//	保证金率
+	int			nMarginRate;			//	保证金率
 	int			nDefaultSlots;
 	int			nUnitsPerSlot;
 
-	int			nMaxLossStop;				//	最大止损
+	int			nMaxLossStop;			//	最大止损
 	int			nMaxProfitStop;			//	最大止盈
 	int			nTimeStop;				//	时间止损
 	int			nMaxOpenTimes;			//	最大开仓次数
 	int			nMaxLossPerDay;			//	每日最大允许亏损额
+	bool		bForceCloseOnBreak;		//	休盘时是否强制平仓
 };	
 
 class TradeFacility
