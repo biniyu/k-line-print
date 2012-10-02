@@ -196,6 +196,29 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if(nChar == VK_RETURN)
 		ToggleViewMode();
 
+	if(nChar == VK_F1)
+	{
+		pDoc->AppendTradeRecord(EXCHANGE.Buy());
+	}
+	
+	if(nChar == VK_F2)
+	{
+		pDoc->AppendTradeRecord(EXCHANGE.Sell());
+	}
+
+	if(nChar == VK_F3)
+	{
+		pDoc->AppendTradeRecord(EXCHANGE.Close());
+	}
+
+	if(nChar == VK_F4)
+	{
+		TradeRecordCollection trs = EXCHANGE.Reverse();
+
+		for(int i = 0 ; i < trs.size(); i++)
+			pDoc->AppendTradeRecord(trs[i]);	
+	}
+
 	if(nChar == VK_DELETE)
 	{
 		klr_1min.DelTrigger();
