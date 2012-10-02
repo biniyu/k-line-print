@@ -53,6 +53,7 @@ void CTradeDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_TIMESTOP, m_nTimeStop);
 	DDX_Text(pDX, IDC_EDIT_MAXOPENTIMES, m_nMaxOpenTimes);
 	DDX_Text(pDX, IDC_EDIT_MAXLOSSPERDAY, m_nMaxLossPerDay);
+	DDX_Control(pDX, IDC_EDIT_MAX_SLOT, m_ctlMaxSlot);
 }
 
 
@@ -216,6 +217,12 @@ void CTradeDialog::UpdateAccountInfo(void)
 	m_PositionInfo.SetItemText(0, 2, IntToCString(EXCHANGE.m_nPosition.nPrice));
 	m_PositionInfo.SetItemText(0, 3, IntToCString(EXCHANGE.m_nTick.price));
 	m_PositionInfo.SetItemText(0, 4, IntToCString(EXCHANGE.m_nPosition.nProfit));
+
+	//	计算最大可开仓手数
+	int maxSlot = (tf.m_nBalance + tf.m_nPosition.nProfit - tf.m_nMargin) 
+		/ ((float)tf.m_nTick.price * TP.nUnitsPerSlot * TP.nMarginRate / 100);
+
+	m_ctlMaxSlot.SetWindowTextW(IntToCString(maxSlot));
 
 	Utility::WriteBalance(EXCHANGE.m_nBalance);
 }
