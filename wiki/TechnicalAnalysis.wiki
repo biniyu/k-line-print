@@ -1,16 +1,20 @@
 #summary 技术方案
 
-1.  浏览器(首选)
+1.  客户端
 
-  * 首选支持Chrome浏览器，远期支持所有HTML5浏览器
+  * HTML5浏览器(首选)
+   * 首选支持Chrome浏览器，远期支持所有HTML5浏览器
    * 图形库：KineticJS
-   * 服务器 : NodeJS + Socket.IO
+
+  * 本地应用(远期)
+   * Windows7 
+   * IOS
+   * Android
+   * 各平台统一使用WebSocket
+
+2 .  服务器 
   
-2.  本地应用(远期)
-
-  * Windows7
-  * IOS
-  * Android
-
-3.  数据库 MySQL
+  * HTTP 服务器
+  * NodeJS + Socket.IO，WebSocket协议(首选)
+  * 数据库 MySQL
  
