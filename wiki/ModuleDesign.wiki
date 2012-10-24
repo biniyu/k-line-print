@@ -2,23 +2,30 @@
 
 = Introduction =
 
-  * 绘制子系统
-
+  * 绘制
     * K线/分时线绘制
     * 指标绘制
     * 交易标记绘制
 
-  * 交互控制
-    
-
   * 播放控制
+   * 选择品种/交易日
+   * 播放/暂停
+   * 加速/减速
+   
   * 交易控制
+   * 账户汇总
+   * 开/平仓
+   * 触发单
+   * 持仓
+   * 当日交易记录
+   * 止损获利单
+   
   * 风控
+   * 止损/止盈
+   * 最大亏损
+   * 最大交易次数
+  
+  * 交易记录
+   * 显示
   
   
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
