@@ -1,0 +1,24 @@
+#summary 子系统划分
+
+= Introduction =
+
+  * 绘制子系统
+
+    * K线/分时线绘制
+    * 指标绘制
+    * 交易标记绘制
+
+  * 交互控制
+    
+
+  * 播放控制
+  * 交易控制
+  * 风控
+  
+  
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
