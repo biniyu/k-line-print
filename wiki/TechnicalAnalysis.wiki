@@ -7,8 +7,8 @@
    * 图形库：KineticJS
 
   * 本地应用(远期)
-   * Windows7 
-   * IOS
+   * Windows7 (POCO库支持Websocket,待验证)
+   * IOS(SocketRocket)
    * Android
    * 各平台统一使用WebSocket
 
