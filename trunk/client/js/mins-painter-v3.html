@@ -133,11 +133,15 @@
               bIsPlaying = false;
               playButton.value = "播放";              
            }
+		   
+		   exampleSocket.send("play!");
         }
         
         function onNextDay()
         {
-            socket.emit('next day', {});
+            //socket.emit('next day', {});
+			
+			exampleSocket.send("nextday!");
         }
         
         function onFast()
@@ -148,6 +152,8 @@
               clearInterval(timerId);
               timerId = setInterval("onTimer()", interval);
            }
+		   
+		   exampleSocket.send("fast!");
         }
         
         function onSlow()
@@ -158,6 +164,8 @@
               clearInterval(timerId);
               timerId = setInterval("onTimer()", interval);
            }
+		   
+		   exampleSocket.send("slow!");
         }        
         
         var data = getQuote();
@@ -206,7 +214,7 @@
         });
         */
         
-        var exampleSocket = new WebSocket("ws://127.0.0.1:8080");
+        var exampleSocket = new WebSocket("ws://oscar.iego.net:8080");
         
         exampleSocket.onopen = function (event) {
             exampleSocket.send("Here's some text that the server is urgently awaiting!");
