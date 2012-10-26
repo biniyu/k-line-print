@@ -54,28 +54,37 @@ END_MESSAGE_MAP()
 
 void CLoginDialog::OnBnClickedOk()
 {
-	HTTPClientSession cs("localhost", 8080);
-	HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
-	HTTPResponse response;
-	WebSocket ws(cs, request, response);
-	std::string payload("login");
-	ws.sendFrame(payload.data(), payload.size());
-	char buffer[1024];
-	int flags;
-	int n = ws.receiveFrame(buffer, sizeof(buffer), flags);
-	assert (n == payload.size());
-	assert (payload.compare(0, payload.size(), buffer, 0, n) == 0);
-	assert (flags == WebSocket::FRAME_TEXT);
-	
-	payload = "Hello, universe!";
-	ws.sendFrame(payload.data(), payload.size(), WebSocket::FRAME_BINARY);
-	n = ws.receiveFrame(buffer, sizeof(buffer), flags);
-	assert (n == payload.size());
-	assert (payload.compare(0, payload.size(), buffer, 0, n) == 0);
-	assert (flags == WebSocket::FRAME_BINARY);	
-	
-	ws.shutdown();
-	n = ws.receiveFrame(buffer, sizeof(buffer), flags);
+	try
+	{
+		HTTPClientSession cs("localhost", 8080);
+		HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
+		HTTPResponse response;
+		WebSocket ws(cs, request, response);
+		std::string payload("login");
+		ws.sendFrame(payload.data(), payload.size());
+		char buffer[1024];
+		int flags;
+		int n = ws.receiveFrame(buffer, sizeof(buffer), flags);
+		assert (n == payload.size());
+		assert (payload.compare(0, payload.size(), buffer, 0, n) == 0);
+		assert (flags == WebSocket::FRAME_TEXT);
+		
+		payload = "Hello, universe!";
+		ws.sendFrame(payload.data(), payload.size(), WebSocket::FRAME_BINARY);
+		n = ws.receiveFrame(buffer, sizeof(buffer), flags);
+		assert (n == payload.size());
+		assert (payload.compare(0, payload.size(), buffer, 0, n) == 0);
+		assert (flags == WebSocket::FRAME_BINARY);	
+		
+		ws.shutdown();
+		n = ws.receiveFrame(buffer, sizeof(buffer), flags);
+	}
+	catch (Poco::Exception& exc)
+	{
+		AfxMessageBox(CString(exc.displayText().c_str()));
+		OnCancel();
+		return;
+	}
 
 	OnOK();
 }
