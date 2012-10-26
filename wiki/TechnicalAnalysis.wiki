@@ -18,3 +18,4 @@
   * NodeJS + Socket.IO，WebSocket协议(首选)
   * 数据库 MySQL
  
+Socket.IO在WebSocket之上封装，不能直接适配POCO的Websocket
