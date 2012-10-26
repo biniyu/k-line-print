@@ -45,6 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../../public/include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -69,6 +70,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="../../public/lib/poco"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -219,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LoginDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.cpp"
 				>
 			</File>
@@ -318,6 +324,10 @@
 			</File>
 			<File
 				RelativePath=".\KLineWriter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LoginDialog.h"
 				>
 			</File>
 			<File

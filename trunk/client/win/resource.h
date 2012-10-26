@@ -89,6 +89,7 @@
 #define IDD_TRADE                       313
 #define IDD_PLAYBACK_CONF               314
 #define IDD_TRADE_LOG                   315
+#define IDD_LOGIN                       317
 #define IDC_COMBO_VAR_LIST              1000
 #define IDC_EDIT_MORE_THAN              1001
 #define IDC_CHECK_MORE_THAN             1002
@@ -137,11 +138,13 @@
 #define IDC_EDIT1                       1038
 #define IDC_EDIT_GAP                    1038
 #define IDC_EDIT_DEFAULT_SLOTS          1038
+#define IDC_EDIT_USER                   1038
 #define IDC_CHECK13                     1039
 #define IDC_CHECK_FLUNC_ABOVE           1039
 #define IDC_EDIT2                       1040
 #define IDC_EDIT_FLUNC_ABOVE            1040
 #define IDC_EDIT_MAXLOSS                1040
+#define IDC_EDIT_PASSWORD               1040
 #define IDC_CHECK14                     1041
 #define IDC_CHECK_FLUNC_BELOW           1041
 #define IDC_EDIT3                       1042
@@ -194,7 +197,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        317
+#define _APS_NEXT_RESOURCE_VALUE        318
 #define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           312
