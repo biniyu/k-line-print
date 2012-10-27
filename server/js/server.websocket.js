@@ -90,9 +90,7 @@ else
 
 try
 {
-//	client.query("SELECT * FROM variety where symbol='TA'",
-//	client.query("SELECT * FROM tick",
-	client.query("SELECT * FROM tick where time>'2012/08/20 9:30:00' and time <'2012/08/20 9:32:00'", 
+	client.query("SELECT * FROM tick where time> '2012-08-20 14:00:00' and time <'2012-08-20 14:01:00'", 
 		
 		function selectCb(err, results, fields) {
 			if (err) {
@@ -100,7 +98,6 @@ try
 			}
 
 		console.log(results);
-//		console.log(fields);
 		client.end();
 	});
 }
