@@ -59,6 +59,67 @@ wsServer = new WebSocketServer({
     disableNagleAlgorithm: false
 });
 
+var db_options = {  
+    host: 'oscar.iego.net',  
+    port: 3306,  
+    user: 'oscar',  
+    password: 'f517278',  
+    database: 'klineprint'  
+};  
+
+var connArray = new Array;
+var tickArray = new Array;
+
+//¼ÓÔØmysql Module    
+var mysql = require('mysql'),client = null;  
+  
+if(mysql.createClient) 
+{  
+    client = mysql.createClient(db_options);  
+} 
+else 
+{  
+    client = new mysql.Client(db_options);  
+    client.connect(function(err) {  
+        if(err) {  
+            console.error('connect db ' + client.host + ' error: ' + err);  
+            process.exit();  
+        }  
+    });  
+}  
+
+try
+{
+//	client.query("SELECT * FROM variety where symbol='TA'",
+//	client.query("SELECT * FROM tick",
+	client.query("SELECT * FROM tick where time>'2012/08/20 9:30:00' and time <'2012/08/20 9:32:00'", 
+		
+		function selectCb(err, results, fields) {
+			if (err) {
+			  throw err;
+			}
+
+		console.log(results);
+//		console.log(fields);
+		client.end();
+	});
+}
+catch(e)
+{
+    console.log(e);
+    client.end();
+}
+
+var timerId = setInterval(function(){
+	console.log('timeout!');
+	
+	for(var conn in connArray)
+	{
+		console.log("send data to " + connArray[conn].remoteAddress);
+	}
+	
+}, 1000);
+
 wsServer.on('connect', function(connection) {
     if (debug) console.log((new Date()) + " Connection accepted" +
                             " - Protocol Version " + connection.webSocketVersion);
@@ -77,5 +138,16 @@ wsServer.on('connect', function(connection) {
     });
     connection.on('close', function(reasonCode, description) {
         if (debug) console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.");
+		for(var i = 0; i < connArray.length; i++)
+		{
+			if(connArray[i] == connection)
+			{
+				delete connArray[i];
+				break;
+			}
+		}		
     });
+	
+	connArray.push(connection);
+	
 });
