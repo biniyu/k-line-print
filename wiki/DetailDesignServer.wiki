@@ -1,0 +1,22 @@
+#summary 详细设计(服务器端)
+
+* 连接-WebSocket连接
+
+* 账户-相同帐号的登录共享上下文(包括播放与账户信息)
+
+
+连接成功 -> 登录信息 -> 连接账户上下文
+
+定时器 ： 
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
