@@ -334,14 +334,7 @@ float KLineRenderer::GetInterestPosition(int nInterest)
 
 void KLineRenderer::DelTrigger()
 {
-	if(m_bTriggerSelected)
-	{
-		EXCHANGE.m_nPosition.nTrigger = EXCHANGE.m_nPosition.nLossStop
-			= EXCHANGE.m_nPosition.nProfitStop = 0;
-
-		m_bTriggerSelected = m_bProfitStopSelected = m_bLossStopSelected = false;
-	}
-	else if(m_bProfitStopSelected)
+	if(m_bProfitStopSelected)
 	{
 		EXCHANGE.m_nPosition.nProfitStop = 0;
 		m_bProfitStopSelected = false;
@@ -350,6 +343,13 @@ void KLineRenderer::DelTrigger()
 	{
 		EXCHANGE.m_nPosition.nLossStop = 0;
 		m_bLossStopSelected = false;
+	}
+	else
+	{
+		EXCHANGE.m_nPosition.nTrigger = EXCHANGE.m_nPosition.nLossStop
+			= EXCHANGE.m_nPosition.nProfitStop = 0;
+
+		m_bTriggerSelected = m_bProfitStopSelected = m_bLossStopSelected = false;
 	}
 }
 
