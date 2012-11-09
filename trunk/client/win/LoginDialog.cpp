@@ -56,7 +56,7 @@ void CLoginDialog::OnBnClickedOk()
 {
 	try
 	{
-		HTTPClientSession cs("localhost", 8080);
+		HTTPClientSession cs("oscar.iego.net", 8080);
 		HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
 		HTTPResponse response;
 		WebSocket ws(cs, request, response);
