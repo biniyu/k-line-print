@@ -740,6 +740,17 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 
 		tmp.Format(_T("%d"), kline.interest);
 		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kInterestPos, tmp);
+
+		//	绘制成交量线
+		float kVolPos = GetVolPosition(kline.vol);
+
+		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kVolPos);
+		pDC->LineTo(m_kMiddle - m_kWidth * 2, kVolPos);
+
+//		tmp.Format(_T("%d"), kline.vol);
+//		CSize sz = pDC->GetTextExtent(tmp);
+//		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kVolPos - sz.cy, tmp);
+
 	}
 
 	// 显示时间和价格
