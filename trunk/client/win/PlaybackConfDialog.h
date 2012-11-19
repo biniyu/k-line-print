@@ -27,7 +27,6 @@ private:
 
 	PlaybackConfig m_pc;
 
-	int m_nPlaybackOrder;
 	int m_nDateRangeOption;
 	BOOL m_bMonday;
 	BOOL m_bTuesday;
@@ -36,17 +35,12 @@ private:
 	BOOL m_bFriday;
 	CTime m_StartDate;
 	CTime m_EndDate;
-	BOOL m_bGap;
-	BOOL m_bFluncAbove;
-	BOOL m_bFluncBelow;
 
 public:
 	
 	afx_msg void OnBnClickedOk();
 	virtual BOOL OnInitDialog();
-	float m_fGap;
-	float m_fFluncAbove;
-	float m_fFluncBelow;
+
 	CTime m_TimeFrom;
 	CTime m_TimeTo;
 };
