@@ -26,9 +26,7 @@ private:
 	int m_nCurrentTickTime;		//	当前时间
 
 	TickCollection			m_TickData;
-	KLineCollection			m_15SecData;
 	KLineCollection			m_1MinData;
-	KLineCollection			m_DayData;
 
 	Strategy				m_Strategy;
 

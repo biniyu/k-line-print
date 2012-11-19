@@ -27,24 +27,9 @@ public:
 	void Layout();
 	void Render();
 
-	void Set5SecData(KLineCollection* pData);
 	void Set1MinData(KLineCollection* pData);
-	void SetDayData(KLineCollection* pData, int nDate);  
 
 private:
-
-	enum ViewMode
-	{
-		ViewModeAll,
-		ViewModeDay,
-		ViewMode1Min,
-		ViewModeDetail
-	};
-
-	bool		m_bLocked;				//	联动
-	ViewMode	m_enViewMode;
-
-	void ToggleViewMode();		//	切换视图
 
 // 重写
 public:
@@ -65,9 +50,7 @@ public:
 
 protected:
 
-	KLineRenderer klr_5sec;
 	KLineRenderer klr_1min;
-	KLineRenderer klr_day;
 
 	bool		m_bMouseDown;
 

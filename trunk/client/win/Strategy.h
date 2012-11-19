@@ -9,10 +9,9 @@ public:
 	Strategy(void);
 	~Strategy(void);
 
-	void SetData(KLineCollection* p1MinData, KLineCollection* p5SecData)
+	void SetData(KLineCollection* p1MinData)
 	{
 		m_p1MinData = p1MinData;
-		m_p5SecData = p5SecData;
 	}
 
 	virtual void Quote(Tick tick);
@@ -20,7 +19,6 @@ public:
 private:
 
 	KLineCollection* m_p1MinData;
-	KLineCollection* m_p5SecData;
 
 	int m_lasttime;
 	int m_lastprice;

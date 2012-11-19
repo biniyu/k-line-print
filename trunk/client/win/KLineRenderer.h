@@ -13,18 +13,9 @@ public:
 		enAxisMode
 	};
 
-	enum TrackingMode
-	{
-		enHighLowTMode,
-		enCloseTMode,
-		enMouseTMode
-	};
-
 private:
 
 	RenderMode m_enRenderMode;
-
-	TrackingMode m_enTrackingMode;
 
 	//	选中止损线
 	bool m_bLossStopSelected;
@@ -222,8 +213,6 @@ public:
 
 	void ToggleRenderMode();
 
-	void ToggleTrackingMode();
-
 	void ToggleKeyPrice() { m_bShowKeyPrice = !m_bShowKeyPrice; }
 
 	void ToggleTimeLine() { m_bShowTimeLine = !m_bShowTimeLine; }
@@ -238,8 +227,6 @@ public:
 
 	//	获取鼠标所在位置的价格
 	int GetPriceByPosition(CPoint pt);
-
-	TrackingMode GetTrackingMode() { return m_enTrackingMode; }
 
 	void SetOpenIndex(int nOpenIndex) { m_nOpenIndex = nOpenIndex; }
 };

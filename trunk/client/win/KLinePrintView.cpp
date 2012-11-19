@@ -48,8 +48,6 @@ END_MESSAGE_MAP()
 
 CKLinePrintView::CKLinePrintView()
 {
-	m_bLocked = TRUE;
-	m_enViewMode = ViewMode1Min;
 	m_pTradeDialog = 0;
 	m_bMouseDown = FALSE;
 }
@@ -57,13 +55,6 @@ CKLinePrintView::CKLinePrintView()
 CKLinePrintView::~CKLinePrintView()
 {
 
-}
-
-void CKLinePrintView::Set5SecData(KLineCollection* pData) 
-{ 
-	klr_5sec.SetKLineData(pData, 120); 
-	klr_5sec.SetOpenIndex(0);
-	klr_5sec.SetShowAvg(true);
 }
 
 void CKLinePrintView::Set1MinData(KLineCollection* pData) 
@@ -74,17 +65,6 @@ void CKLinePrintView::Set1MinData(KLineCollection* pData)
 	klr_1min.SetShowCriticalTime(true);
 	klr_1min.SetShowMaxMin(false);	//	显示日内最高最低价
 	klr_1min.SetOpenIndex(1);
-}
-
-void CKLinePrintView::SetDayData(KLineCollection* pData, int nDate)  
-{ 
-	klr_day.SetKLineData(pData, 120);
-	klr_day.SelectByTime(nDate);
-	klr_day.SetShowVol(false);
-	klr_day.SetShowMA(true);
-	klr_day.SetShowHighLow(true);	//	显示n日最高最低价
-	klr_day.SetOpenIndex(-1);
-	klr_day.SetShowDate(true);
 }
 
 BOOL CKLinePrintView::PreCreateWindow(CREATESTRUCT& cs)
@@ -107,16 +87,11 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	CRect rc;
 	GetClientRect(&rc);
 
-#define RADIUS 5
-
-	if(m_bLocked)
-		m_MemDC.Ellipse(rc.right - 2 * RADIUS, rc.top, rc.right, rc.top + 2*RADIUS);
-
 	CString txtSpeed;
 
 	txtSpeed.Format(_T("%dX(%c)"), PBCONFIG.nPlaySpeed, PBCONFIG.bRealTime ? 'R':'-');
 
-	m_MemDC.TextOutW(rc.right - 2 * RADIUS - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
+	m_MemDC.TextOutW(rc.right - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
 
 	//将内存中的图拷贝到屏幕上进行显示
 	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);
@@ -191,11 +166,6 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if(!pDoc->m_CurCsvFile.size()) return;
 
-	int origdate = klr_day.GetCurTime();
-
-	if(nChar == VK_RETURN)
-		ToggleViewMode();
-
 	if(nChar == VK_F1)
 	{
 		pDoc->AppendTradeRecord(EXCHANGE.Buy());
@@ -248,66 +218,26 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if(nChar == VK_UP)
 	{
 		klr_1min.ZoomIn();
-		klr_day.ZoomIn();
-		klr_5sec.ZoomIn();
 	}
 
 	if(nChar == VK_DOWN)
 	{
 		klr_1min.ZoomOut();
-		klr_day.ZoomOut();
-		klr_5sec.ZoomOut();
 	}
 
 	if(nChar == VK_LEFT)
 	{
 		klr_1min.MovePrev();
-		klr_day.MovePrev();
-		klr_5sec.MovePrev();
 	}
 
 	if(nChar == VK_RIGHT)
 	{
 		klr_1min.MoveNext();
-		klr_day.MoveNext();
-		klr_5sec.MoveNext();
-	}
-
-	if(nChar == VK_HOME)
-	{
-		klr_1min.ToggleTrackingMode();
-		klr_day.ToggleTrackingMode();
-		klr_5sec.ToggleTrackingMode();
 	}
 
 	if(nChar == VK_END)
 	{
 		klr_1min.ToggleRenderMode();
-		klr_day.ToggleRenderMode();
-		klr_5sec.ToggleRenderMode();
-	}
-
-	if(klr_5sec.IsSelected() && nChar > '0' && nChar <'9')
-	{
-		int tmptime = klr_5sec.GetCurTime(); 
-		switch(nChar)
-		{
-		case '1':
-			pDoc->ReloadDetailData(1);
-			break;
-		case '2':
-			pDoc->ReloadDetailData(5);
-			break;
-		case '3':
-			pDoc->ReloadDetailData(15);
-			break;
-		}
-		klr_5sec.SelectByTime(tmptime);
-	}
-
-	if(nChar == VK_SPACE)
-	{
-		m_bLocked = !m_bLocked;
 	}
 
 	if(nChar == 'R')
@@ -320,24 +250,6 @@ void CKLinePrintView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	{
 		klr_1min.ToggleKeyPrice();
 	}	
-
-	if(klr_1min.IsSelected() && m_bLocked)
-	{
-		klr_5sec.SelectByTime(klr_1min.GetCurTime());
-		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
-	}
-
-	if(klr_5sec.IsSelected() && m_bLocked)
-	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime());
-		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
-		klr_day.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
-	}
-
-	if(klr_day.IsSelected() && m_bLocked && (origdate != klr_day.GetCurTime()))
-	{
-		pDoc->ReloadByDate(klr_day.GetCurTime());
-	}
 
 	Render();
 
@@ -395,72 +307,16 @@ void CKLinePrintView::Render()
 	klr_1min.SetTradeRecord(pDoc->GetTradeRecord());
 	klr_1min.Render(&m_MemDC);
 
-	klr_day.Render(&m_MemDC);
-
-	klr_5sec.SetTradeRecord(pDoc->GetTradeRecord());
-	klr_5sec.Render(&m_MemDC);
-
 	Invalidate(FALSE);
 }
 
 void CKLinePrintView::Layout()
 {
 	CRect rc;
-	CRect rc_1min, rc_day, rc_detail;
 	
 	GetClientRect(&rc);
 
-	int horiSplit = rc.bottom / 5 * 3;
-
-	int vertSplitUp = 0;
-	int vertSplitDown = rc.right / 2;
-
-	//绘图
-	if(m_enViewMode == ViewModeAll)
-	{
-		rc_1min = rc;
-		rc_1min.left = vertSplitUp;
-		rc_1min.bottom = horiSplit;
-
-		rc_day = rc;
-		rc_day.top = horiSplit;
-		rc_day.right = vertSplitDown;
-
-		rc_detail = rc;
-		rc_detail.top = horiSplit;
-		rc_detail.left = vertSplitDown;
-	}
-	else if(m_enViewMode == ViewMode1Min)
-	{
-		rc_1min = rc;
-		rc_1min.left = vertSplitUp;
-
-		rc_day = CRect(0,0,0,0);
-		rc_detail = CRect(0,0,0,0);
-	}
-
-	klr_1min.SetRect(rc_1min);
-	klr_day.SetRect(rc_day);
-	klr_5sec.SetRect(rc_detail);
-}
-
-void CKLinePrintView::ToggleViewMode()		//	切换视图
-{
-	switch(m_enViewMode)
-	{
-	case ViewModeAll:
-		m_enViewMode = ViewMode1Min;
-		break;
-	case ViewMode1Min:
-		m_enViewMode = ViewModeAll;
-		break;
-	default:
-		break;
-	}
-
-	Layout();
-
-	Render();
+	klr_1min.SetRect(rc);
 }
 
 void CKLinePrintView::OnSize(UINT nType, int cx, int cy)
@@ -503,25 +359,6 @@ void CKLinePrintView::OnLButtonDown(UINT nFlags, CPoint point)
 	m_bMouseDown = true;
 
 	klr_1min.Select(point);
-	if(klr_1min.IsSelected() && m_bLocked)
-	{
-		klr_5sec.SelectByTime(klr_1min.GetCurTime());
-		klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
-	}
-
-	klr_5sec.Select(point);
-	if(klr_5sec.IsSelected() && m_bLocked)
-	{
-		klr_1min.SelectByTime(klr_5sec.GetCurTime());
-		klr_1min.SetSelectedPrice(klr_5sec.GetSelectedClosePrice());
-	}
-
-	klr_day.Select(point);
-	if(klr_day.IsSelected() && m_bLocked)
-	{
-		pDoc->ReloadByDate(klr_day.GetCurTime());
-	}
-
 	Render();
 
 	CView::OnLButtonDown(nFlags, point);
@@ -542,7 +379,7 @@ void CKLinePrintView::OnPlaybackBegin()
 	if(m_pTradeDialog)
 		m_pTradeDialog->EnableTrade(FALSE);
 
-	pDoc->DisplayTill(0, klr_day.GetCurTime());
+	pDoc->DisplayTill(0);
 }
 
 void CKLinePrintView::OnPlaybackEnd()
@@ -561,7 +398,7 @@ void CKLinePrintView::OnPlaybackEnd()
 		m_pTradeDialog->EnableTrade(FALSE);
 
 	pDoc->LoadNextDay();
-	pDoc->DisplayTill(PBCONFIG.nStartTime * 1000, klr_day.GetCurTime());
+	pDoc->DisplayTill(PBCONFIG.nStartTime * 1000);
 }
 
 void CKLinePrintView::OnPlaybackForward()
@@ -571,7 +408,7 @@ void CKLinePrintView::OnPlaybackForward()
 	if(!pDoc->HasPlaybackCalendar())
 		pDoc->LoadPlaybackCalendar(PBCONFIG);
 
-	pDoc->DisplayTill(klr_1min.GetCurTime(), klr_day.GetCurTime());
+	pDoc->DisplayTill(klr_1min.GetCurTime());
 
 	SetTimer(1,1000,NULL); 
 
@@ -704,8 +541,7 @@ void CKLinePrintView::OnTimer(UINT_PTR nIDEvent)
 	}
 
 	klr_1min.SelectLastK();
-	klr_5sec.SelectLastK();
-	klr_day.SetSelectedPrice(klr_1min.GetSelectedClosePrice());
+
 	Render();
 	Invalidate(FALSE);
 
