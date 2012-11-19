@@ -37,7 +37,6 @@ protected:  // 控件条嵌入成员
 	CMFCToolBar       m_wndToolBar;
 	CMFCToolBar       m_wndPlaybackBar;
 	CMFCStatusBar     m_wndStatusBar;
-	CMFCToolBarImages m_UserImages;
 	CTradeLogDialog*  m_pTradeLogDlg;
 
 
@@ -47,8 +46,6 @@ protected:
 	afx_msg void OnApplicationLook(UINT id);
 	afx_msg void OnUpdateApplicationLook(CCmdUI* pCmdUI);
 	DECLARE_MESSAGE_MAP()
-
-	void SetDockingWindowIcons(BOOL bHiColorIcons);
 
 public:
 
