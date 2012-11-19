@@ -24,7 +24,6 @@ KLineRenderer::KLineRenderer(void)
 	m_pKLines = NULL;
 	m_bSelected = false;
 	m_enRenderMode = enHighLowMode;
-	m_enTrackingMode = enCloseTMode;
 	m_nOpenIndex = -1;
 	m_bShowDate = false;
 	m_nDisplayKLineCount = m_nFirstDisplayedIndex = m_nSelectedIndex = 0;
@@ -1212,22 +1211,3 @@ int KLineRenderer::GetPriceByPosition(CPoint pt)
 
 	return (m_kHighPrice - (pt.y - m_Rect.top) / m_pixelPerPrice);
 }
-
-void KLineRenderer::ToggleTrackingMode()
-{
-	if(!m_bSelected) return;
-
-	if(m_enTrackingMode == enHighLowTMode)
-	{
-		m_enTrackingMode = enCloseTMode;
-	}
-	else if(m_enTrackingMode == enCloseTMode)
-	{
-		m_enTrackingMode = enMouseTMode;
-	}
-	else if(m_enTrackingMode == enMouseTMode)
-	{
-		m_enTrackingMode = enHighLowTMode;
-	}
-}
-

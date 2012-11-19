@@ -62,7 +62,7 @@ BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
 		return FALSE;    
 	} 
 
-	m_Strategy.SetData(&m_1MinData, &m_15SecData);
+	m_Strategy.SetData(&m_1MinData);
 
 	LoadKLineGroup(InfoString);
 	DisplayTill(-1, -1);
@@ -240,17 +240,6 @@ void CKLinePrintDoc::ReloadByDate(int nDate)
 	OnOpenDocument(CString(tmp.c_str()));
 }
 
-void CKLinePrintDoc::ReloadDetailData(int second)
-{
-	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
-
-	m_15SecData.Clear();
-	m_15SecData.Generate(m_TickData, second);
-	pView->Set5SecData(&m_15SecData);
-	pView->Render();
-	this->UpdateAllViews(0);
-}
-
 void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 {
 	string tmp = Utility::GetNeighborCsvFile(m_CurCsvFile, bPrev, TRUE/* 必须是主力合约 */);
@@ -318,7 +307,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 			//	检查下一个尚未播放的tick
 			Tick tickToQuote = m_TickData[m_nCurrentTickIdx + 1];
 			m_1MinData.Quote(tickToQuote);
-			m_15SecData.Quote(tickToQuote);
 			EXCHANGE.SetTick(tickToQuote);
 			m_Strategy.Quote(tickToQuote);
 			m_nCurrentTickIdx++;
@@ -337,10 +325,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 		{
 			Tick tmp = tickToQuote;
 			tmp.time_ms = nDate;
-			m_DayData.Quote(tmp);
 
 			m_1MinData.Quote(tickToQuote);
-			m_15SecData.Quote(tickToQuote);
 
 			lastQuote = tickToQuote;
 			m_nCurrentTickTime = tickToQuote.time_ms;
@@ -350,8 +336,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 		else	// 越过指定时间
 		{
 			Tick tmp = lastQuote;
-			tmp.time_ms = nDate;
-			m_DayData.Quote(tmp);
 
 			//	有可能数据缺失，虚拟的Quote一次，不记录持仓变化和成交量
 			tmp.time_ms = nTillMilliTime;
@@ -360,7 +344,6 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 			tmp.totalvol = 0;
 
 			m_1MinData.Quote(tmp);
-			m_15SecData.Quote(tmp);
 
 			//	如果相差的时间大于5分钟，应该是盘中休息时间，跳过
 
@@ -376,8 +359,8 @@ void CKLinePrintDoc::PlayTillTime(int nTillMilliTime, bool bTest)
 
 void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 {
-	m_DayData.Clear();
-	m_15SecData.Clear();
+	KLineCollection m_DayData;
+
 	m_1MinData.Clear();
 
 	//	当前日期
@@ -386,7 +369,7 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 	if(!bTest)
 	{
 		DWORD before = GetTickCount();
-		m_KLineReader.Read(m_CurDayFile, m_DayData, nTillDate/**/);
+		m_KLineReader.Read(m_CurDayFile, m_DayData, -1);
 		DWORD after = GetTickCount();
 		TRACE("\nday line %s read, use %d ticks", m_CurDayFile.c_str(), after - before);
 
@@ -427,22 +410,9 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 	//	生成本日第一条K线
 	m_nCurrentTickIdx = 0;
 
-	m_DayData.SetPeriod(36000 * 1000);
 	m_1MinData.SetPeriod(60 * 1000);
-	m_15SecData.SetPeriod(15 * 1000);
-
-
-	if(!bTest)
-	{
-		//	需要override时间
-		Tick tmp = m_TickData[m_nCurrentTickIdx];
-		tmp.time_ms = nDate;
-
-		m_DayData.StartQuote(tmp);
-	}
 
 	m_1MinData.StartQuote(m_TickData[m_nCurrentTickIdx]);
-	m_15SecData.StartQuote(m_TickData[m_nCurrentTickIdx]);
 
 	if(bTest)
 	{
@@ -463,9 +433,7 @@ void CKLinePrintDoc::DisplayTill(int nTillMilliTime, int nTillDate, bool bTest)
 		CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)::AfxGetMainWnd())->GetActiveView();
 
 		//	设置数据
-		pView->SetDayData(&m_DayData, nDate);
 		pView->Set1MinData(&m_1MinData);
-		pView->Set5SecData(&m_15SecData);
 
 		//	显示
 		pView->Render();	
