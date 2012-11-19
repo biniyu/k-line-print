@@ -445,9 +445,6 @@ void Utility::WriteExchangeConfig(TradeParam tp)
 PlaybackConfig Utility::ReadPlaybackConfig()
 {
 	PlaybackConfig pc;
-
-	pc.enPlaybackOrder = (PlaybackConfig::PlaybackOrder)
-		GetPrivateProfileIntA("Playback","Order", 0, CONFIG_FILE);
 	
 	pc.nStartDate = GetPrivateProfileIntA("Playback","StartDate", 0, CONFIG_FILE);
 	pc.nEndDate = GetPrivateProfileIntA("Playback","EndDate", 0, CONFIG_FILE);
@@ -459,10 +456,6 @@ PlaybackConfig Utility::ReadPlaybackConfig()
 	pc.bDayOfWeek[3] = GetPrivateProfileIntA("Playback","Wednesday", 0, CONFIG_FILE);
 	pc.bDayOfWeek[4] = GetPrivateProfileIntA("Playback","Thursday", 0, CONFIG_FILE);
 	pc.bDayOfWeek[5] = GetPrivateProfileIntA("Playback","Friday", 0, CONFIG_FILE);
-
-	pc.fGapPercentage = GetPrivateProfileIntA("Playback","Gap", 0, CONFIG_FILE);
-	pc.fLastDayFluctuationAbove = GetPrivateProfileIntA("Playback","FluctuationAbove", 0, CONFIG_FILE);
-	pc.fLastDayFluctuationBelow = GetPrivateProfileIntA("Playback","FluctuationBelow", 0, CONFIG_FILE);
 
 	pc.bRealTime = GetPrivateProfileIntA("Playback","RealTime", 1, CONFIG_FILE);
 	pc.nPlaySpeed = GetPrivateProfileIntA("Playback","Speed", 1, CONFIG_FILE);
@@ -476,8 +469,6 @@ void Utility::SavePlaybackConfig(PlaybackConfig pc)
 	WritePrivateProfileIntA("Playback","RealTime", pc.bRealTime, CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","Speed", pc.nPlaySpeed, CONFIG_FILE);
 
-	WritePrivateProfileIntA("Playback","Order", (int)pc.enPlaybackOrder, CONFIG_FILE);
-
 	WritePrivateProfileIntA("Playback","StartDate", pc.nStartDate, CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","EndDate", pc.nEndDate, CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","StartTime", pc.nStartTime, CONFIG_FILE);
@@ -488,10 +479,6 @@ void Utility::SavePlaybackConfig(PlaybackConfig pc)
 	WritePrivateProfileIntA("Playback","Wednesday", (int)pc.bDayOfWeek[3], CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","Thursday", (int)pc.bDayOfWeek[4], CONFIG_FILE);
 	WritePrivateProfileIntA("Playback","Friday", (int)pc.bDayOfWeek[5], CONFIG_FILE);
-
-	WritePrivateProfileIntA("Playback","Gap", (int)pc.fGapPercentage, CONFIG_FILE);
-	WritePrivateProfileIntA("Playback","FluctuationAbove", (int)pc.fLastDayFluctuationAbove, CONFIG_FILE);
-	WritePrivateProfileIntA("Playback","FluctuationBelow", (int)pc.fLastDayFluctuationBelow, CONFIG_FILE);
 }
 
 void Utility::WriteLog(string path, TradeRecord tr)

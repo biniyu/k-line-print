@@ -92,12 +92,6 @@ BOOL CKLinePrintApp::InitInstance()
 
 	InitKeyboardManager();
 
-	InitTooltipManager();
-	CMFCToolTipInfo ttParams;
-	ttParams.m_bVislManagerTheme = TRUE;
-	theApp.GetTooltipManager()->SetTooltipParams(AFX_TOOLTIP_TYPE_ALL,
-		RUNTIME_CLASS(CMFCToolTipCtrl), &ttParams);
-
 	// 注册应用程序的文档模板。文档模板
 	// 将用作文档、框架窗口和视图之间的连接
 	CSingleDocTemplate* pDocTemplate;
@@ -110,12 +104,9 @@ BOOL CKLinePrintApp::InitInstance()
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
 
-
-
 	// 分析标准外壳命令、DDE、打开文件操作的命令行
 	CCommandLineInfo cmdInfo;
 	ParseCommandLine(cmdInfo);
-
 
 	// 调度在命令行中指定的命令。如果
 	// 用 /RegServer、/Register、/Unregserver 或 /Unregister 启动应用程序，则返回 FALSE。
@@ -197,30 +188,6 @@ void CKLinePrintApp::OnAppAbout()
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
-
-// CKLinePrintApp 自定义加载/保存方法
-
-void CKLinePrintApp::PreLoadState()
-{
-	BOOL bNameValid;
-	CString strName;
-	bNameValid = strName.LoadString(IDS_EDIT_MENU);
-	ASSERT(bNameValid);
-	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EDIT);
-	bNameValid = strName.LoadString(IDS_EXPLORER);
-	ASSERT(bNameValid);
-	GetContextMenuManager()->AddMenu(strName, IDR_POPUP_EXPLORER);
-}
-
-void CKLinePrintApp::LoadCustomState()
-{
-}
-
-void CKLinePrintApp::SaveCustomState()
-{
-}
-
-// CKLinePrintApp 消息处理程序
 
 
 

@@ -34,10 +34,6 @@ public:
 	PlaybackConfig	m_PlaybackConfig;		//	回放选项
 	TradeFacility	m_ex;					//	交易所
 
-	virtual void PreLoadState();
-	virtual void LoadCustomState();
-	virtual void SaveCustomState();
-
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 };

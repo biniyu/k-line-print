@@ -116,46 +116,6 @@ BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig)
 	if(pbConfig.bDayOfWeek[nWeekDay] == FALSE)
 		return FALSE;
 
-	//	如果不需要前一交易日K线数据
-	if(!pbConfig.fGapPercentage 
-		&& (!pbConfig.fLastDayFluctuationAbove)
-		&& (!pbConfig.fLastDayFluctuationBelow)) 
-		return TRUE;
-
-	//	获取当前合约在该日期的文件名
-	string tmp = Utility::GetPathByDate(m_CurCsvFile, nDate);
-
-	//	获取主力合约文件名
-	string major = Utility::GetMajorContractPath(tmp);
-
-	//	无法获取主力合约文件，因该品种未上市
-	if(!major.size()) return FALSE;
-
-	//	获取日线数据文件名
-	string dayfile = Utility::GetDayLinePath(major);
-
-	KLine this_kline = m_KLineReader.GetKLineByTime(dayfile, nDate);
-	KLine prev_kline = m_KLineReader.GetKLineByTime(dayfile, CALENDAR.GetPrev(nDate));
-
-	//	无法获取上个交易日的数据
-	if(!prev_kline.time) return FALSE;
-
-	//	高低开条件
-	int gap = 100 * abs(this_kline.open - prev_kline.close) / (float)prev_kline.close;
-
-	if(pbConfig.fGapPercentage && gap < pbConfig.fGapPercentage)
-		return FALSE;
-
-	//	上一交易日的振幅
-	int lastFlunc =  100 * (prev_kline.high - prev_kline.low) 
-					/ ((float)(prev_kline.high + prev_kline.low) / 2.0f);
-
-	if(pbConfig.fLastDayFluctuationAbove && lastFlunc < pbConfig.fLastDayFluctuationAbove)
-		return FALSE;
-
-	if(pbConfig.fLastDayFluctuationBelow && lastFlunc > pbConfig.fLastDayFluctuationBelow)
-		return FALSE;
-
 	return TRUE;
 }
 
@@ -256,15 +216,8 @@ BOOL CKLinePrintDoc::LoadNextDay()
 	
 	nCurDate = Utility::GetDateByPath(m_CurCsvFile);
 
-	if(PBCONFIG.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
-	{
-		nNextDate = m_FilteredCalendar.GetNext(nCurDate);
-	}
-	else	//	PLAYBACK_RANDOM
-	{	
-		int nDayCnt = m_FilteredCalendar.size();
-		nNextDate = m_FilteredCalendar.GetBySeq(rand() % nDayCnt);
-	}
+	int nDayCnt = m_FilteredCalendar.size();
+	nNextDate = m_FilteredCalendar.GetBySeq(rand() % nDayCnt);
 
 	string tmp = Utility::GetPathByDate(m_CurCsvFile, nNextDate);
 

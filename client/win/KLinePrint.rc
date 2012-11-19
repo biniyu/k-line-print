@@ -91,17 +91,13 @@ IDI_PROPERTIES_WND_HC   ICON                    "res\\properties_wnd_hc.ico"
 
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
 IDR_MAINFRAME_256       BITMAP                  "res\\Toolbar256.bmp"
-IDR_SORT                BITMAP                  "res\\sort.bmp"
 IDB_SORT_24             BITMAP                  "res\\sort_hc.bmp"
 IDB_FILE_VIEW           BITMAP                  "res\\fileview.bmp"
 IDB_FILE_VIEW_24        BITMAP                  "res\\fileview_hc.bmp"
 IDB_CLASS_VIEW          BITMAP                  "res\\classview.bmp"
 IDB_CLASS_VIEW_24       BITMAP                  "res\\classview_hc.bmp"
-IDR_EXPLORER            BITMAP                  "res\\explorer.bmp"
 IDB_EXPLORER_24         BITMAP                  "res\\explorer_hc.bmp"
-IDR_MENU_IMAGES         BITMAP                  "res\\menuimages.bmp"
 IDB_MENU_IMAGES_24      BITMAP                  "res\\menuimages_hc.bmp"
-IDR_PROPERTIES          BITMAP                  "res\\properties.bmp"
 IDB_PROPERTIES_HC       BITMAP                  "res\\properties_hc.bmp"
 IDR_PLAYBACK            BITMAP                  "res\\Playback.bmp"
 
@@ -150,38 +146,6 @@ BEGIN
     BUTTON      ID_APP_ABOUT
 END
 
-IDR_SORT TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_SORT_MENU
-    BUTTON      ID_NEW_FOLDER
-END
-
-IDR_EXPLORER TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_PROPERTIES
-END
-
-IDR_MENU_IMAGES TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_WINDOW_MANAGER
-    SEPARATOR
-    BUTTON      ID_WINDOW_CASCADE
-    BUTTON      ID_WINDOW_TILE_HORZ
-    BUTTON      ID_TOOLS_MACRO
-    BUTTON      ID_SORTING_SORTALPHABETIC
-    BUTTON      ID_SORTING_SORTBYTYPE
-    BUTTON      ID_SORTING_SORTBYACCESS
-    BUTTON      ID_SORTING_GROUPBYTYPE
-END
-
-IDR_PROPERTIES TOOLBAR  16, 16
-BEGIN
-    BUTTON      ID_EXPAND_ALL
-    BUTTON      ID_SORTPROPERTIES
-    BUTTON      ID_PROPERTIES1
-    BUTTON      ID_PROPERTIES2
-END
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -228,16 +192,11 @@ BEGIN
     POPUP "合约(&C)"
     BEGIN
         MENUITEM "交易记录",                        ID_TRADE_LOG
-        MENUITEM "搜索合约",                        ID_SEARCH_CONTRACT
         MENUITEM "日线生成",                        ID_GEN_DAYLINE
         MENUITEM "策略测试",                        ID_STRATEGY
     END
     POPUP "视图(&V)"
     BEGIN
-        POPUP "工具栏和停靠窗口(&T)"
-        BEGIN
-            MENUITEM "<占位符>",                       ID_VIEW_TOOLBAR
-        END
         MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
         POPUP "应用程序外观(&A)"
         BEGIN
@@ -258,55 +217,6 @@ BEGIN
     POPUP "帮助(&H)"
     BEGIN
         MENUITEM "关于 KLinePrint(&A)...",        ID_APP_ABOUT
-    END
-END
-
-IDR_POPUP_EDIT MENU 
-BEGIN
-    POPUP "编辑"
-    BEGIN
-        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
-        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
-        MENUITEM "粘贴(&P)\tCtrl+V",              ID_EDIT_PASTE
-    END
-END
-
-IDR_POPUP_SORT MENU 
-BEGIN
-    POPUP "排序"
-    BEGIN
-        MENUITEM "按字母顺序排序(&S)",                 ID_SORTING_SORTALPHABETIC
-        MENUITEM "按类型排序(&T)",                   ID_SORTING_SORTBYTYPE
-        MENUITEM "按访问排序(&E)",                   ID_SORTING_SORTBYACCESS
-        MENUITEM "按类型分组(&Y)",                   ID_SORTING_GROUPBYTYPE
-    END
-END
-
-IDR_POPUP_EXPLORER MENU 
-BEGIN
-    POPUP "资源管理器"
-    BEGIN
-        MENUITEM "打开(&O)",                      ID_OPEN
-        MENUITEM "打开方式(&W)....",                ID_OPEN_WITH
-        MENUITEM SEPARATOR
-        MENUITEM "编译(&C)",                      ID_DUMMY_COMPILE
-        MENUITEM SEPARATOR
-        MENUITEM "剪切(&T)\tCtrl+X",              ID_EDIT_CUT
-        MENUITEM "复制(&C)\tCtrl+C",              ID_EDIT_COPY
-        MENUITEM "删除(&R)",                      ID_EDIT_CLEAR
-        MENUITEM SEPARATOR
-        MENUITEM "属性(&P)...",                   ID_PROPERTIES
-    END
-END
-
-IDR_OUTPUT_POPUP MENU 
-BEGIN
-    POPUP "弹出项"
-    BEGIN
-        MENUITEM "复制(&C)",                      ID_EDIT_COPY
-        MENUITEM "清除(&C)",                      ID_EDIT_CLEAR
-        MENUITEM SEPARATOR
-        MENUITEM "隐藏(&H)",                      ID_VIEW_OUTPUTWND
     END
 END
 
@@ -359,24 +269,6 @@ BEGIN
     DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_SEARCH_CONTRACT DIALOGEX 0, 0, 292, 130
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "搜索合约"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "搜索",IDOK,163,35,90,14
-    PUSHBUTTON      "取消",IDCANCEL,163,55,88,14
-    EDITTEXT        IDC_EDIT_MORE_THAN,71,34,66,14,ES_CENTER | ES_AUTOHSCROLL
-    CONTROL         "大于(%)",IDC_CHECK_MORE_THAN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,24,36,45,10
-    CONTROL         "TopN",IDC_CHECK_TOP_N,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,24,55,33,10
-    EDITTEXT        IDC_EDIT_TOPN,71,55,66,14,ES_CENTER | ES_AUTOHSCROLL
-    COMBOBOX        IDC_COMBO1,25,92,250,30,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "搜索到的文件",IDC_STATIC,15,74,49,8
-    CONTROL         "开/收盘价范围",IDC_CHECK_OPEN_CLOSE_RANGE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,113,16,67,10
-    CONTROL         "最高/最低价范围",IDC_CHECK_HIGH_LOW_RANGE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,24,16,75,10
-    CONTROL         "高低开幅度",IDC_CHECK_GAP_RANGE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,193,16,56,10
-END
-
 IDD_TRADE DIALOGEX 0, 0, 286, 228
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "交易"
@@ -418,47 +310,34 @@ BEGIN
     CONTROL         "休盘时强行平仓",IDC_CHECK_CLOSE_ON_BREAK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,103,188,72,10
 END
 
-IDD_PLAYBACK_CONF DIALOGEX 0, 0, 242, 279
+IDD_PLAYBACK_CONF DIALOGEX 0, 0, 242, 177
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "回放参数设置"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CONTROL         "按序播放",IDC_RADIO_SEQUENCE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,27,23,48,10
-    CONTROL         "随机播放",IDC_RADIO_RANDOM,"Button",BS_AUTORADIOBUTTON,75,23,48,10
-    CONTROL         "所有",IDC_RADIO_ALLDATE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,23,59,32,10
-    CONTROL         "最近一年",IDC_RADIO_1YEAR,"Button",BS_AUTORADIOBUTTON,60,59,48,10
-    CONTROL         "最近半年",IDC_RADIO_HALFYEAR,"Button",BS_AUTORADIOBUTTON,109,59,48,10
-    CONTROL         "最近三个月",IDC_RADIO_3MONTH,"Button",BS_AUTORADIOBUTTON,160,59,56,10
-    CONTROL         "起止日期",IDC_RADIO_DATE_RANGE,"Button",BS_AUTORADIOBUTTON,23,77,48,10
-    DEFPUSHBUTTON   "确定",IDOK,56,258,50,14
-    PUSHBUTTON      "取消",IDCANCEL,130,258,50,14
-    CONTROL         "",IDC_DATETIMEPICKER_FROM,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,89,75,56,15
-    LTEXT           "从",IDC_STATIC,77,78,9,8
-    LTEXT           "到",IDC_STATIC,152,78,9,8
-    CONTROL         "",IDC_DATETIMEPICKER_TO,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,164,75,53,15
-    CONTROL         "星期一",IDC_CHECK_MONDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,156,40,10
-    CONTROL         "星期二",IDC_CHECK_TUESDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,62,156,40,10
-    CONTROL         "星期三",IDC_CHECK_WEDNESDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,103,156,40,10
-    CONTROL         "星期四",IDC_CHECK_THURSDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,145,156,40,10
-    CONTROL         "星期五",IDC_CHECK_FRIDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,186,156,40,10
-    GROUPBOX        "日期范围",IDC_STATIC,15,42,210,58
-    GROUPBOX        "周间日",IDC_STATIC,15,137,210,43
-    GROUPBOX        "播放顺序",IDC_STATIC,16,11,210,28
-    CONTROL         "高低开超过",IDC_CHECK_GAP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,201,56,10
-    EDITTEXT        IDC_EDIT_GAP,91,199,40,14,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "%",IDC_STATIC,138,201,8,8
-    GROUPBOX        "过滤条件",IDC_STATIC,17,185,207,67
-    CONTROL         "前一交易日震荡幅度大于",IDC_CHECK_FLUNC_ABOVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,218,104,10
-    EDITTEXT        IDC_EDIT_FLUNC_ABOVE,133,217,40,14,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "%",IDC_STATIC,177,219,8,8
-    CONTROL         "前一交易日震荡幅度小于",IDC_CHECK_FLUNC_BELOW,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,235,104,10
-    EDITTEXT        IDC_EDIT_FLUNC_BELOW,134,234,40,14,ES_CENTER | ES_AUTOHSCROLL
-    LTEXT           "%",IDC_STATIC,178,236,8,8
-    GROUPBOX        "时段",IDC_STATIC,15,103,210,29
-    CONTROL         "",IDC_TIMEPICKER_FROM,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,62,112,51,15
-    CONTROL         "",IDC_TIMEPICKER_TO,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,135,112,51,15
-    LTEXT           "从",IDC_STATIC,47,115,9,8
-    LTEXT           "到",IDC_STATIC,121,115,9,8
+    CONTROL         "所有",IDC_RADIO_ALLDATE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,23,31,32,10
+    CONTROL         "最近一年",IDC_RADIO_1YEAR,"Button",BS_AUTORADIOBUTTON,60,31,48,10
+    CONTROL         "最近半年",IDC_RADIO_HALFYEAR,"Button",BS_AUTORADIOBUTTON,109,31,48,10
+    CONTROL         "最近三个月",IDC_RADIO_3MONTH,"Button",BS_AUTORADIOBUTTON,160,31,56,10
+    CONTROL         "起止日期",IDC_RADIO_DATE_RANGE,"Button",BS_AUTORADIOBUTTON,23,49,48,10
+    DEFPUSHBUTTON   "确定",IDOK,57,156,50,14
+    PUSHBUTTON      "取消",IDCANCEL,131,156,50,14
+    CONTROL         "",IDC_DATETIMEPICKER_FROM,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,89,47,56,15
+    LTEXT           "从",IDC_STATIC,77,50,9,8
+    LTEXT           "到",IDC_STATIC,152,50,9,8
+    CONTROL         "",IDC_DATETIMEPICKER_TO,"SysDateTimePick32",DTS_RIGHTALIGN | WS_TABSTOP,164,47,53,15
+    CONTROL         "星期一",IDC_CHECK_MONDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,22,128,40,10
+    CONTROL         "星期二",IDC_CHECK_TUESDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,62,128,40,10
+    CONTROL         "星期三",IDC_CHECK_WEDNESDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,103,128,40,10
+    CONTROL         "星期四",IDC_CHECK_THURSDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,145,128,40,10
+    CONTROL         "星期五",IDC_CHECK_FRIDAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,186,128,40,10
+    GROUPBOX        "日期范围",IDC_STATIC,15,14,210,58
+    GROUPBOX        "周间日",IDC_STATIC,15,109,210,43
+    GROUPBOX        "时段",IDC_STATIC,15,75,210,29
+    CONTROL         "",IDC_TIMEPICKER_FROM,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,62,84,51,15
+    CONTROL         "",IDC_TIMEPICKER_TO,"SysDateTimePick32",DTS_RIGHTALIGN | DTS_UPDOWN | WS_TABSTOP | 0x8,135,84,51,15
+    LTEXT           "从",IDC_STATIC,47,87,9,8
+    LTEXT           "到",IDC_STATIC,121,87,9,8
 END
 
 IDD_TRADE_LOG DIALOGEX 0, 0, 528, 339
@@ -545,14 +424,6 @@ BEGIN
         BOTTOMMARGIN, 55
     END
 
-    IDD_SEARCH_CONTRACT, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 285
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 123
-    END
-
     IDD_TRADE, DIALOG
     BEGIN
         BOTTOMMARGIN, 227
@@ -563,7 +434,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 235
         TOPMARGIN, 7
-        BOTTOMMARGIN, 272
+        BOTTOMMARGIN, 170
     END
 
     IDD_TRADE_LOG, DIALOG

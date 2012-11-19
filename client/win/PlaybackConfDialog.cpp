@@ -13,7 +13,6 @@ IMPLEMENT_DYNAMIC(CPlaybackConfDialog, CDialog)
 
 CPlaybackConfDialog::CPlaybackConfDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CPlaybackConfDialog::IDD, pParent)
-	, m_nPlaybackOrder(0)
 	, m_nDateRangeOption(0)
 	, m_bMonday(FALSE)
 	, m_bTuesday(FALSE)
@@ -22,12 +21,6 @@ CPlaybackConfDialog::CPlaybackConfDialog(CWnd* pParent /*=NULL*/)
 	, m_bFriday(FALSE)
 	, m_StartDate(0)
 	, m_EndDate(0)
-	, m_bGap(FALSE)
-	, m_bFluncAbove(FALSE)
-	, m_bFluncBelow(FALSE)
-	, m_fGap(0)
-	, m_fFluncAbove(0)
-	, m_fFluncBelow(0)
 	, m_TimeFrom(0)
 	, m_TimeTo(0)
 {
@@ -41,7 +34,6 @@ CPlaybackConfDialog::~CPlaybackConfDialog()
 void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	DDX_Radio(pDX, IDC_RADIO_SEQUENCE, m_nPlaybackOrder);
 	DDX_Radio(pDX, IDC_RADIO_ALLDATE, m_nDateRangeOption);
 	DDX_Check(pDX, IDC_CHECK_MONDAY, m_bMonday);
 	DDX_Check(pDX, IDC_CHECK_TUESDAY, m_bTuesday);
@@ -50,12 +42,6 @@ void CPlaybackConfDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_CHECK_FRIDAY, m_bFriday);
 	DDX_DateTimeCtrl(pDX, IDC_DATETIMEPICKER_FROM, m_StartDate);
 	DDX_DateTimeCtrl(pDX, IDC_DATETIMEPICKER_TO, m_EndDate);
-	DDX_Check(pDX, IDC_CHECK_GAP, m_bGap);
-	DDX_Check(pDX, IDC_CHECK_FLUNC_ABOVE, m_bFluncAbove);
-	DDX_Check(pDX, IDC_CHECK_FLUNC_BELOW, m_bFluncBelow);
-	DDX_Text(pDX, IDC_EDIT_GAP, m_fGap);
-	DDX_Text(pDX, IDC_EDIT_FLUNC_ABOVE, m_fFluncAbove);
-	DDX_Text(pDX, IDC_EDIT_FLUNC_BELOW, m_fFluncBelow);
 	DDX_DateTimeCtrl(pDX, IDC_TIMEPICKER_FROM, m_TimeFrom);
 	DDX_DateTimeCtrl(pDX, IDC_TIMEPICKER_TO, m_TimeTo);
 }
@@ -71,11 +57,6 @@ END_MESSAGE_MAP()
 void CPlaybackConfDialog::OnBnClickedOk()
 {
 	UpdateData();
-
-	if(m_nPlaybackOrder == 0)
-		m_pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_SEQUENTIAL;
-	else
-		m_pc.enPlaybackOrder = PlaybackConfig::PLAYBACK_RANDOM;
 
 	int nLastDate = CALENDAR.GetLast();
 
@@ -132,21 +113,6 @@ void CPlaybackConfDialog::OnBnClickedOk()
 	m_pc.bDayOfWeek[4] = m_bThursday;
 	m_pc.bDayOfWeek[5] = m_bFriday;
 
-	if(m_bGap)
-		m_pc.fGapPercentage = m_fGap;
-	else
-		m_pc.fGapPercentage = 0;
-
-	if(m_bFluncAbove)
-		m_pc.fLastDayFluctuationAbove = m_fFluncAbove;
-	else
-		m_pc.fLastDayFluctuationAbove = 0;
-
-	if(m_bFluncBelow)
-		m_pc.fLastDayFluctuationBelow = m_fFluncBelow;
-	else
-		m_pc.fLastDayFluctuationBelow = 0;
-
 	//	保存到配置文件
 	PBCONFIG = m_pc;
 	Utility::SavePlaybackConfig(m_pc);
@@ -157,11 +123,6 @@ void CPlaybackConfDialog::OnBnClickedOk()
 BOOL CPlaybackConfDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-
-	if(m_pc.enPlaybackOrder == PlaybackConfig::PLAYBACK_SEQUENTIAL)
-		m_nPlaybackOrder = 0;
-	else
-		m_nPlaybackOrder = 1;
 	
 	if(m_pc.bDayOfWeek[1]) 
 		m_bMonday = TRUE;
@@ -207,24 +168,6 @@ BOOL CPlaybackConfDialog::OnInitDialog()
 	else
 		m_TimeTo = CTime(2000,1,1, 
 						m_pc.nEndTime / 3600, m_pc.nEndTime % 3600 / 60, m_pc.nEndTime % 3600 % 60);
-
-	if(m_pc.fGapPercentage)
-	{
-		m_bGap = TRUE;
-		m_fGap = m_pc.fGapPercentage;
-	}
-
-	if(m_pc.fLastDayFluctuationAbove)
-	{
-		m_bFluncAbove = TRUE;
-		m_fFluncAbove = m_pc.fLastDayFluctuationAbove;
-	}
-
-	if(m_pc.fLastDayFluctuationBelow)
-	{
-		m_bFluncBelow = TRUE;
-		m_fFluncBelow = m_pc.fLastDayFluctuationBelow;
-	}
 
 	UpdateData(FALSE);
 
