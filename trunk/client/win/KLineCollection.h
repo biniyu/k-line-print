@@ -29,6 +29,9 @@ public:
 	double ma20;
 	double ma60;
 
+	int sumOf19;			//	前19日的和，用于计算ma20
+	int sumOf59;			//	前59日的和，用于计算ma60
+
 	//	最高最低价
 	double high5;
 	double low5;

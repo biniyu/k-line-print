@@ -62,6 +62,7 @@ void CKLinePrintView::Set1MinData(KLineCollection* pData)
 	klr_1min.SetKLineData(pData, 240); 
 	klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 	klr_1min.SetShowAvg(true);
+	klr_1min.SetShowMA(true);
 	klr_1min.SetShowCriticalTime(true);
 	klr_1min.SetShowMaxMin(false);	//	显示日内最高最低价
 	klr_1min.SetOpenIndex(1);
@@ -125,14 +126,8 @@ void CKLinePrintView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 void CKLinePrintView::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ClientToScreen(&point);
-	OnContextMenu(this, point);
+//	OnContextMenu(this, point);
 }
-
-void CKLinePrintView::OnContextMenu(CWnd* pWnd, CPoint point)
-{
-	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
-}
-
 
 // CKLinePrintView 诊断
 
