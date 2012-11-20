@@ -133,6 +133,32 @@ void KLineCollection::Quote(Tick tick)
 		tmp.avg_devi = GetAvgDevi(tmp);
 		tmp.interest = curKLine.interest;
 
+		float nSumOfClose = 0;
+
+		//	º∆À„ma20
+		if(size() >= 19)
+		{
+
+			for(int i = size() - 1; i >= (int)size() - 19; i--)
+			{
+				KLine& tmp1 = (*this)[i];
+				nSumOfClose += tmp1.close;
+			}
+
+			tmp.sumOf19 = nSumOfClose;
+		}
+
+		if(size() >= 59)
+		{
+			for(int i = size() - 20; i >= (int)size() - 59; i--)
+			{
+				KLine& tmp1 = (*this)[i];
+				nSumOfClose += tmp1.close;
+			}
+
+			tmp.sumOf59 = nSumOfClose;
+		}
+
 		AddToTail(tmp);
 	}
 	else
@@ -151,6 +177,10 @@ void KLineCollection::Quote(Tick tick)
 		curKLine.avg = curKLine.price_acc / (float) curKLine.vol_acc;
 		curKLine.avg_devi = GetAvgDevi(curKLine);
 		curKLine.interest += tick.interest;
+
+		//	º∆À„ma20
+		curKLine.ma20 = (curKLine.sumOf19 + curKLine.close) / 20.0f;
+		curKLine.ma60 = (curKLine.sumOf59 + curKLine.close) / 60.0f;
 	}
 }
 
