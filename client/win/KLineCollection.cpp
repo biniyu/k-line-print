@@ -91,6 +91,12 @@ void KLineCollection::StartQuote(Tick tick)
 	m_nMaxPrice = m_nMinPrice = tick.price;
 	tmp.interest = 0;
 
+	//	计算初始macd
+	tmp.EMA12 = tmp.EMA26 = tick.price;
+	tmp.MACD = tmp.EMA12 - tmp.EMA26;
+	tmp.avgMACD9 = tmp.MACD;
+	tmp.MACDDiff = tmp.MACD - tmp.avgMACD9;
+
 	AddToTail(tmp);
 }
 
@@ -101,6 +107,10 @@ int KLineCollection::GetAvgDevi(KLine kline)
 	else
 		return abs(kline.low - kline.avg);
 }
+
+double sFactor12 = 2.0f / (1+12);
+double sFactor26 = 2.0f / (1+26);
+double sFactor9 = 2.0f / (1+9);
 
 //	接收分笔数据
 void KLineCollection::Quote(Tick tick)
@@ -159,6 +169,13 @@ void KLineCollection::Quote(Tick tick)
 			tmp.sumOf59 = nSumOfClose;
 		}
 
+		//	计算macd(12,26,9)
+		tmp.EMA12 = curKLine.EMA12 + sFactor12 * (tmp.close - curKLine.EMA12);
+		tmp.EMA26 = curKLine.EMA26 + sFactor26 * (tmp.close - curKLine.EMA26);
+		tmp.MACD = tmp.EMA12 - tmp.EMA26;
+		tmp.avgMACD9 = curKLine.avgMACD9 + sFactor9 * (tmp.MACD - curKLine.avgMACD9);
+		tmp.MACDDiff = tmp.MACD - tmp.avgMACD9;
+
 		AddToTail(tmp);
 	}
 	else
@@ -181,6 +198,23 @@ void KLineCollection::Quote(Tick tick)
 		//	计算ma20
 		curKLine.ma20 = (curKLine.sumOf19 + curKLine.close) / 20.0f;
 		curKLine.ma60 = (curKLine.sumOf59 + curKLine.close) / 60.0f;
+
+		if(size() == 1)
+		{
+			curKLine.EMA12 = curKLine.EMA26 = curKLine.close;
+			curKLine.MACD = curKLine.EMA12 - curKLine.EMA26;
+			curKLine.avgMACD9 = curKLine.MACD;
+			curKLine.MACDDiff = curKLine.MACD - curKLine.avgMACD9;
+		}
+		else
+		{
+			KLine& lastKLine = (*this)[this->size() - 2];
+			curKLine.EMA12 = lastKLine.EMA12 + sFactor12 * (curKLine.close - lastKLine.EMA12);
+			curKLine.EMA26 = lastKLine.EMA26 + sFactor26 * (curKLine.close - lastKLine.EMA26);
+			curKLine.MACD = curKLine.EMA12 - curKLine.EMA26;
+			curKLine.avgMACD9 = lastKLine.avgMACD9 + sFactor9 * (curKLine.MACD - lastKLine.avgMACD9);
+			curKLine.MACDDiff = curKLine.MACD - curKLine.avgMACD9;
+		}
 	}
 }
 
