@@ -62,7 +62,7 @@ void CKLinePrintView::Set1MinData(KLineCollection* pData)
 	klr_1min.SetKLineData(pData, 240); 
 	klr_1min.SetRenderMode(KLineRenderer::enAxisMode);
 	klr_1min.SetShowAvg(true);
-	klr_1min.SetShowMA(true);
+	klr_1min.SetShowMA(false);
 	klr_1min.SetShowCriticalTime(true);
 	klr_1min.SetShowMaxMin(false);	//	显示日内最高最低价
 	klr_1min.SetOpenIndex(1);

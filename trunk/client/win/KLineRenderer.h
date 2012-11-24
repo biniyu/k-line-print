@@ -1,7 +1,11 @@
 #pragma once
 
+#include <vector>
+
 class KLineCollection;
 class TradeRecordCollection;
+
+using namespace std;
 
 class KLineRenderer
 {
@@ -119,6 +123,10 @@ private:
 
 	CBrush brRed, brGreen, brBlue;
 
+	vector<int> m_vecDivRatio;		//	主图与各副图之间的比例
+	vector<float> m_vecDivHeight;		//	各图的高度
+	vector<int> m_vecDivStartY;		//	各图起始纵坐标
+
 private:
 
 	void RenderGraphFrame(CDC* pDC);
@@ -139,7 +147,7 @@ private:
 	void RenderAvg(CDC* pDC, int nKIdx);
 	void RenderMA(CDC* pDC, int nKIdx);
 	void RenderVol(CDC* pDC, int nKIdx);
-
+	void RenderMACD(CDC* pDC, int nKIdx);
 
 public:
 
