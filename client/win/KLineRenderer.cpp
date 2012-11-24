@@ -51,6 +51,11 @@ KLineRenderer::KLineRenderer(void)
 	brBlue.CreateSolidBrush(RGB(0,0,255));
 
 	m_bLossStopSelected = m_bProfitStopSelected = m_bTriggerSelected = FALSE;
+
+	//	主图,VOL, MACD的比例为4:1:1
+	m_vecDivRatio.push_back(4);
+	m_vecDivRatio.push_back(1);
+	m_vecDivRatio.push_back(1);
 }
 
 KLineRenderer::~KLineRenderer(void)
@@ -318,17 +323,17 @@ void KLineRenderer::ToggleRenderMode()
 
 float KLineRenderer::GetPricePosition(int nPrice)
 {
-	return m_Rect.top + (m_kHighPrice - nPrice) * m_pixelPerPrice;
+	return m_vecDivStartY[0] + (m_kHighPrice - nPrice) * m_pixelPerPrice;
 }
 
 float KLineRenderer::GetVolPosition(int nVol)
 {
-	return m_Rect.bottom - nVol * m_pixelPerVol;
+	return m_vecDivStartY[2] - nVol * m_pixelPerVol;
 }
 
 float KLineRenderer::GetInterestPosition(int nInterest)
 {
-	return m_Rect.bottom - (nInterest + m_interestMax) * m_pixelPerInterest;
+	return m_vecDivStartY[2] - (nInterest + m_interestMax) * m_pixelPerInterest;
 }
 
 void KLineRenderer::DelTrigger()
@@ -829,6 +834,11 @@ void KLineRenderer::RenderAvg(CDC* pDC, int nKIdx)
 	}
 }
 
+void KLineRenderer::RenderMACD(CDC* pDC, int nKIdx)
+{
+
+}
+
 void KLineRenderer::RenderMA(CDC* pDC, int nKIdx)
 {
 	if(nKIdx > m_nFirstDisplayedIndex + 1)
@@ -862,6 +872,8 @@ void KLineRenderer::RenderMA(CDC* pDC, int nKIdx)
 
 void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 {
+	int divBottom = m_vecDivStartY[2];
+
 	KLine& kline = (*m_pKLines)[nKIdx];
 
 	float kLastMiddle = m_kMiddle - m_kWidth - m_nKSpace;
@@ -872,7 +884,7 @@ void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 	if(m_bShowTimeLine)
 	{
 		pDC->SelectObject(penBlue);
-		pDC->MoveTo(m_kMiddle - 2, m_Rect.bottom);
+		pDC->MoveTo(m_kMiddle - 2, divBottom);
 		pDC->LineTo(m_kMiddle - 2, kVolPos);
 	}
 	else
@@ -884,10 +896,10 @@ void KLineRenderer::RenderVol(CDC* pDC, int nKIdx)
 		else
 			pDC->SelectObject(&penBlue);
 
-		pDC->MoveTo(m_kLeft, m_Rect.bottom);
+		pDC->MoveTo(m_kLeft, divBottom);
 		pDC->LineTo(m_kLeft, kVolPos);
 		pDC->LineTo(m_kRight, kVolPos);
-		pDC->LineTo(m_kRight, m_Rect.bottom);
+		pDC->LineTo(m_kRight, divBottom);
 	}
 
 	//	日内持仓量线
@@ -927,6 +939,13 @@ void KLineRenderer::RenderGraphFrame(CDC* pDC)
 	sz = pDC->GetTextExtent(tmp);
 	pDC->TextOutW(m_Rect.right - RIGHT_MARGIN, timeLinePos, tmp);
 
+	//	绘制主图及各副图的分割线
+	for(int i = 0; i < m_vecDivStartY.size(); i++)
+	{
+		pDC->MoveTo(m_Rect.left, m_vecDivStartY[i]);
+		pDC->LineTo(m_Rect.right, m_vecDivStartY[i]);		
+	}
+
 	//	绘制时间线
 	pDC->MoveTo(m_Rect.left, m_Rect.bottom - 1);
 	pDC->LineTo(m_Rect.right, m_Rect.bottom - 1);
@@ -944,6 +963,25 @@ void KLineRenderer::RenderGraphFrame(CDC* pDC)
 
 void KLineRenderer::CalculateGraphLayout()
 {
+	//	计算各主副图的位置
+	int nTotalRatio = 0;
+
+	for(int i = 0; i < m_vecDivRatio.size(); i++) 
+		nTotalRatio += m_vecDivRatio[i];
+
+	m_vecDivHeight.clear();
+	m_vecDivStartY.clear();
+
+	int nStartYPosition = m_Rect.top;
+
+	for(int i = 0; i < m_vecDivRatio.size(); i++)
+	{
+		int nDivHeight = (float)m_Rect.Height() * m_vecDivRatio[i] / nTotalRatio;
+		m_vecDivHeight.push_back(nDivHeight);
+		m_vecDivStartY.push_back(nStartYPosition);
+		nStartYPosition += nDivHeight;
+	}
+
 	if(m_enRenderMode == enHighLowMode)
 	{
 		m_pKLines->GetPriceVolRange(m_nFirstDisplayedIndex, 
@@ -998,12 +1036,12 @@ void KLineRenderer::CalculateGraphLayout()
 	if(m_bShowVol)
 	{
 		//	计算一个价格对应多少像素
-		m_pixelPerPrice = (float)m_Rect.Height() * m_nKVolRatio / (m_nKVolRatio + 1) / (m_kHighPrice - m_kLowPrice);
+		m_pixelPerPrice = m_vecDivHeight[0] / (m_kHighPrice - m_kLowPrice);
 		
 		//	计算单位成交量对应多少像素
-		m_pixelPerVol = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / m_volMax;
+		m_pixelPerVol = m_vecDivHeight[1] / m_volMax;
 
-		m_pixelPerInterest = ((float)m_Rect.Height()) / (m_nKVolRatio + 1) / (2 * m_interestMax);
+		m_pixelPerInterest = m_vecDivHeight[1] / (2 * m_interestMax);
 	}
 	else
 	{
