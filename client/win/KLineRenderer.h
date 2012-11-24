@@ -90,7 +90,7 @@ private:
 	CPoint m_cp;
 
 	//	每个价格/成交量/持仓量单位对应的像素数
-	float m_pixelPerPrice, m_pixelPerVol, m_pixelPerInterest;
+	float m_pixelPerPrice, m_pixelPerVol, m_pixelPerInterest, m_pixelPerMacd;
 
 	//	价格百分比
 	float m_fPricePercentage;
@@ -103,6 +103,9 @@ private:
 
 	//	最大成交量/持仓量
 	int m_volMax, m_interestMax;
+
+	//	MACD 最大最小值
+	float m_hiMacd, m_loMacd;
 
 	//	当前图显示的最高/最低/中轴价
 	int m_kHighPrice, m_kLowPrice, m_kAxisPrice;
@@ -192,6 +195,9 @@ public:
 
 	//	选中本区域并选中K线
 	void Select(CPoint pt);
+
+	//	计算MACD在图中的位置
+	float GetMacdPosition(float fMacd);
 
 	//	计算价格在图中的位置
 	float GetPricePosition(int nPrice);

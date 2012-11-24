@@ -43,9 +43,11 @@ void KLineCollection::Clear()
 }
 
 void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr, int& nLowPr, 
-									   int& nMaxVol, int& nMaxInterest)
+									   int& nMaxVol, int& nMaxInterest, float& fHiMacd, float& fLoMacd)
 {
 	int high = 0, low = 0, maxvol = 0, maxint = 5000;
+
+	float hiMacd = 0, loMacd = 0;
 
 	for(int i = nStartIdx; i <= nEndIdx; i++)
 	{
@@ -58,6 +60,8 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 			high = kline.high;
 			low = kline.low;
 			maxvol = kline.vol;
+			hiMacd = kline.MACD;
+			loMacd = kline.MACD;
 		}
 		else
 		{
@@ -65,6 +69,8 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 			if(kline.low < low) low = kline.low;
 			if(kline.vol > maxvol) maxvol = kline.vol;
 			if(abs(kline.interest) > maxint) maxint = abs(kline.interest);
+			if(kline.MACD > hiMacd) hiMacd = kline.MACD;
+			if(kline.MACD < loMacd) loMacd = kline.MACD;
 		}
 	}
 
@@ -72,6 +78,8 @@ void KLineCollection::GetPriceVolRange(int nStartIdx, int nEndIdx, int& nHighPr,
 	nLowPr = low;
 	nMaxVol = maxvol;
 	nMaxInterest = maxint;
+	fHiMacd = hiMacd;
+	fLoMacd = loMacd;
 }
 
 //	开始接收分笔数据
