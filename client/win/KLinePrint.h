@@ -26,16 +26,23 @@ public:
 public:
 	virtual BOOL InitInstance();
 
+	int GetPlaybackDate();
+	void LoadPlaybackCalendar(PlaybackConfig pbConfig);
+	BOOL ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig);
+
 // 实现
 	UINT			m_nAppLook;
 	BOOL			m_bHiColorIcons;
 
 	Calendar		m_cal;
+	Calendar		m_PlaybackCalendar;
+
 	PlaybackConfig	m_PlaybackConfig;		//	回放选项
 	TradeFacility	m_ex;					//	交易所
 
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+
 };
 
 extern CKLinePrintApp theApp;
@@ -43,4 +50,5 @@ extern CKLinePrintApp theApp;
 #define CALENDAR ((CKLinePrintApp*)AfxGetApp())->m_cal
 #define PBCONFIG ((CKLinePrintApp*)AfxGetApp())->m_PlaybackConfig
 #define EXCHANGE ((CKLinePrintApp*)AfxGetApp())->m_ex
+#define PBCAL ((CKLinePrintApp*)AfxGetApp())->m_PlaybackCalendar
 
