@@ -114,7 +114,7 @@ BOOL CKLinePrintApp::InitInstance()
 		return FALSE;
 
 	CalendarGenerator cg;
-	cg.Generate("J:\\FutureData\\ZZ", m_cal);
+	cg.Generate("C:\\FutureData\\ZZ", m_cal);
 
 	//	读入账户/品种信息
 	EXCHANGE.SetBalance(Utility::ReadBalance());
@@ -125,22 +125,24 @@ BOOL CKLinePrintApp::InitInstance()
 
 	srand(time(0));
 
+	//	加载回放配置并生成日历
+	m_PlaybackConfig = Utility::ReadPlaybackConfig();
+	LoadPlaybackCalendar(m_PlaybackConfig);
+
 	//	自动打开上次的文件
 	char path[MAX_PATH];
-	CKLinePrintDoc* pDoc = NULL;
 
 	::GetPrivateProfileStringA("Files","Current","", 
 							path, sizeof(path), 
 							(Utility::GetProgramPath() + "klinep.ini").c_str());
 
+	CKLinePrintDoc* pDoc = NULL;
+
 	if(strlen(path))
+	{
 		pDoc = (CKLinePrintDoc*)OpenDocumentFile(CString(path));
-
-	//	加载回放配置并生成日历
-	m_PlaybackConfig = Utility::ReadPlaybackConfig();
-
-	if(pDoc)
-		pDoc->LoadPlaybackCalendar(m_PlaybackConfig);
+		pDoc->LoadNextDay();
+	}
 
 	// 唯一的一个窗口已初始化，因此显示它并对其进行更新
 	m_pMainWnd->ShowWindow(SW_SHOW);
@@ -150,7 +152,49 @@ BOOL CKLinePrintApp::InitInstance()
 	return TRUE;
 }
 
+void CKLinePrintApp::LoadPlaybackCalendar(PlaybackConfig pbConfig)
+{
+	m_PlaybackCalendar.clear();
 
+	//	根据配置生成过滤后的日历
+
+	int nCurDate = CALENDAR.GetFirst();
+
+	while(nCurDate > 0)
+	{
+		//	满足所有条件才加入
+		if(ValidatePlaybackConfig(nCurDate, pbConfig))
+			m_PlaybackCalendar.Add(nCurDate);
+
+		nCurDate = CALENDAR.GetNext(nCurDate);
+	}
+}
+
+BOOL CKLinePrintApp::ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig)
+{
+	if(pbConfig.nStartDate)
+	{
+		if(nDate < pbConfig.nStartDate) return FALSE;
+	}
+
+	if(pbConfig.nEndDate)
+	{
+		if(nDate > pbConfig.nEndDate) return FALSE;
+	}
+
+	int nWeekDay = Utility::GetWeekDayByDate(nDate);
+
+	if(pbConfig.bDayOfWeek[nWeekDay] == FALSE)
+		return FALSE;
+
+	return TRUE;
+}
+
+int CKLinePrintApp::GetPlaybackDate()
+{
+	int nDayCnt = m_PlaybackCalendar.size();
+	return m_PlaybackCalendar.GetBySeq(rand() % nDayCnt);
+}
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 

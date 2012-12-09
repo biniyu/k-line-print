@@ -400,9 +400,6 @@ void CKLinePrintView::OnPlaybackForward()
 {
 	CKLinePrintDoc* pDoc = GetDocument();
 
-	if(!pDoc->HasPlaybackCalendar())
-		pDoc->LoadPlaybackCalendar(PBCONFIG);
-
 	pDoc->DisplayTill(klr_1min.GetCurTime());
 
 	SetTimer(1,1000,NULL); 
@@ -625,7 +622,7 @@ void CKLinePrintView::OnPlaybackConf()
 
 	if(IDOK == dlg.DoModal())
 	{
-		pDoc->LoadPlaybackCalendar(PBCONFIG);
+		theApp.LoadPlaybackCalendar(PBCONFIG);
 	}
 }
 

@@ -36,8 +36,6 @@ private:
 	KLineReader				m_KLineReader;
 	TickReader				m_TickReader;
 
-	Calendar				m_FilteredCalendar;		// 根据回放选项过滤出来的符合条件的日期
-
 // 操作
 public:
 
@@ -92,11 +90,6 @@ public:
 	void SetTradeRecord(TradeRecordCollection trs) { m_TradeRecords = trs; }
 
 	TradeRecordCollection* GetTradeRecord() { return &m_TradeRecords; }
-
-	void LoadPlaybackCalendar(PlaybackConfig pbConfig);
-	BOOL ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig);
-
-	BOOL HasPlaybackCalendar() { return (m_FilteredCalendar.size()!=0); }
 
 	void ViewNeighborDate(BOOL bPrev);
 	void ReloadByDate(int nDate);

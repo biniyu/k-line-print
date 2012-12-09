@@ -54,8 +54,6 @@ BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 	char InfoString[256];    
 
-	
-	  
 	// 转换后的数据存放在InfoString数组中   
 	if (!WideCharToMultiByte(CP_ACP,0, lpszPathName,-1, InfoString,100,NULL,NULL))    
 	{    
@@ -65,7 +63,7 @@ BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	m_Strategy.SetData(&m_1MinData);
 
 	LoadKLineGroup(InfoString);
-	DisplayTill(-1, -1);
+
 	return TRUE;
 }
 
@@ -97,48 +95,6 @@ void CKLinePrintDoc::Dump(CDumpContext& dc) const
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
-
-
-BOOL CKLinePrintDoc::ValidatePlaybackConfig(int nDate, PlaybackConfig pbConfig)
-{
-	if(pbConfig.nStartDate)
-	{
-		if(nDate < pbConfig.nStartDate) return FALSE;
-	}
-
-	if(pbConfig.nEndDate)
-	{
-		if(nDate > pbConfig.nEndDate) return FALSE;
-	}
-
-	int nWeekDay = Utility::GetWeekDayByDate(nDate);
-
-	if(pbConfig.bDayOfWeek[nWeekDay] == FALSE)
-		return FALSE;
-
-	return TRUE;
-}
-
-void CKLinePrintDoc::LoadPlaybackCalendar(PlaybackConfig pbConfig)
-{
-	//	未加载分笔数据
-	if(!m_CurCsvFile.size()) return;
-
-	m_FilteredCalendar.clear();
-
-	//	根据配置生成过滤后的日历
-
-	int nCurDate = CALENDAR.GetFirst();
-
-	while(nCurDate > 0)
-	{
-		//	满足所有条件才加入
-		if(ValidatePlaybackConfig(nCurDate, pbConfig))
-			m_FilteredCalendar.Add(nCurDate);
-
-		nCurDate = CALENDAR.GetNext(nCurDate);
-	}
-}
 
 // CKLinePrintDoc 命令
 
@@ -212,12 +168,7 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 BOOL CKLinePrintDoc::LoadNextDay()
 {
 	// 根据回放配置决定下一个交易日的日期
-	int nCurDate, nNextDate;
-	
-	nCurDate = Utility::GetDateByPath(m_CurCsvFile);
-
-	int nDayCnt = m_FilteredCalendar.size();
-	nNextDate = m_FilteredCalendar.GetBySeq(rand() % nDayCnt);
+	int nNextDate = theApp.GetPlaybackDate();
 
 	string tmp = Utility::GetPathByDate(m_CurCsvFile, nNextDate);
 
@@ -565,7 +516,7 @@ void CKLinePrintDoc::OnStrategy()
 
 		EXCHANGE.ResetStats();
 
-		nCurDate = m_FilteredCalendar.GetNext(nCurDate);
+		nCurDate = PBCAL.GetNext(nCurDate);
 	}	
 
 	EXCHANGE.SetLogFile(Utility::GetProgramPath() + "log\\manual.log.txt");

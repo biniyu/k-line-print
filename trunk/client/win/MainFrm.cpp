@@ -42,6 +42,8 @@ CMainFrame::CMainFrame()
 
 CMainFrame::~CMainFrame()
 {
+	if(m_pTradeLogDlg)
+		delete m_pTradeLogDlg;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
