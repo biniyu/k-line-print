@@ -163,6 +163,8 @@ void CKLinePrintDoc::ViewNeighborDate(BOOL bPrev)
 	if(!tmp.size()) return;
 
 	OnOpenDocument(CString(tmp.c_str()));
+
+	DisplayTill(-1, -1);
 }
 
 BOOL CKLinePrintDoc::LoadNextDay()
