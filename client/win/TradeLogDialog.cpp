@@ -120,6 +120,7 @@ void CTradeLogDialog::OnLbnSelchangeListFile()
 	CKLinePrintView* pView = (CKLinePrintView*)((CMainFrame*)AfxGetMainWnd())->GetActiveView();
 
 	pDoc->OnOpenDocument(strSelText);
+	pDoc->DisplayTill();
 	pDoc->SetTradeRecord(trs);
 	pView->Render();
 	pDoc->UpdateAllViews(0);
