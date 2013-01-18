@@ -29,6 +29,7 @@ using Poco::Net::HTTPServerResponse;
 using Poco::Net::WebSocket;
 using Poco::Net::WebSocketException;
 using Poco::Net::NetException;
+using Poco::Exception;
 using Poco::Timestamp;
 using Poco::Thread;
 using Poco::ThreadPool;
@@ -64,7 +65,8 @@ public:
 	
 	void run()
 	{
-		HTTPClientSession cs("oscar.iego.net", 9980);
+//		HTTPClientSession cs("oscar.iego.net", 9980);
+		HTTPClientSession cs("localhost", 9980);
 		HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
 		HTTPResponse response;
 
@@ -99,9 +101,13 @@ public:
 			Poco::Thread::sleep(2000);
 			goto _retry;
 		}
-		catch(...)
+		catch(Exception exc)
 		{
-			printf("unknown\n");
+			printf("Exception %s\n", exc.displayText().c_str());
+		}
+		catch(exception exc)
+		{
+			printf("exception %s\n", exc.what());
 		}
 
 		printf("done!\n");
