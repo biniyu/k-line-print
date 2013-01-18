@@ -129,6 +129,7 @@ public:
 		try
 		{
 			WebSocket ws(request, response);
+			printf("getReceiveTimeout %d\n", ws.getReceiveTimeout().totalSeconds());
 			app.logger().information("WebSocket connection established.");
 			char buffer[1024];
 			int flags;
@@ -159,6 +160,8 @@ public:
 				break;
 			}
 		}
+
+		app.logger().information("WebSocket connection terminated.");
 	}
 };
 
