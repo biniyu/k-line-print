@@ -48,6 +48,7 @@
 #include "Poco/Util/HelpFormatter.h"
 #include "Poco/Format.h"
 #include <iostream>
+#include <stdio.h>
 
 
 using Poco::Net::ServerSocket;
