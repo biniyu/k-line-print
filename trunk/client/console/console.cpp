@@ -15,6 +15,7 @@
 #include "Poco/Net/ServerSocket.h"
 #include "Poco/Net/NetException.h"
 #include "Poco/Thread.h"
+#include "Poco/Timer.h"
 #include "Poco/Util/ServerApplication.h"
 #include "Poco/Util/Option.h"
 #include "Poco/Util/OptionSet.h"
@@ -32,7 +33,8 @@ using Poco::Net::NetException;
 using Poco::Exception;
 using Poco::Timestamp;
 using Poco::Thread;
-using Poco::ThreadPool;
+using Poco::Timer;
+using Poco::TimerCallback;
 using Poco::Runnable;
 using Poco::Event;
 using Poco::Util::ServerApplication;
@@ -88,7 +90,7 @@ public:
 				printf("received msg : %s\n", buffer);
 			}
 		}
-		catch (NetException& exc)
+		catch (Exception exc)
 		{
 			printf("%d : %s\n", exc.code(), exc.displayText().c_str());
 		
@@ -101,17 +103,15 @@ public:
 			Poco::Thread::sleep(2000);
 			goto _retry;
 		}
-		catch(Exception exc)
-		{
-			printf("Exception %s\n", exc.displayText().c_str());
-		}
-		catch(exception exc)
-		{
-			printf("exception %s\n", exc.what());
-		}
 
 		printf("done!\n");
 	}
+
+	void onTimer(Timer& timer)
+	{
+		send(".");
+	}
+
 
 private:
 
@@ -119,13 +119,18 @@ private:
 
 };
 
+Thread thread;
+MyRunnable r;
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	Thread thread;
-	MyRunnable r;
 
 	thread.start(r);
 	Thread::sleep(200);
+
+	Timer t(0, 30000);
+	TimerCallback<MyRunnable> tc(r, &MyRunnable::onTimer);
+	t.start(tc);
 
 	r.send("aaa");
 
