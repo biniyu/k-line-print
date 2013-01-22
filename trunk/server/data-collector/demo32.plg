@@ -1,0 +1,60 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: demo32 - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/demo32.res" /d "_DEBUG" /d "_AFXDLL" "D:\VC6\demo32\demo32.rc"" 
+Creating temporary file "D:\Temp\RSP2CA.tmp" with contents
+[
+/nologo /G5 /Zp1 /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Fp"Debug/demo32.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\VC6\demo32\demo32.cpp"
+"D:\VC6\demo32\demo32Doc.cpp"
+"D:\VC6\demo32\demo32View.cpp"
+"D:\VC6\demo32\MainFrm.cpp"
+"D:\VC6\demo32\StkDemo.cpp"
+"D:\VC6\demo32\STKDRV.cpp"
+]
+Creating command line "cl.exe @D:\Temp\RSP2CA.tmp" 
+Creating temporary file "D:\Temp\RSP2CB.tmp" with contents
+[
+/nologo /G5 /Zp1 /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Fp"Debug/demo32.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /c 
+"D:\VC6\demo32\StdAfx.cpp"
+]
+Creating command line "cl.exe @D:\Temp\RSP2CB.tmp" 
+Creating temporary file "D:\Temp\RSP2CC.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/demo32.pdb" /debug /machine:I386 /out:"Debug/demo32.exe" /pdbtype:sept 
+.\Debug\demo32.obj
+.\Debug\demo32Doc.obj
+.\Debug\demo32View.obj
+.\Debug\MainFrm.obj
+.\Debug\StdAfx.obj
+.\Debug\StkDemo.obj
+.\Debug\STKDRV.obj
+.\Debug\demo32.res
+]
+Creating command line "link.exe @D:\Temp\RSP2CC.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+demo32.cpp
+demo32Doc.cpp
+demo32View.cpp
+MainFrm.cpp
+StkDemo.cpp
+STKDRV.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+demo32.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
