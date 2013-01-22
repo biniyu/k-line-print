@@ -1,0 +1,9 @@
+网际风是32位应用，如果要在WinX64平台使用，使用以下方法手动安装：
+
+将 Stock.dll、WJFMain.exe  2个拷入股票软件的文件夹（如飞狐为D:\Foxtrader），双击“X64通用驱动注册表”导入文件即可。
+
+分析家2006版安装方法：将上述2个文件拷入分析家安装目录如 D:\FXJ 文件夹，将 Stock.DLL 重命名为 StockDrv.DLL 原来的 StockDrv.DLL需要先重命名或直接删除不要。
+
+由于X64平台将32位应用的注册表项“HKEY_LOCAL_MACHINE\SOFTWARE”移到了“HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node”以下，所以分析家，飞狐的注册表均要使用X64专用的注册表文件。
+
+64位平台，飞狐需要使用右键菜单“以管理员身份运行”才可以读取上述注册表键值，否则会报告“未安装驱动程序”。

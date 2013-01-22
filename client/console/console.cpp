@@ -67,8 +67,8 @@ public:
 	
 	void run()
 	{
-//		HTTPClientSession cs("oscar.iego.net", 9980);
-		HTTPClientSession cs("localhost", 9980);
+		HTTPClientSession cs("oscar.iego.net", 9980);
+//		HTTPClientSession cs("localhost", 9980);
 		HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
 		HTTPResponse response;
 

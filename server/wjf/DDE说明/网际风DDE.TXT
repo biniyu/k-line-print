@@ -1,0 +1,22 @@
+启用 网际风 DDE Server 方法，将其他设置的 DDE Server 打勾，关闭网际风再次打开即可。
+
+APP: WJFDDE
+Topic: 市场名加品种名称，市场名为2字符必须大写 如 SH600030  SH000001  NQ021005  WHUSDJPY
+Item:
+TIME 行情时间
+NAME 品种名称
+LASTCLOSE 昨收盘
+OPEN 开盘
+HIGH 最高价
+LOW  最低价
+LAST 最新价
+VOLUME  成交量
+AMOUNT  成交额或持仓量
+BID  买一价 对一档行情表示买入价
+ASK  卖一价 对一档行情表示卖出价
+BID2-5   买二-买五价
+ASK2-5   卖二-卖五价
+BIDSIZE  买一量 对一档行情表示买入量
+ASKSIZE  卖一量 对一档行情表示卖出量
+BIDSIZE2-5  买二-买五量
+ASKSIZE2-5  卖二-卖五量
