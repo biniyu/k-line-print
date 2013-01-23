@@ -91,6 +91,7 @@ RCV_DATA *	pHeader;
 PGZLXBINDATA pGZLX;
 int j;
 	pHeader = (RCV_DATA *) lPara;
+	My_PankouType* pData;
 	PBYTE pBuffx;
 
 //	对于处理较慢的数据类型,建议将数据备份,另创建一线程处理
@@ -113,7 +114,7 @@ int j;
 
 
 // 增加的数据获得如下
-				TRACE("PB5=%8.3f VB5=%8.2f PS5=%8.3f VS5=%8.2f\n",Buf.m_fBuyPrice[0],Buf.m_fBuyVolume[0],Buf.m_fSellPrice[0],Buf.m_fSellVolume[0]);
+//				TRACE("PB5=%8.3f VB5=%8.2f PS5=%8.3f VS5=%8.2f\n",Buf.m_fBuyPrice[0],Buf.m_fBuyVolume[0],Buf.m_fSellPrice[0],Buf.m_fSellVolume[0]);
 
 				m_StkPtr ++;
 				m_StkPtr = m_StkPtr % StkBufNum;
@@ -123,19 +124,29 @@ int j;
 
 	case RCV_PANKOUDATA:
 
-		My_PankouType* pData = (My_PankouType*)lPara;
+		pData = (My_PankouType*)lPara;
 		
-		TRACE("pankou data : %s @%d : %d ticks of %d (block %d), lastclose %f, open %f\n",
+		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f\n",
+			pData->m_wMarket, pData->m_wStkIdx, 
 			pData->m_szLabel, pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
 			pData->R0, pData->m_fLastClose, pData->m_fOpen);
 
-		for(int i = 0; i < pData->m_nCount; i++)
+#if 0
+		for(i = 0; i < pData->m_nCount; i++)
 		{
 			RCV_PANKOU_STRUCTEx& tick = pData->m_Data[i];
-			TRACE(" \n", 
+
+			struct tm * tt;
+			tt = localtime(&tick.m_time);
+
+			TRACE(" %02d:%02d:%02d %.2f B:%.2f(%.2f) S:%.2f(%.2f) AVG %.2f h:%.2f l:%.2f vol:%.2f\n", 
+				tt->tm_hour, tt->tm_min, tt->tm_sec,
+				tick.m_fNewPrice, 
+				tick.m_fBuyPrice[0], tick.m_fBuyVolume[0],
+				tick.m_fSellPrice[0], tick.m_fSellVolume[0],
+				tick.m_fAvgPrice, tick.m_fHigh, tick.m_fLow, tick.m_fVolume);
 		}
-
-
+#endif
 		break;
 	
 	case RCV_FILEDATA:
