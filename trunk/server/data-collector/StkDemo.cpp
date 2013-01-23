@@ -123,7 +123,19 @@ int j;
 
 	case RCV_PANKOUDATA:
 
-		TRACE("Panko!\n");
+		My_PankouType* pData = (My_PankouType*)lPara;
+		
+		TRACE("pankou data : %s @%d : %d ticks of %d (block %d), lastclose %f, open %f\n",
+			pData->m_szLabel, pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
+			pData->R0, pData->m_fLastClose, pData->m_fOpen);
+
+		for(int i = 0; i < pData->m_nCount; i++)
+		{
+			RCV_PANKOU_STRUCTEx& tick = pData->m_Data[i];
+			TRACE(" \n", 
+		}
+
+
 		break;
 	
 	case RCV_FILEDATA:

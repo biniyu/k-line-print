@@ -127,6 +127,57 @@ typedef struct tagRCV_REPORT_STRUCTEx
 } RCV_REPORT_STRUCTEx, *PRCV_REPORT_STRUCTEx;
 
 
+typedef struct tagRCV_PANKOU_STRUCTEx
+{
+	TIME_TYPE	m_time;									// 交易时间
+	float	m_fHigh;									// 最高
+	float	m_fLow;										// 最低
+	float	m_fNewPrice;								// 最新
+	float	m_fVolume;									// 成交量
+	float	m_fAmount;									// 成交额
+	int		m_lStroke;									// 保留   4字节
+
+	float	m_fBuyPrice[5];								// 申买价1,2,3
+	float	m_fBuyVolume[5];							// 申买量1,2,3
+	float	m_fSellPrice[5];							// 申卖价1,2,3
+	float	m_fSellVolume[5];							// 申卖量1,2,3
+
+	float   m_fAvgPrice;								// 期货结算价 对国内期货市场有效 4字节
+	DWORD   m_fTickAll;									// 成交总笔数(交易所发布) 最高字节为秒内周期 0.01 秒为单位
+
+} RCV_PANKOU_STRUCTEx, *PRCV_PANKOU_STRUCTEx;
+
+typedef struct tagMy_PankouType
+{
+	WORD	m_wMarket;									// 股票市场类型
+	WORD	m_wStkIdx;									// 股票市场类型
+	char	m_szLabel[STKLABEL_LEN];					// 股票代码,以'\0'结尾
+	long	m_lDate;									// FORMAT: 20010305,0表示当天或最近交易日的明细数据 4字节
+
+	float	m_fLastClose;								// 昨收
+	float	m_fOpen;									// 今开
+	DWORD	m_nAllCount;								// 总盘口行情数                                     4字节
+	DWORD	m_nCount;									// 当前块笔数        V3.62 版本从双字节扩充到       4字节
+	WORD	R0;											// 用来记录当前分笔是第几块     V3.68 版本
+	RCV_PANKOU_STRUCTEx m_Data[0];
+
+} My_PankouType, *PMy_PankouType;
+/*
+  My_PankouType=record          // 返回分笔数据类型  V3.62 作了修改 请使用3.62以后的版本使用新的分笔定义
+    m_wMarket:WORD;             // 股票市场类型　　　　　　　　同通视规范定义       2字节
+    m_wStkIdx:WORD;             // 股票在该市场的码表索引      V3.62 版本修改字段   2字节
+    m_szLabel:StockNumType;     // 股票代码,以'\0'结尾,如 "600100"  同通视规范定义  10字节
+    m_lDate:longint;            // FORMAT: 20010305,0表示当天或最近交易日的明细数据 4字节
+    m_fLastClose:single;        // 昨收                                             4字节 
+    m_fOpen:single;             // 今开                                             4字节 
+    m_nAllCount:DWORD;          // 总盘口行情数                                     4字节
+    m_nCount:DWORD;             // 当前块笔数        V3.62 版本从双字节扩充到       4字节 m_nCount<=m_nAllCount 一个品种的分笔可能通过多个包传送 如果分笔数据量很大的话 需要应用层自己合并（目前每个分笔包不超过6000笔，当前是第几个包在下一个字段标识）
+    R0:word;                    // 用来记录当前分笔是第几块     V3.68 版本                     2字节 数据头部一共 36 字节 后面数据体长度为 116*m_nCount
+    m_Data:array[0..0] of RCV_PANKOU_STRUCTEx; //    V3.62 版本每笔扩充8字节 该缓冲区的长度为 m_nCount*sizeof(RCV_PANKOU_STRUCTEx)=m_nCount*116 该缓冲区的每笔定义见上述 RCV_PANKOU_STRUCTEx
+  end;
+
+*/
+
 //////////////////////////////////////////////////////////////////////////////////
 //补充数据头
 //数据头 m_dwHeadTag == EKE_HEAD_TAG 
