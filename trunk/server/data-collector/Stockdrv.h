@@ -129,7 +129,7 @@ typedef struct tagRCV_REPORT_STRUCTEx
 
 typedef struct tagRCV_PANKOU_STRUCTEx
 {
-	TIME_TYPE	m_time;									// 交易时间
+	time_t	m_time;									// 交易时间
 	float	m_fHigh;									// 最高
 	float	m_fLow;										// 最低
 	float	m_fNewPrice;								// 最新
