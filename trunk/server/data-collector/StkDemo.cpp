@@ -116,6 +116,8 @@ int j;
 // 增加的数据获得如下
 //				TRACE("PB5=%8.3f VB5=%8.2f PS5=%8.3f VS5=%8.2f\n",Buf.m_fBuyPrice[0],Buf.m_fBuyVolume[0],Buf.m_fSellPrice[0],Buf.m_fSellVolume[0]);
 
+				TRACE("%s <-> %s\n", Buf.m_szLabel, Buf.m_szName);
+
 				m_StkPtr ++;
 				m_StkPtr = m_StkPtr % StkBufNum;
 			}
