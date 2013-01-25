@@ -1,0 +1,212 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: GuiLib - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Debug/GuiLib.res" /d "_DEBUG" /d "_AFXDLL" "Z:\istockcn\GUILib\GuiLib\GuiLib.rc"" 
+Creating temporary file "C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP58.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "..\Header" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_AFXEXT" /D "EXTLIB_DLL" /FR"Debug/" /Fp"Debug/GuiLib.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"Z:\istockcn\GUILib\GuiLib\CoolMenu.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiADODB.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiCapOutBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuicheckBox.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiComboBoxExt.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiComboFont.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiContainer.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiControlBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDocBarExten.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDockContext.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDockToolBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDocSpecial.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDrawLayer.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiDropDownEdit.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiEdit.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiFDir.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiFile.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiFolder.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiFrameWnd.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiGroupBox.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiHeaderCtrl.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiImageLinkButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiLabelButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiLib.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiLinkButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiListEdit.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiMDIFrame.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiMDITabbed.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiMiniSplitter.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiMiniTool.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiNormalButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiOfficeBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiOutLook.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiOutLookView.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiPanelAccess.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiPowerPointView.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiRadioButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiSliderCtrl.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiSplitter.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiSplitterWnd.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiStaticStandar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiStatusBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiSysTray.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiTabbed.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiTabPowerPoint.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiTabWnd.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiToolBarWnd.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiToolButton.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiVisioFolder.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiWorkPanel.cpp"
+"Z:\istockcn\GUILib\GuiLib\GuiWorkTab.cpp"
+"Z:\istockcn\GUILib\GuiLib\MenuBar.cpp"
+"Z:\istockcn\GUILib\GuiLib\NewMenu.cpp"
+"Z:\istockcn\GUILib\GuiLib\Subclass.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP58.tmp" 
+Creating temporary file "C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP59.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "..\Header" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_AFXEXT" /D "EXTLIB_DLL" /FR"Debug/" /Fp"Debug/GuiLib.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"Z:\istockcn\GUILib\GuiLib\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP59.tmp" 
+Creating temporary file "C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP5A.tmp" with contents
+[
+/nologo /subsystem:windows /dll /profile /debug /machine:I386 /def:".\GuiLib.def" /out:"../../StkUI/Debug/GuiLib.dll" /implib:"../Lib/GuiLib.lib" 
+.\Debug\CoolMenu.obj
+.\Debug\GuiADODB.obj
+.\Debug\GuiButton.obj
+.\Debug\GuiCapOutBar.obj
+.\Debug\GuicheckBox.obj
+.\Debug\GuiComboBoxExt.obj
+.\Debug\GuiComboFont.obj
+.\Debug\GuiContainer.obj
+.\Debug\GuiControlBar.obj
+.\Debug\GuiDocBarExten.obj
+.\Debug\GuiDockContext.obj
+.\Debug\GuiDockToolBar.obj
+.\Debug\GuiDocSpecial.obj
+.\Debug\GuiDrawLayer.obj
+.\Debug\GuiDropDownEdit.obj
+.\Debug\GuiEdit.obj
+.\Debug\GuiFDir.obj
+.\Debug\GuiFile.obj
+.\Debug\GuiFolder.obj
+.\Debug\GuiFrameWnd.obj
+.\Debug\GuiGroupBox.obj
+.\Debug\GuiHeaderCtrl.obj
+.\Debug\GuiImageLinkButton.obj
+.\Debug\GuiLabelButton.obj
+.\Debug\GuiLib.obj
+.\Debug\GuiLinkButton.obj
+.\Debug\GuiListEdit.obj
+.\Debug\GuiMDIFrame.obj
+.\Debug\GuiMDITabbed.obj
+.\Debug\GuiMiniSplitter.obj
+.\Debug\GuiMiniTool.obj
+.\Debug\GuiNormalButton.obj
+.\Debug\GuiOfficeBar.obj
+.\Debug\GuiOutLook.obj
+.\Debug\GuiOutLookView.obj
+.\Debug\GuiPanelAccess.obj
+.\Debug\GuiPowerPointView.obj
+.\Debug\GuiRadioButton.obj
+.\Debug\GuiSliderCtrl.obj
+.\Debug\GuiSplitter.obj
+.\Debug\GuiSplitterWnd.obj
+.\Debug\GuiStaticStandar.obj
+.\Debug\GuiStatusBar.obj
+.\Debug\GuiSysTray.obj
+.\Debug\GuiTabbed.obj
+.\Debug\GuiTabPowerPoint.obj
+.\Debug\GuiTabWnd.obj
+.\Debug\GuiToolBarWnd.obj
+.\Debug\GuiToolButton.obj
+.\Debug\GuiVisioFolder.obj
+.\Debug\GuiWorkPanel.obj
+.\Debug\GuiWorkTab.obj
+.\Debug\MenuBar.obj
+.\Debug\NewMenu.obj
+.\Debug\StdAfx.obj
+.\Debug\Subclass.obj
+.\Debug\GuiLib.res
+]
+Creating command line "link.exe @C:\DOCUME~1\HAIYI\LOCALS~1\Temp\RSP5A.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+CoolMenu.cpp
+GuiADODB.cpp
+GuiButton.cpp
+GuiCapOutBar.cpp
+GuicheckBox.cpp
+GuiComboBoxExt.cpp
+GuiComboFont.cpp
+GuiContainer.cpp
+GuiControlBar.cpp
+GuiDocBarExten.cpp
+GuiDockContext.cpp
+GuiDockToolBar.cpp
+GuiDocSpecial.cpp
+GuiDrawLayer.cpp
+GuiDropDownEdit.cpp
+GuiEdit.cpp
+GuiFDir.cpp
+GuiFile.cpp
+GuiFolder.cpp
+GuiFrameWnd.cpp
+Generating Code...
+Compiling...
+GuiGroupBox.cpp
+GuiHeaderCtrl.cpp
+GuiImageLinkButton.cpp
+GuiLabelButton.cpp
+GuiLib.cpp
+GuiLinkButton.cpp
+GuiListEdit.cpp
+GuiMDIFrame.cpp
+GuiMDITabbed.cpp
+GuiMiniSplitter.cpp
+GuiMiniTool.cpp
+GuiNormalButton.cpp
+GuiOfficeBar.cpp
+GuiOutLook.cpp
+GuiOutLookView.cpp
+GuiPanelAccess.cpp
+GuiPowerPointView.cpp
+GuiRadioButton.cpp
+GuiSliderCtrl.cpp
+GuiSplitter.cpp
+Generating Code...
+Compiling...
+GuiSplitterWnd.cpp
+GuiStaticStandar.cpp
+GuiStatusBar.cpp
+GuiSysTray.cpp
+GuiTabbed.cpp
+GuiTabPowerPoint.cpp
+GuiTabWnd.cpp
+GuiToolBarWnd.cpp
+GuiToolButton.cpp
+GuiVisioFolder.cpp
+GuiWorkPanel.cpp
+GuiWorkTab.cpp
+MenuBar.cpp
+NewMenu.cpp
+Subclass.cpp
+Generating Code...
+Linking...
+   Creating library ../Lib/GuiLib.lib and object ../Lib/GuiLib.exp
+
+
+
+<h3>Results</h3>
+GuiLib.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

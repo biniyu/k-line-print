@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{35C05AA7-0E96-4407-B5F6-B695376B954A}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\../Lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\../Lib\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\../Lib/GuiLib.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_AFXEXT;EXTLIB_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\Debug/GuiLib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>../../StkUI/Debug/GuiLib.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ModuleDefinitionFile>.\GuiLib.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\../Lib/GuiLib.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>.\../Lib/GuiLib.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\../Lib/GuiLib.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_AFXEXT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\Release/GuiLib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <OutputFile>../../StkUI/Release/GuiLib.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <ModuleDefinitionFile>.\GuiLib.def</ModuleDefinitionFile>
+      <ProgramDatabaseFile>.\../Lib/GuiLib.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImportLibrary>.\../Lib/GuiLib.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="CoolMenu.cpp" />
+    <ClCompile Include="GuiADODB.cpp" />
+    <ClCompile Include="GuiButton.cpp" />
+    <ClCompile Include="GuiCapOutBar.cpp" />
+    <ClCompile Include="GuicheckBox.cpp" />
+    <ClCompile Include="GuiComboBoxExt.cpp" />
+    <ClCompile Include="GuiComboFont.cpp" />
+    <ClCompile Include="GuiContainer.cpp" />
+    <ClCompile Include="GuiControlBar.cpp" />
+    <ClCompile Include="GuiDocBarExten.cpp" />
+    <ClCompile Include="GuiDockContext.cpp" />
+    <ClCompile Include="GuiDockToolBar.cpp" />
+    <ClCompile Include="GuiDocSpecial.cpp" />
+    <ClCompile Include="GuiDrawLayer.cpp" />
+    <ClCompile Include="GuiDropDownEdit.cpp" />
+    <ClCompile Include="GuiEdit.cpp" />
+    <ClCompile Include="GuiFDir.cpp" />
+    <ClCompile Include="GuiFile.cpp" />
+    <ClCompile Include="GuiFolder.cpp" />
+    <ClCompile Include="GuiFrameWnd.cpp" />
+    <ClCompile Include="GuiGroupBox.cpp" />
+    <ClCompile Include="GuiHeaderCtrl.cpp" />
+    <ClCompile Include="GuiImageLinkButton.cpp" />
+    <ClCompile Include="GuiLabelButton.cpp" />
+    <ClCompile Include="GuiLib.cpp" />
+    <ClCompile Include="GuiLinkButton.cpp" />
+    <ClCompile Include="GuiListEdit.cpp" />
+    <ClCompile Include="GuiMDIFrame.cpp" />
+    <ClCompile Include="GuiMDITabbed.cpp" />
+    <ClCompile Include="GuiMiniSplitter.cpp" />
+    <ClCompile Include="GuiMiniTool.cpp" />
+    <ClCompile Include="GuiNormalButton.cpp" />
+    <ClCompile Include="GuiOfficeBar.cpp" />
+    <ClCompile Include="GuiOutLook.cpp" />
+    <ClCompile Include="GuiOutLookView.cpp" />
+    <ClCompile Include="GuiPanelAccess.cpp" />
+    <ClCompile Include="GuiPowerPointView.cpp" />
+    <ClCompile Include="GuiRadioButton.cpp" />
+    <ClCompile Include="GuiSliderCtrl.cpp" />
+    <ClCompile Include="GuiSplitter.cpp" />
+    <ClCompile Include="GuiSplitterWnd.cpp" />
+    <ClCompile Include="GuiStaticStandar.cpp" />
+    <ClCompile Include="GuiStatusBar.cpp" />
+    <ClCompile Include="GuiSysTray.cpp" />
+    <ClCompile Include="GuiTabbed.cpp" />
+    <ClCompile Include="GuiTabPowerPoint.cpp" />
+    <ClCompile Include="GuiTabWnd.cpp" />
+    <ClCompile Include="GuiToolBarWnd.cpp" />
+    <ClCompile Include="GuiToolButton.cpp" />
+    <ClCompile Include="GuiVisioFolder.cpp" />
+    <ClCompile Include="GuiWorkPanel.cpp" />
+    <ClCompile Include="GuiWorkTab.cpp" />
+    <ClCompile Include="MenuBar.cpp" />
+    <ClCompile Include="NewMenu.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Subclass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GuiLib.def" />
+    <None Include="bitmap1.bmp" />
+    <None Include="bitmap2.bmp" />
+    <None Include="bitmap3.bmp" />
+    <None Include="bitmap4.bmp" />
+    <None Include="bitradio.bmp" />
+    <None Include="bmp00001.bmp" />
+    <None Include="DockOffice.bmp" />
+    <None Include="res\GuiLib.rc2" />
+    <None Include="ico00001.ico" />
+    <None Include="icon1.ico" />
+    <None Include="idc_hand.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GuiLib.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Header\CBaseTab.h" />
+    <ClInclude Include="..\Header\CoolMenu.h" />
+    <ClInclude Include="..\Header\ExtLib.h" />
+    <ClInclude Include="..\Header\GuiADODB.h" />
+    <ClInclude Include="..\Header\GuiBaseTab.h" />
+    <ClInclude Include="..\Header\GuiButton.h" />
+    <ClInclude Include="..\Header\GuiCapOutBar.h" />
+    <ClInclude Include="..\Header\GuicheckBox.h" />
+    <ClInclude Include="..\Header\GuiColors.h" />
+    <ClInclude Include="..\Header\GuiComboBoxExt.h" />
+    <ClInclude Include="..\Header\GuiComboFont.h" />
+    <ClInclude Include="..\Header\GuiContainer.h" />
+    <ClInclude Include="..\Header\GuiControlBar.h" />
+    <ClInclude Include="..\Header\GuiDocBarExten.h" />
+    <ClInclude Include="..\Header\GuiDockContext.h" />
+    <ClInclude Include="..\Header\GuiDockToolBar.h" />
+    <ClInclude Include="..\Header\GuiDocSpecial.h" />
+    <ClInclude Include="..\Header\GuiDrawLayer.h" />
+    <ClInclude Include="..\Header\GuiDropDownEdit.h" />
+    <ClInclude Include="..\Header\GuiEdit.h" />
+    <ClInclude Include="..\Header\GuiFDir.h" />
+    <ClInclude Include="..\Header\GuiFile.h" />
+    <ClInclude Include="..\Header\GuiFolder.h" />
+    <ClInclude Include="..\Header\GuiFrameWnd.h" />
+    <ClInclude Include="..\Header\GuiGroupBox.h" />
+    <ClInclude Include="..\Header\GuiHeaderCtrl.h" />
+    <ClInclude Include="..\Header\GuiImageLinkButton.h" />
+    <ClInclude Include="..\Header\GuiLabelButton.h" />
+    <ClInclude Include="..\Header\GuiLib.h" />
+    <ClInclude Include="..\Header\GuiLinkButton.h" />
+    <ClInclude Include="..\Header\GuiListEdit.h" />
+    <ClInclude Include="..\Header\GuiMDIFrame.h" />
+    <ClInclude Include="..\Header\GuiMDITabbed.h" />
+    <ClInclude Include="..\Header\GuiMiniSplitter.h" />
+    <ClInclude Include="..\Header\GuiMiniTool.h" />
+    <ClInclude Include="..\Header\GuiNormalButton.h" />
+    <ClInclude Include="..\Header\GuiOfficeBar.h" />
+    <ClInclude Include="..\Header\GuiOutLook.h" />
+    <ClInclude Include="..\Header\GuiOutLookView.h" />
+    <ClInclude Include="..\Header\GuiPanelAccess.h" />
+    <ClInclude Include="..\Header\GuiPowerPointView.h" />
+    <ClInclude Include="..\Header\GuiRadioButton.h" />
+    <ClInclude Include="..\Header\GuiSliderCtrl.h" />
+    <ClInclude Include="..\Header\GuiSplitter.h" />
+    <ClInclude Include="..\Header\GuiSplitterWnd.h" />
+    <ClInclude Include="..\Header\GuiStaticStandar.h" />
+    <ClInclude Include="..\Header\GuiStatusBar.h" />
+    <ClInclude Include="..\Header\GuiSysTray.h" />
+    <ClInclude Include="..\Header\GuiTabbed.h" />
+    <ClInclude Include="..\Header\GuiTabPowerPoint.h" />
+    <ClInclude Include="..\Header\GuiTabWnd.h" />
+    <ClInclude Include="..\Header\GuiToolBarWnd.h" />
+    <ClInclude Include="..\Header\GuiToolButton.h" />
+    <ClInclude Include="..\Header\GuiVisioFolder.h" />
+    <ClInclude Include="..\Header\GuiWorkPanel.h" />
+    <ClInclude Include="..\Header\GuiWorkTab.h" />
+    <ClInclude Include="..\Header\MenuBar.h" />
+    <ClInclude Include="..\Header\NewMenu.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="..\Header\Subclass.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

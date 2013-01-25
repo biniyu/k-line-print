@@ -11,6 +11,11 @@
 #include "StockDrv.H"
 #include "STKDRV.H"
 
+#include <string>
+#include <map>
+
+using namespace std;
+
 CSTKDRV		gSTOCKDLL;
 
 #ifdef _DEBUG
@@ -79,6 +84,8 @@ char * pTitle = "  股号     名  称      最新     今开     昨收     最高     最低
 	dc.TextOut(1,y,m_File,m_File.GetLength());
 }
 
+map<string, string> codemap;
+
 // 处理数据
 LONG CStkDemo::OnStkDataOK(
 		UINT wFileType,				// 文件类型, 参见 StockDrv.H
@@ -118,6 +125,11 @@ int j;
 
 				TRACE("%s <-> %s\n", Buf.m_szLabel, Buf.m_szName);
 
+				string label = Buf.m_szLabel;
+				string name = Buf.m_szName;
+
+				codemap[label] = name;
+
 				m_StkPtr ++;
 				m_StkPtr = m_StkPtr % StkBufNum;
 			}
@@ -130,7 +142,7 @@ int j;
 		
 		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f\n",
 			pData->m_wMarket, pData->m_wStkIdx, 
-			pData->m_szLabel, pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
+			codemap[pData->m_szLabel].c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
 			pData->R0, pData->m_fLastClose, pData->m_fOpen);
 
 #if 0

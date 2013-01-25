@@ -1,0 +1,672 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Enu Debug|Win32">
+      <Configuration>Enu Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Enu Release|Win32">
+      <Configuration>Enu Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{11C23929-5017-4C43-A11B-BE3F7D779680}</ProjectGuid>
+    <RootNamespace>StkUI</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">.\StkUI___Win32_Enu_Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">.\StkUI___Win32_Enu_Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">.\StkUI___Win32_Enu_Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">.\StkUI___Win32_Enu_Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\StkUI___Win32_Enu_Debug/StkUI.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CLKLAN_ENGLISH_US;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\StkUI___Win32_Enu_Debug/StkUI.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\StkUI___Win32_Enu_Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\StkUI___Win32_Enu_Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\StkUI___Win32_Enu_Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;_DEBUG;AFX_RESOURCE_DLL;AFX_TARG_ENU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0809</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>htmlhelp/htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Debug/StockAna.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../StkLib/Lib;../StkNet/Lib;../ProfUIS/Bin;../GuiLib/Lib;../XPFace/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\StkUI___Win32_Enu_Debug/StockAna.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Release/StkUI.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\ProfUIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_32BIT_TIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\Release/StkUI.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
+      <ObjectFileName>.\Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Release/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;NDEBUG;AFX_RESOURCE_DLL;AFX_TARG_CHS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0804</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>htmlhelp/htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Release/StockAna.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../StkLib/Lib;../StkNet/Lib;../ProfUIS/Bin;../GuiLib/Lib;../XPFace/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\Release/StockAna.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\Debug/StkUI.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_32BIT_TIME_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\Debug/StkUI.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\Debug/</AssemblerListingLocation>
+      <ObjectFileName>.\Debug/</ObjectFileName>
+      <ProgramDataBaseFileName>.\Debug/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;_DEBUG;AFX_RESOURCE_DLL;AFX_TARG_CHS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0804</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>htmlhelp/htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Debug/StockAna.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../StkLib/Lib;../StkNet/Lib;../ProfUIS/Bin;../GuiLib/Lib;../XPFace/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>.\Debug/StockAna.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <TypeLibraryName>.\StkUI___Win32_Enu_Release/StkUI.tlb</TypeLibraryName>
+    </Midl>
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>..\ProfUIS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CLKLAN_ENGLISH_US;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>.\StkUI___Win32_Enu_Release/StkUI.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\StkUI___Win32_Enu_Release/</AssemblerListingLocation>
+      <ObjectFileName>.\StkUI___Win32_Enu_Release/</ObjectFileName>
+      <ProgramDataBaseFileName>.\StkUI___Win32_Enu_Release/</ProgramDataBaseFileName>
+      <BrowseInformation>true</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_AFXDLL;NDEBUG;AFX_RESOURCE_DLL;AFX_TARG_ENU;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0809</Culture>
+    </ResourceCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>htmlhelp/htmlhelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>Release/StockAna.exe</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../StkLib/Lib;../StkNet/Lib;../ProfUIS/Bin;../GuiLib/Lib;../XPFace/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ProgramDatabaseFile>.\StkUI___Win32_Enu_Release/StockAna.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AfxCore.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="SListCombos.cpp" />
+    <ClCompile Include="StaticDoc.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="StkUI.cpp" />
+    <ClCompile Include="ParamDlg\36BIASDlg.cpp" />
+    <ClCompile Include="ParamDlg\ADDlg.cpp" />
+    <ClCompile Include="ParamDlg\ARBRDlg.cpp" />
+    <ClCompile Include="ParamDlg\ASIDlg.cpp" />
+    <ClCompile Include="ParamDlg\ATRDlg.cpp" />
+    <ClCompile Include="ParamDlg\BBIDlg.cpp" />
+    <ClCompile Include="ParamDlg\BIASDlg.cpp" />
+    <ClCompile Include="ParamDlg\BOLLDlg.cpp" />
+    <ClCompile Include="ParamDlg\CCIDlg.cpp" />
+    <ClCompile Include="ParamDlg\CDPDlg.cpp" />
+    <ClCompile Include="ParamDlg\CIDlg.cpp" />
+    <ClCompile Include="ParamDlg\CRDlg.cpp" />
+    <ClCompile Include="ParamDlg\CVDlg.cpp" />
+    <ClCompile Include="ParamDlg\CWDlg.cpp" />
+    <ClCompile Include="ParamDlg\CYODlg.cpp" />
+    <ClCompile Include="ParamDlg\DCYODlg.cpp" />
+    <ClCompile Include="ParamDlg\DJDlg.cpp" />
+    <ClCompile Include="ParamDlg\DMIDlg.cpp" />
+    <ClCompile Include="ParamDlg\DMKIDlg.cpp" />
+    <ClCompile Include="ParamDlg\DPERDlg.cpp" />
+    <ClCompile Include="ParamDlg\DPODlg.cpp" />
+    <ClCompile Include="ParamDlg\EMVDlg.cpp" />
+    <ClCompile Include="ParamDlg\HLCDlg.cpp" />
+    <ClCompile Include="ParamDlg\HSLDlg.cpp" />
+    <ClCompile Include="ParamDlg\KDJDlg.cpp" />
+    <ClCompile Include="ParamDlg\KSTDlg.cpp" />
+    <ClCompile Include="ParamDlg\MACDDlg.cpp" />
+    <ClCompile Include="ParamDlg\MADlg.cpp" />
+    <ClCompile Include="ParamDlg\MAOSCDlg.cpp" />
+    <ClCompile Include="ParamDlg\MFIDlg.cpp" />
+    <ClCompile Include="ParamDlg\MIKEDlg.cpp" />
+    <ClCompile Include="ParamDlg\MOBVDlg.cpp" />
+    <ClCompile Include="ParamDlg\MTMDlg.cpp" />
+    <ClCompile Include="ParamDlg\NVIDlg.cpp" />
+    <ClCompile Include="ParamDlg\NVRSIDlg.cpp" />
+    <ClCompile Include="ParamDlg\OBVDlg.cpp" />
+    <ClCompile Include="ParamDlg\OSCDlg.cpp" />
+    <ClCompile Include="ParamDlg\PCNTDlg.cpp" />
+    <ClCompile Include="ParamDlg\PSYDlg.cpp" />
+    <ClCompile Include="ParamDlg\PVDlg.cpp" />
+    <ClCompile Include="ParamDlg\PVIDlg.cpp" />
+    <ClCompile Include="ParamDlg\RDlg.cpp" />
+    <ClCompile Include="ParamDlg\REIDlg.cpp" />
+    <ClCompile Include="ParamDlg\ROCDlg.cpp" />
+    <ClCompile Include="ParamDlg\RSIDlg.cpp" />
+    <ClCompile Include="ParamDlg\SARDlg.cpp" />
+    <ClCompile Include="ParamDlg\SetParamDlg.cpp" />
+    <ClCompile Include="ParamDlg\UOSDlg.cpp" />
+    <ClCompile Include="ParamDlg\VMACDDlg.cpp" />
+    <ClCompile Include="ParamDlg\VolumeDlg.cpp" />
+    <ClCompile Include="ParamDlg\VRDlg.cpp" />
+    <ClCompile Include="ParamDlg\VROCDlg.cpp" />
+    <ClCompile Include="ParamDlg\VRSIDlg.cpp" />
+    <ClCompile Include="ParamDlg\WVADDlg.cpp" />
+    <ClCompile Include="View\BaseView.cpp" />
+    <ClCompile Include="View\DrawTech.cpp" />
+    <ClCompile Include="View\GraphView.cpp" />
+    <ClCompile Include="View\GroupView.cpp" />
+    <ClCompile Include="View\InfoView.cpp" />
+    <ClCompile Include="View\MultiSort.cpp" />
+    <ClCompile Include="View\MultiSortView.cpp" />
+    <ClCompile Include="View\RealTime.cpp" />
+    <ClCompile Include="View\RealTimeView.cpp" />
+    <ClCompile Include="View\SelectorView.cpp" />
+    <ClCompile Include="View\Simulation.cpp" />
+    <ClCompile Include="View\SimuView.cpp" />
+    <ClCompile Include="View\SListView.cpp" />
+    <ClCompile Include="View\StockGraph.cpp" />
+    <ClCompile Include="View\StrategyView.cpp" />
+    <ClCompile Include="View\TechsView.cpp" />
+    <ClCompile Include="View\WizardView.cpp" />
+    <ClCompile Include="Dialog\AlarmResultDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\AlarmSettingDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\AlarmTipDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\BaseIndexDlg.cpp" />
+    <ClCompile Include="Dialog\CacheLoadDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\CloseStrategyDlg.cpp" />
+    <ClCompile Include="Dialog\DataSrcDlg.cpp" />
+    <ClCompile Include="Dialog\DownloadDlg.cpp" />
+    <ClCompile Include="Dialog\EditKDATADlg.cpp" />
+    <ClCompile Include="Dialog\ExportDest.cpp" />
+    <ClCompile Include="Dialog\ExportOption.cpp" />
+    <ClCompile Include="Dialog\FilterInfoDlg.cpp" />
+    <ClCompile Include="Dialog\InstallPacDlg.cpp" />
+    <ClCompile Include="Dialog\ListExportDlg.cpp" />
+    <ClCompile Include="Dialog\NetInfoDlg.cpp" />
+    <ClCompile Include="Dialog\QuoteTipDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\RegApplyEvaDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\RegisterDlg.cpp" />
+    <ClCompile Include="Dialog\SelectGrpDlg.cpp" />
+    <ClCompile Include="Dialog\SelectStk.cpp" />
+    <ClCompile Include="Dialog\SelectTraderDlg.cpp" />
+    <ClCompile Include="Dialog\SetBasedataDlg.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">..</AdditionalIncludeDirectories>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Enu Debug|Win32'">Default</CompileAs>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Enu Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\ProfUIS\include;..</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="Dialog\SetBaseDlg.cpp" />
+    <ClCompile Include="Dialog\SetColorDlg.cpp" />
+    <ClCompile Include="Dialog\SetColumnDlg.cpp" />
+    <ClCompile Include="Dialog\SetDrdataDlg.cpp" />
+    <ClCompile Include="Dialog\SetGroupDlg.cpp" />
+    <ClCompile Include="Dialog\SetKDataDlg.cpp" />
+    <ClCompile Include="Dialog\SetPrpt.cpp" />
+    <ClCompile Include="Dialog\SetRate.cpp" />
+    <ClCompile Include="Dialog\SetRule.cpp" />
+    <ClCompile Include="Dialog\SimuAddOpDlg.cpp" />
+    <ClCompile Include="Dialog\SimuAddStockDlg.cpp" />
+    <ClCompile Include="Dialog\SimuAdvancedDlg.cpp" />
+    <ClCompile Include="Dialog\SimuRealOp.cpp" />
+    <ClCompile Include="Dialog\SimuReport.cpp" />
+    <ClCompile Include="Dialog\SimuStatDlg.cpp" />
+    <ClCompile Include="Dialog\TyDataDlg.cpp" />
+    <ClCompile Include="Dialog\UpgradeDlg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="StkUI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AfxCore.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="SListCombos.h" />
+    <ClInclude Include="StaticDoc.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="StkUI.h" />
+    <ClInclude Include="ParamDlg\36BIASDlg.h" />
+    <ClInclude Include="ParamDlg\ADDlg.h" />
+    <ClInclude Include="ParamDlg\ARBRDlg.h" />
+    <ClInclude Include="ParamDlg\ASIDlg.h" />
+    <ClInclude Include="ParamDlg\ATRDlg.h" />
+    <ClInclude Include="ParamDlg\BBIDlg.h" />
+    <ClInclude Include="ParamDlg\BIASDlg.h" />
+    <ClInclude Include="ParamDlg\BOLLDlg.h" />
+    <ClInclude Include="ParamDlg\CCIDlg.h" />
+    <ClInclude Include="ParamDlg\CDPDlg.h" />
+    <ClInclude Include="ParamDlg\CIDlg.h" />
+    <ClInclude Include="ParamDlg\CRDlg.h" />
+    <ClInclude Include="ParamDlg\CVDlg.h" />
+    <ClInclude Include="ParamDlg\CWDlg.h" />
+    <ClInclude Include="ParamDlg\CYODlg.h" />
+    <ClInclude Include="ParamDlg\DCYODlg.h" />
+    <ClInclude Include="ParamDlg\DJDlg.h" />
+    <ClInclude Include="ParamDlg\DMIDlg.h" />
+    <ClInclude Include="ParamDlg\DMKIDlg.h" />
+    <ClInclude Include="ParamDlg\DPERDlg.h" />
+    <ClInclude Include="ParamDlg\DPODlg.h" />
+    <ClInclude Include="ParamDlg\EMVDlg.h" />
+    <ClInclude Include="ParamDlg\HLCDlg.h" />
+    <ClInclude Include="ParamDlg\HSLDlg.h" />
+    <ClInclude Include="ParamDlg\KDJDlg.h" />
+    <ClInclude Include="ParamDlg\KSTDlg.h" />
+    <ClInclude Include="ParamDlg\MACDDlg.h" />
+    <ClInclude Include="ParamDlg\MADlg.h" />
+    <ClInclude Include="ParamDlg\MAOSCDlg.h" />
+    <ClInclude Include="ParamDlg\MFIDlg.h" />
+    <ClInclude Include="ParamDlg\MIKEDlg.h" />
+    <ClInclude Include="ParamDlg\MOBVDlg.h" />
+    <ClInclude Include="ParamDlg\MTMDlg.h" />
+    <ClInclude Include="ParamDlg\NVIDlg.h" />
+    <ClInclude Include="ParamDlg\NVRSIDlg.h" />
+    <ClInclude Include="ParamDlg\OBVDlg.h" />
+    <ClInclude Include="ParamDlg\OSCDlg.h" />
+    <ClInclude Include="ParamDlg\PCNTDlg.h" />
+    <ClInclude Include="ParamDlg\PSYDlg.h" />
+    <ClInclude Include="ParamDlg\PVDlg.h" />
+    <ClInclude Include="ParamDlg\PVIDlg.h" />
+    <ClInclude Include="ParamDlg\RDlg.h" />
+    <ClInclude Include="ParamDlg\REIDlg.h" />
+    <ClInclude Include="ParamDlg\ROCDlg.h" />
+    <ClInclude Include="ParamDlg\RSIDlg.h" />
+    <ClInclude Include="ParamDlg\SARDlg.h" />
+    <ClInclude Include="ParamDlg\SetParamDlg.h" />
+    <ClInclude Include="ParamDlg\UOSDlg.h" />
+    <ClInclude Include="ParamDlg\VMACDDlg.h" />
+    <ClInclude Include="ParamDlg\VolumeDlg.h" />
+    <ClInclude Include="ParamDlg\VRDlg.h" />
+    <ClInclude Include="ParamDlg\VROCDlg.h" />
+    <ClInclude Include="ParamDlg\VRSIDlg.h" />
+    <ClInclude Include="ParamDlg\WVADDlg.h" />
+    <ClInclude Include="View\BaseView.h" />
+    <ClInclude Include="View\GraphView.h" />
+    <ClInclude Include="View\GroupView.h" />
+    <ClInclude Include="View\InfoView.h" />
+    <ClInclude Include="View\MultiSort.h" />
+    <ClInclude Include="View\MultiSortView.h" />
+    <ClInclude Include="View\RealTime.h" />
+    <ClInclude Include="View\RealTimeView.h" />
+    <ClInclude Include="View\SelectorView.h" />
+    <ClInclude Include="View\Simulation.h" />
+    <ClInclude Include="View\SimuView.h" />
+    <ClInclude Include="View\SListView.h" />
+    <ClInclude Include="View\StockGraph.h" />
+    <ClInclude Include="View\StrategyView.h" />
+    <ClInclude Include="View\TechsView.h" />
+    <ClInclude Include="View\WizardView.h" />
+    <ClInclude Include="Dialog\AlarmResultDlg.h" />
+    <ClInclude Include="Dialog\AlarmSettingDlg.h" />
+    <ClInclude Include="Dialog\AlarmTipDlg.h" />
+    <ClInclude Include="Dialog\BaseIndexDlg.h" />
+    <ClInclude Include="Dialog\CacheLoadDlg.h" />
+    <ClInclude Include="Dialog\CloseStrategyDlg.h" />
+    <ClInclude Include="Dialog\DataSrcDlg.h" />
+    <ClInclude Include="Dialog\downloaddlg.h" />
+    <ClInclude Include="Dialog\EditKDATADlg.h" />
+    <ClInclude Include="Dialog\ExportDest.h" />
+    <ClInclude Include="Dialog\ExportOption.h" />
+    <ClInclude Include="Dialog\FilterInfoDlg.h" />
+    <ClInclude Include="Dialog\InstallPacDlg.h" />
+    <ClInclude Include="Dialog\ListExportDlg.h" />
+    <ClInclude Include="Dialog\NetInfoDlg.h" />
+    <ClInclude Include="Dialog\QuoteTipDlg.h" />
+    <ClInclude Include="Dialog\RegApplyEvaDlg.h" />
+    <ClInclude Include="Dialog\RegisterDlg.h" />
+    <ClInclude Include="Dialog\SelectGrpDlg.h" />
+    <ClInclude Include="Dialog\SelectStk.h" />
+    <ClInclude Include="Dialog\SelectTraderDlg.h" />
+    <ClInclude Include="Dialog\SetBasedataDlg.h" />
+    <ClInclude Include="Dialog\SetBaseDlg.h" />
+    <ClInclude Include="Dialog\SetColorDlg.h" />
+    <ClInclude Include="Dialog\SetColumnDlg.h" />
+    <ClInclude Include="Dialog\SetDrdataDlg.h" />
+    <ClInclude Include="Dialog\SetGroupDlg.h" />
+    <ClInclude Include="Dialog\SetKDataDlg.h" />
+    <ClInclude Include="Dialog\SetPrpt.h" />
+    <ClInclude Include="Dialog\SetRate.h" />
+    <ClInclude Include="Dialog\SetRule.h" />
+    <ClInclude Include="Dialog\SimuAddOpDlg.h" />
+    <ClInclude Include="Dialog\SimuAddStockDlg.h" />
+    <ClInclude Include="Dialog\SimuAdvancedDlg.h" />
+    <ClInclude Include="Dialog\SimuRealOp.h" />
+    <ClInclude Include="Dialog\SimuReport.h" />
+    <ClInclude Include="Dialog\SimuStatDlg.h" />
+    <ClInclude Include="Dialog\TyDataDlg.h" />
+    <ClInclude Include="Dialog\UpgradeDlg.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AfxCore.inl" />
+    <None Include="res\alarm_in.ico" />
+    <None Include="res\alarm_wa.ico" />
+    <None Include="res\balang.bmp" />
+    <None Include="res\balang.ico" />
+    <None Include="res\bin00001.bin" />
+    <None Include="res\bitmap1.bmp" />
+    <None Include="res\bitmap2.bmp" />
+    <None Include="res\bmp00001.bmp" />
+    <None Include="res\bmp00002.bmp" />
+    <None Include="res\bmp00003.bmp" />
+    <None Include="res\bmp00004.bmp" />
+    <None Include="res\bmp00005.bmp" />
+    <None Include="res\bmp00006.bmp" />
+    <None Include="res\bmp00007.bmp" />
+    <None Include="res\bmp00008.bmp" />
+    <None Include="res\bmp00009.bmp" />
+    <None Include="res\bmp00010.bmp" />
+    <None Include="res\bmp00011.bmp" />
+    <None Include="res\bmp00012.bmp" />
+    <None Include="res\bmp00013.bmp" />
+    <None Include="res\bmp00014.bmp" />
+    <None Include="res\bmp00015.bmp" />
+    <None Include="res\bmp00016.bmp" />
+    <None Include="res\bmp00017.bmp" />
+    <None Include="res\cancel.ico" />
+    <None Include="res\controls6.ico" />
+    <None Include="res\cursor1.cur" />
+    <None Include="res\dlgleftl.bmp" />
+    <None Include="res\dlgtoplo.bmp" />
+    <None Include="res\groupvie.bmp" />
+    <None Include="res\helplogo.bmp" />
+    <None Include="res\ico00001.ico" />
+    <None Include="res\ico00002.ico" />
+    <None Include="res\ico00003.ico" />
+    <None Include="res\ico00004.ico" />
+    <None Include="res\ico00005.ico" />
+    <None Include="res\ico00006.ico" />
+    <None Include="res\ico00007.ico" />
+    <None Include="res\ico00008.ico" />
+    <None Include="res\ico00009.ico" />
+    <None Include="res\ico00010.ico" />
+    <None Include="res\ico00011.ico" />
+    <None Include="res\ico00012.ico" />
+    <None Include="res\ico00013.ico" />
+    <None Include="res\ico00014.ico" />
+    <None Include="res\ico00015.ico" />
+    <None Include="res\icon1.ico" />
+    <None Include="res\idr_main.ico" />
+    <None Include="res\idr_simt.ico" />
+    <None Include="res\il_tab.bmp" />
+    <None Include="res\imagelist.bmp" />
+    <None Include="res\indicato.ico" />
+    <None Include="res\leftlogo.bmp" />
+    <None Include="res\mainbar.bmp" />
+    <None Include="res\mainbar1.bmp" />
+    <None Include="res\mainfram.bmp" />
+    <None Include="res\menuchec.bmp" />
+    <None Include="res\ok.ico" />
+    <None Include="res\package.bmp" />
+    <None Include="res\periodba.bmp" />
+    <None Include="res\prjview_.bmp" />
+    <None Include="res\simubar.bmp" />
+    <None Include="res\slistbar.bmp" />
+    <None Include="res\splash.bmp" />
+    <None Include="res\startlog.bmp" />
+    <None Include="res\strategy.bmp" />
+    <None Include="res\strategy.ico" />
+    <None Include="res\techsvie.bmp" />
+    <None Include="res\text1.bin" />
+    <None Include="res\text_dec.bin" />
+    <None Include="res\text_upg.bin" />
+    <None Include="res\toplogo.bmp" />
+    <None Include="res\viewbar.bmp" />
+    <None Include="res\wizardhe.bmp" />
+    <None Include="res\worksp_b.bmp" />
+    <None Include="res\worksp_t.bmp" />
+    <None Include="res\workspba.bmp" />
+    <None Include="res\world.ico" />
+    <None Include="res\zlinker.ico" />
+    <None Include="res\zlinker1.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GuiLib\GuiLib\GuiLib.vcxproj">
+      <Project>{35c05aa7-0e96-4407-b5f6-b695376b954a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\NetTS\NetTS.vcxproj">
+      <Project>{38a60cc0-a2e7-48b1-93ce-91250f75a7b7}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\ProfUIS\profuisdll\profuisdll.vcxproj">
+      <Project>{50dbd19b-db6f-4325-94fc-6a333c89627b}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\StkLib\Src\StkLib.vcxproj">
+      <Project>{b43c317d-2be8-46a6-b6a7-5b89b493f1ff}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\StkNet\Src\StkNet.vcxproj">
+      <Project>{878c9771-d65d-4ab1-9df9-a9a0938438db}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\XPFace\Src\XPFace.vcxproj">
+      <Project>{9e28745a-a22f-4f7e-90d4-d0ca1774e990}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
