@@ -72,6 +72,7 @@ BOOL CKLinePrintView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	// TODO: 在此处通过修改
 	//  CREATESTRUCT cs 来修改窗口类或样式
+	m_graph.SetParent( this );
 
 	return CView::PreCreateWindow(cs);
 }
@@ -88,6 +89,9 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	CRect rc;
 	GetClientRect(&rc);
 
+//	m_graph.Redraw( pDC, rc );
+
+#if 1
 	CString txtSpeed;
 
 	txtSpeed.Format(_T("%dX(%c)"), PBCONFIG.nPlaySpeed, PBCONFIG.bRealTime ? 'R':'-');
@@ -96,6 +100,7 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 
 	//将内存中的图拷贝到屏幕上进行显示
 	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);
+#endif
 }
 
 

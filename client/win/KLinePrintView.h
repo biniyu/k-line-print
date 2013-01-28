@@ -7,6 +7,7 @@
 #include "KLineRenderer.h"
 #include "TickRenderer.h"
 #include "TradeDialog.h"
+#include "StockGraph.h"
 
 class KLineCollection;
 class CKLinePrintDoc;
@@ -49,6 +50,8 @@ public:
 #endif
 
 protected:
+
+	CStockGraph	m_graph;
 
 	KLineRenderer klr_1min;
 
