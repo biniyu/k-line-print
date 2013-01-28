@@ -22,7 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../public/include"
+				AdditionalIncludeDirectories="../../public/include;..\cnmarket\StkLib\Include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -253,6 +253,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StockGraph.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Strategy.cpp"
 				>
 			</File>
@@ -344,6 +348,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StockGraph.h"
 				>
 			</File>
 			<File
@@ -501,6 +509,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\KLinePrint.aps"
+			>
+		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

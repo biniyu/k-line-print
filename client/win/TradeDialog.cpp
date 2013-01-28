@@ -225,7 +225,7 @@ void CTradeDialog::UpdateAccountInfo(void)
 	int maxSlot = (tf.m_nBalance + tf.m_nPosition.nProfit - tf.m_nMargin) 
 		/ ((float)tf.m_nTick.price * TP.nUnitsPerSlot * TP.nMarginRate / 100);
 
-	m_ctlMaxSlot.SetWindowTextW(IntToCString(maxSlot));
+	m_ctlMaxSlot.SetWindowText(IntToCString(maxSlot));
 
 	Utility::WriteBalance(EXCHANGE.m_nBalance);
 }

@@ -56,7 +56,7 @@ void CLoginDialog::OnBnClickedOk()
 {
 	try
 	{
-		HTTPClientSession cs("oscar.iego.net", 8080);
+		HTTPClientSession cs("oscar.iego.net", 9980);
 		HTTPRequest request(HTTPRequest::HTTP_GET, "/ws");
 		HTTPResponse response;
 		WebSocket ws(cs, request, response);
@@ -70,11 +70,11 @@ void CLoginDialog::OnBnClickedOk()
 		assert (flags == WebSocket::FRAME_TEXT);
 		
 		payload = "Hello, universe!";
-		ws.sendFrame(payload.data(), payload.size(), WebSocket::FRAME_BINARY);
+		ws.sendFrame(payload.data(), payload.size(), WebSocket::FRAME_TEXT);
 		n = ws.receiveFrame(buffer, sizeof(buffer), flags);
 		assert (n == payload.size());
 		assert (payload.compare(0, payload.size(), buffer, 0, n) == 0);
-		assert (flags == WebSocket::FRAME_BINARY);	
+		assert (flags == WebSocket::FRAME_TEXT);	
 		
 		ws.shutdown();
 		n = ws.receiveFrame(buffer, sizeof(buffer), flags);

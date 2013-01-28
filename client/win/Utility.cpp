@@ -18,30 +18,13 @@ Utility::~Utility(void)
 
 int CStringToInt(const CString& str)
 {
-	char InfoString[256];    
-	  
-	// 转换后的数据存放在InfoString数组中   
-	if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(str),-1,InfoString,100,NULL,NULL))    
-	{    
-		return -1;    
-	} 
-
-	int ip = atoi(InfoString);
-	
+	int ip = atoi((LPCTSTR)str);	
 	return ip;
 }
 
 string CStringTostring(const CString& str)
 {
-	char InfoString[256];    
-	  
-	// 转换后的数据存放在InfoString数组中   
-	if (!WideCharToMultiByte(CP_ACP,0,LPCTSTR(str),-1,InfoString,100,NULL,NULL))    
-	{    
-		return "";    
-	} 
-
-	return string(InfoString);
+	return string(LPCTSTR(str));
 }
 
 CString IntToCString(int nInt)

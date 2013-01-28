@@ -58,7 +58,7 @@ void TickRenderer::Render(CDC* pDC)
 	sz = pDC->GetTextExtent(strTime);
 
 	pDC->SetTextColor(RGB(0,0,255));
-	pDC->TextOutW(m_Rect.left + (m_Rect.Width() - sz.cx) / 2, ncurx, strTime);
+	pDC->TextOut(m_Rect.left + (m_Rect.Width() - sz.cx) / 2, ncurx, strTime);
 
 	ncurx += (sz.cy + SPACE_BETWEEN_LINE);
 
@@ -74,7 +74,7 @@ void TickRenderer::Render(CDC* pDC)
 	else
 		pDC->SetTextColor(RGB(0,150,0));
 
-	pDC->TextOutW(m_Rect.left + (m_Rect.Width() - sz.cx) / 2, ncurx, strPrice);
+	pDC->TextOut(m_Rect.left + (m_Rect.Width() - sz.cx) / 2, ncurx, strPrice);
 
 	ncurx += (sz.cy + SPACE_BETWEEN_LINE);
 
@@ -85,8 +85,8 @@ void TickRenderer::Render(CDC* pDC)
 	strVol.Format(_T("%d"), m_tick.volS1);
 	sz = pDC->GetTextExtent(strPrice);
 	sz2 = pDC->GetTextExtent(strVol);
-	pDC->TextOutW(m_Rect.left + MARGIN, ncurx, strPrice);
-	pDC->TextOutW(m_Rect.right - MARGIN - sz2.cx, ncurx, strVol);
+	pDC->TextOut(m_Rect.left + MARGIN, ncurx, strPrice);
+	pDC->TextOut(m_Rect.right - MARGIN - sz2.cx, ncurx, strVol);
 	ncurx += (sz.cy + SPACE_BETWEEN_LINE);
 
 	//	ÏÔÊ¾Âò1
@@ -96,8 +96,8 @@ void TickRenderer::Render(CDC* pDC)
 	strVol.Format(_T("%d"), m_tick.volB1);
 	sz = pDC->GetTextExtent(strPrice);
 	sz2 = pDC->GetTextExtent(strVol);
-	pDC->TextOutW(m_Rect.left + MARGIN, ncurx, strPrice);
-	pDC->TextOutW(m_Rect.right - MARGIN - sz2.cx, ncurx, strVol);
+	pDC->TextOut(m_Rect.left + MARGIN, ncurx, strPrice);
+	pDC->TextOut(m_Rect.right - MARGIN - sz2.cx, ncurx, strVol);
 	ncurx += (sz.cy + SPACE_BETWEEN_LINE);
 
 	pDC->SetTextColor(oldColor);

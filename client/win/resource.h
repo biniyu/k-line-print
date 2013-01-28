@@ -4,6 +4,7 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
+#define IDS_STRING101                   101
 #define ID_STATUSBAR_PANE1              120
 #define ID_STATUSBAR_PANE2              121
 #define IDS_STATUS_PANE1                122
@@ -158,6 +159,48 @@
 #define ID_TRADE_LOG                    32790
 #define ID_32791                        32791
 #define ID_STRATEGY                     32792
+
+#define IDS_STOCKGRAPH_SHARETOTAL       45798
+
+#define IDS_STOCKGRAPH_NOKDATA          45807
+#define IDS_STOCKGRAPH_PROJECT          45808
+#define IDS_STOCKGRAPH_PRIMARY          45809
+#define IDS_STOCKGRAPH_MEDIATE          45810
+#define IDS_STOCKGRAPH_MIGHT            45811
+#define IDS_STOCKGRAPH_PRESSURE         45812
+#define IDS_STOCKGRAPH_UPHOLD           45813
+#
+#define IDS_STOCKGRAPH_RECENTCWDISFMT   45829
+#define IDS_STOCKGRAPH_PASTCWDISFMT     45830
+#define IDS_STOCKGRAPH_GAINPERCENT      45831
+#define IDS_STOCKGRAPH_COSTAVE          45832
+#define IDS_STOCKGRAPH_MASSFMT90        45833
+#define IDS_STOCKGRAPH_MASSFMT70        45834
+#define IDS_STOCKGRAPH_PE               45842
+
+#define IDS_STOCKGRAPH_KLINE            45773
+#define IDS_STOCKGRAPH_FONTNAME         45774
+#define IDS_STOCKGRAPH_TIME             45775
+#define IDS_STOCKGRAPH_OPEN             45776
+#define IDS_STOCKGRAPH_HIGH             45777
+#define IDS_STOCKGRAPH_LOW              45778
+#define IDS_STOCKGRAPH_CLOSE            45779
+#define IDS_STOCKGRAPH_VOLUME           45780
+#define IDS_STOCKGRAPH_AMOUNT           45781
+#define IDS_STOCKGRAPH_YIELDAVERAGE     45782
+#define IDS_STOCKGRAPH_DAY              45783
+#define IDS_STOCKGRAPH_YIELDSTDDEV      45784
+#define IDS_STOCKGRAPH_BEITE            45785
+#define IDS_STOCKGRAPH_XIAPU            45786
+#define IDS_STOCKGRAPH_CHANGEHAND       45787
+#define IDS_STOCKGRAPH_RATIOVOLUME      45788
+#define IDS_STOCKGRAPH_SHARECURRENCY    45789
+#define IDS_STOCKGRAPH_NETASSETPS       45790
+#define IDS_STOCKGRAPH_EPS              45791
+#define IDS_STOCKGRAPH_RS               45792
+#define IDS_STOCKGRAPH_TIME2            45793
+#define IDS_STOCKGRAPH_PRICEAVERAGE     45794
+#define IDS_STOCKGRAPH_RELATIVECHANGEHAND 45795
 
 // Next default values for new objects
 // 

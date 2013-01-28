@@ -223,7 +223,7 @@ void CTradeLogDialog::OnCbnSelchangeComboLogfile()
 {
 	CString tmp;
 
-	m_comboLogFiles.GetWindowTextW(tmp);
+	m_comboLogFiles.GetWindowText(tmp);
 
 	string filename = CStringTostring(tmp);
 
