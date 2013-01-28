@@ -52,17 +52,9 @@ BOOL CKLinePrintDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	if (!CDocument::OnOpenDocument(lpszPathName))
 		return FALSE;
 
-	char InfoString[256];    
-
-	// 转换后的数据存放在InfoString数组中   
-	if (!WideCharToMultiByte(CP_ACP,0, lpszPathName,-1, InfoString,100,NULL,NULL))    
-	{    
-		return FALSE;    
-	} 
-
 	m_Strategy.SetData(&m_1MinData);
 
-	LoadKLineGroup(InfoString);
+	LoadKLineGroup(lpszPathName);
 
 	return TRUE;
 }

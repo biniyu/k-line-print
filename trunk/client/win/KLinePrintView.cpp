@@ -92,7 +92,7 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 
 	txtSpeed.Format(_T("%dX(%c)"), PBCONFIG.nPlaySpeed, PBCONFIG.bRealTime ? 'R':'-');
 
-	m_MemDC.TextOutW(rc.right - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
+	m_MemDC.TextOut(rc.right - m_MemDC.GetTextExtent(txtSpeed).cx, rc.top, txtSpeed);
 
 	//将内存中的图拷贝到屏幕上进行显示
 	pDC->BitBlt(0,0,rc.Width(),rc.Height(),&m_MemDC,0,0,SRCCOPY);

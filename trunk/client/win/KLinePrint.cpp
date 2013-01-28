@@ -50,13 +50,37 @@ CKLinePrintApp theApp;
 
 BOOL CKLinePrintApp::InitInstance()
 {
+#if 0
+
+	//	维持网络连接/会话
+	Net net("192.168.1.1:8080");
+	net.start();
+
+	//	执行命令
+	CommandExecutor ce(&net);
+	string ret = ce.Execute("login");
+
+	//	接收数据
+	DataHandler dh(&net);
+	
+
+	//	初始化网络连接
+	//	创建线程，发起并维持连接
+	//	
+
 	CLoginDialog loginDlg;
 
-#if 0
 	if(loginDlg.DoModal()!=IDOK)
 	{
 		return FALSE;
 	}
+
+	CommandExecutor ce();
+
+	string result = ce.Execute("login:oscar,12345,sr");
+
+
+
 #endif
 
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
@@ -114,7 +138,7 @@ BOOL CKLinePrintApp::InitInstance()
 		return FALSE;
 
 	CalendarGenerator cg;
-	cg.Generate("C:\\FutureData\\ZZ", m_cal);
+	cg.Generate("D:\\Future\\ZZ", m_cal);
 
 	//	读入账户/品种信息
 	EXCHANGE.SetBalance(Utility::ReadBalance());

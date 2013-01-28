@@ -381,7 +381,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 				EXCHANGE.m_nPosition.nProfit);
 
 	sz = pDC->GetTextExtent(tmp);
-	pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
+	pDC->TextOut(m_kMiddle + RIGHT_MARGIN, prPos + 1, tmp);
 
 	//	绘制止损价
 	if(EXCHANGE.m_nPosition.nLossStop)
@@ -402,7 +402,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		tmp.Format(_T("止损:%d"), EXCHANGE.m_nPosition.nLossStop);
 
 		sz = pDC->GetTextExtent(tmp);
-		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, stopLossPos + 1, tmp);
+		pDC->TextOut(m_kMiddle + RIGHT_MARGIN, stopLossPos + 1, tmp);
 	}
 
 	//	绘制止盈价
@@ -424,7 +424,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		tmp.Format(_T("止盈:%d"), EXCHANGE.m_nPosition.nProfitStop);
 
 		sz = pDC->GetTextExtent(tmp);
-		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, stopProfitPos + 1, tmp);
+		pDC->TextOut(m_kMiddle + RIGHT_MARGIN, stopProfitPos + 1, tmp);
 	}
 
 	//	绘制触发价
@@ -446,7 +446,7 @@ void KLineRenderer::RenderPosition(CDC* pDC)
 		tmp.Format(_T("触发:%d"), EXCHANGE.m_nPosition.nTrigger);
 
 		sz = pDC->GetTextExtent(tmp);
-		pDC->TextOutW(m_kMiddle + RIGHT_MARGIN, triggerPos + 1, tmp);
+		pDC->TextOut(m_kMiddle + RIGHT_MARGIN, triggerPos + 1, tmp);
 	}
 }
 
@@ -467,7 +467,7 @@ void KLineRenderer::RenderKeyPrice(CDC* pDC)
 
 		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, keyPricePos);
 		pDC->LineTo(m_Rect.right - RIGHT_MARGIN, keyPricePos);	
-		pDC->TextOutW(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
+		pDC->TextOut(m_Rect.left + 5, keyPricePos - 5, CString(itKeyPrice->second.c_str()));
 	}
 }
 
@@ -486,7 +486,7 @@ void KLineRenderer::RenderMaxMinPrice(CDC* pDC)
 	tmp.Format(_T("%d"), m_pKLines->m_nMaxPrice);
 
 	sz = pDC->GetTextExtent(tmp);
-	pDC->TextOutW(m_kMiddle - sz.cx, maxPricePos - sz.cy, tmp);
+	pDC->TextOut(m_kMiddle - sz.cx, maxPricePos - sz.cy, tmp);
 
 	pDC->SelectObject(&penGreen);
 	pDC->MoveTo(m_Rect.left + LEFT_MARGIN, minPricePos);
@@ -495,7 +495,7 @@ void KLineRenderer::RenderMaxMinPrice(CDC* pDC)
 	tmp.Format(_T("%d"), m_pKLines->m_nMinPrice);
 
 	sz = pDC->GetTextExtent(tmp);
-	pDC->TextOutW(m_kMiddle - sz.cx, minPricePos + 1, tmp);
+	pDC->TextOut(m_kMiddle - sz.cx, minPricePos + 1, tmp);
 }
 
 void KLineRenderer::RenderAxis(CDC* pDC)
@@ -519,7 +519,7 @@ void KLineRenderer::RenderAxis(CDC* pDC)
 	strPercent.Format(_T("图%.2f%% 跳%.2f%% 波幅%d点 均偏%d点"), 
 				(m_fPricePercentage / 0.01), gap, range, tmpk.avg_devi);
 
-	pDC->TextOutW(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
+	pDC->TextOut(m_Rect.left + LEFT_MARGIN + 10, m_Rect.top + 20, strPercent);
 }
 
 void KLineRenderer::RenderKLine(CDC* pDC, int nKIdx)
@@ -658,7 +658,7 @@ void KLineRenderer::RenderCriticalTime(CDC* pDC, int nKIdx)
 		tmptime.Format(_T("%02d:%02d"), tmpHour, tmpMinute);
 
 		CSize sz = pDC->GetTextExtent(tmptime);
-		pDC->TextOutW(m_kMiddle, timeLinePos - sz.cy, tmptime);
+		pDC->TextOut(m_kMiddle, timeLinePos - sz.cy, tmptime);
 	}
 }
 
@@ -739,7 +739,7 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 		CString tmp;
 
 		tmp.Format(_T("%d"), kline.close);
-		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kCurPos, tmp);
+		pDC->TextOut(m_kMiddle + m_kWidth * 2, kCurPos, tmp);
 
 		//	绘制持仓量线
 		float kInterestPos = GetInterestPosition(kline.interest);
@@ -748,7 +748,7 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 		pDC->LineTo(m_kMiddle - m_kWidth * 2, kInterestPos);
 
 		tmp.Format(_T("%d"), kline.interest);
-		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kInterestPos, tmp);
+		pDC->TextOut(m_kMiddle + m_kWidth * 2, kInterestPos, tmp);
 
 		//	绘制成交量线
 //		float kVolPos = GetVolPosition(kline.vol);
@@ -758,7 +758,7 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 
 //		tmp.Format(_T("%d"), kline.vol);
 //		CSize sz = pDC->GetTextExtent(tmp);
-//		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kVolPos - sz.cy, tmp);
+//		pDC->TextOut(m_kMiddle + m_kWidth * 2, kVolPos - sz.cy, tmp);
 
 		//  绘制MACD线
 		float kMacdPos = GetMacdPosition(kline.MACD);
@@ -766,7 +766,7 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 		pDC->MoveTo(m_Rect.left + LEFT_MARGIN, kMacdPos);
 		pDC->LineTo(m_kMiddle - m_kWidth * 2, kMacdPos);
 		tmp.Format(_T("%.2f"), kline.MACD);
-		pDC->TextOutW(m_kMiddle + m_kWidth * 2, kMacdPos, tmp);
+		pDC->TextOut(m_kMiddle + m_kWidth * 2, kMacdPos, tmp);
 	}
 
 	// 显示时间和价格
@@ -820,11 +820,11 @@ void KLineRenderer::RenderSelection(CDC* pDC, int nKIdx)
 
 	if(m_kMiddle + 1 + sz.cx > m_Rect.right)
 	{
-		pDC->TextOutW(m_kMiddle - sz.cx - 5, m_Rect.top + 1, strTime);
+		pDC->TextOut(m_kMiddle - sz.cx - 5, m_Rect.top + 1, strTime);
 	}
 	else
 	{
-		pDC->TextOutW(m_kMiddle + 5, m_Rect.top + 1, strTime);
+		pDC->TextOut(m_kMiddle + 5, m_Rect.top + 1, strTime);
 	}
 }
 
@@ -964,12 +964,12 @@ void KLineRenderer::RenderGraphFrame(CDC* pDC)
 	//	显示最大成交量
 	tmp.Format(_T("%d"), m_volMax);
 	sz = pDC->GetTextExtent(tmp);
-	pDC->TextOutW(m_Rect.left + LEFT_MARGIN - sz.cx, timeLinePos, tmp);
+	pDC->TextOut(m_Rect.left + LEFT_MARGIN - sz.cx, timeLinePos, tmp);
 
 	//	显示最大持仓
 	tmp.Format(_T("%d"), m_interestMax);
 	sz = pDC->GetTextExtent(tmp);
-	pDC->TextOutW(m_Rect.right - RIGHT_MARGIN, timeLinePos, tmp);
+	pDC->TextOut(m_Rect.right - RIGHT_MARGIN, timeLinePos, tmp);
 
 	//	绘制主图及各副图的分割线
 	for(int i = 0; i < m_vecDivStartY.size(); i++)
@@ -1221,7 +1221,7 @@ void KLineRenderer::Render(CDC* pDC)
 	//	显示价格百分比范围
 	CString strPercent;
 	strPercent.Format(_T("%.2f"), (m_fPricePercentage / 0.01));
-	pDC->TextOutW(m_Rect.left + 5, m_Rect.top + 1, strPercent);
+	pDC->TextOut(m_Rect.left + 5, m_Rect.top + 1, strPercent);
 }
 
 void KLineRenderer::SetLossStopPrice(int price)
