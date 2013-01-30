@@ -167,6 +167,7 @@
 #define IDR_TESTTYPE                    295
 #define IDD_ALARMRESULT                 296
 #define IDD_REGAPPLYEVA                 297
+#define IDR_PLAYBACK                    297
 #define IDD_SELECTOR_FORM               298
 #define IDC_URL_ADDRESS                 1000
 #define IDC_PROGRESS                    1001
@@ -547,6 +548,14 @@
 #define IDC_RUNSELECTOR                 1321
 #define IDC_FILE_F10                    1323
 #define IDC_F10FILE_EXPLORER            1324
+#define ID_PLAYBACK_BEGIN               32775
+#define ID_PLAYBACK_REV                 32776
+#define ID_PLAYBACK_FASTREV             32777
+#define ID_PLAYBACK_PAUSE               32778
+#define ID_PLAYBACK_FORWARD             32779
+#define ID_PLAYBACK_FASTFW              32780
+#define ID_PLAYBACK_END                 32781
+#define ID_PLAYBACK_STOP                32782
 #define ID_VIEW_SLIST                   32783
 #define ID_VIEW_REALTIME                32784
 #define ID_VIEW_MULTISORT               32785
@@ -1166,7 +1175,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        296
+#define _APS_NEXT_RESOURCE_VALUE        298
 #define _APS_NEXT_COMMAND_VALUE         34592
 #define _APS_NEXT_CONTROL_VALUE         1322
 #define _APS_NEXT_SYMED_VALUE           101

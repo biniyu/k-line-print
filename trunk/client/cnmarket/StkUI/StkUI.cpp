@@ -141,6 +141,14 @@ BOOL CALLBACK LoadProgram( HWND hWnd, int nMinProgress, int nMaxProgress )
 	}
 	SendMessage( hWnd, WM_USER_STARTUP_PROGRESS, nMin+nRange*12/30, 0 );
 
+	if( !pStaticDoc->GetViewIfExist( RUNTIME_CLASS(CSListView) ) )
+		pStaticDoc->ShowStaticView( RUNTIME_CLASS(CSListView), TRUE );
+	if( !pStaticDoc->GetViewIfExist( RUNTIME_CLASS(CRealTimeView) ) )
+		pStaticDoc->ShowStaticView( RUNTIME_CLASS(CRealTimeView), TRUE );
+	if( !pStaticDoc->GetViewIfExist( RUNTIME_CLASS(CGraphView) ) )
+		pStaticDoc->ShowStaticView( RUNTIME_CLASS(CGraphView), TRUE );
+
+#if 0
 	// Show Views
 	if( !pStaticDoc->GetViewIfExist( RUNTIME_CLASS(CWizardView) ) )
 		pStaticDoc->ShowStaticView( RUNTIME_CLASS(CWizardView), TRUE );
@@ -168,6 +176,7 @@ BOOL CALLBACK LoadProgram( HWND hWnd, int nMinProgress, int nMaxProgress )
 	SendMessage( hWnd, WM_USER_STARTUP_PROGRESS, nMin+nRange*28/30, 0 );
 	if( !pStaticDoc->GetViewIfExist( RUNTIME_CLASS(CSelectorView) ) )
 		pStaticDoc->ShowStaticView( RUNTIME_CLASS(CSelectorView), TRUE );
+#endif
 
 	AfxSwitchToStaticView( RUNTIME_CLASS(CSListView) );
 
