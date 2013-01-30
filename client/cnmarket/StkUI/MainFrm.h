@@ -68,6 +68,7 @@ public:
 	BOOL	CreateSimuBar( );
 	BOOL	CreateStatusBar( );
 	BOOL	CreateWorkspBar( );
+	BOOL	CreatePlaybackBar( );
 
 	void	ShowProgressBar( );
 	void	HideProgressBar( );
@@ -112,6 +113,7 @@ protected:
 	CTextToolBar	m_wndMainBar;
 	CGuiToolBarWnd	m_wndViewBar;
 	CGuiToolBarWnd	m_wndPeriodBar;
+	CGuiToolBarWnd	m_wndPlaybackBar;
 	CTextToolBar	m_wndSListBar;
 	CGuiToolBarWnd	m_wndSimuBar;
 	// CStatusBar	m_wndStatusBar;

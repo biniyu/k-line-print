@@ -422,6 +422,7 @@ BOOL CMainFrame::CreateMenuBar( )
 	m_wndCool.LoadToolbar( IDR_PERIODBAR );
 	m_wndCool.LoadToolbar( IDR_SLISTBAR );
 	m_wndCool.LoadToolbar( IDR_SIMUBAR );
+	m_wndCool.LoadToolbar( IDR_PLAYBACK );
 
 	m_wndMenuBar.SetDlgCtrlID( IDW_MENUBAR );
 	CString	strBarTitle;
@@ -532,6 +533,23 @@ BOOL CMainFrame::CreateViewBar( )
 	}
 	return TRUE;
 	*/
+}
+
+BOOL CMainFrame::CreatePlaybackBar( )
+{
+	if (!m_wndPlaybackBar.CreateEx( this, TBSTYLE_FLAT, WS_CHILD | WS_VISIBLE | CBRS_TOP
+		| CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC,CRect(0,0,0,0),IDW_PERIODBAR)
+		|| !m_wndPlaybackBar.LoadToolBar( IDR_PLAYBACK ) )
+	{
+		TRACE0("Failed to create periodbar\n");
+		return FALSE;      // fail to create
+	}
+#if 0
+	CString	strBarTitle;
+	strBarTitle.LoadString( IDS_TITLE_PERIODBAR );
+	m_wndPeriodBar.SetWindowText( strBarTitle );
+#endif	
+	return TRUE;
 }
 
 BOOL CMainFrame::CreatePeriodBar( )
@@ -793,7 +811,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		!CreateSListBar( ) || 
 		!CreateSimuBar( ) ||
 		!CreateStatusBar( ) ||
-		!CreateWorkspBar( ) 
+		!CreateWorkspBar( ) ||
+		!CreatePlaybackBar( )
 		)
 	{
 		return -1;      // failed to create
@@ -823,6 +842,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndSListBar.EnableDocking(CBRS_ALIGN_TOP|CBRS_ALIGN_BOTTOM);
 	m_wndPeriodBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndSimuBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndPlaybackBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndWorkspBar.EnableDocking(CBRS_ALIGN_LEFT|CBRS_ALIGN_RIGHT);
 
 	// Set Bar Position
@@ -835,6 +855,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	DockControlBar(&m_wndWorkspBar, AFX_IDW_DOCKBAR_LEFT);
 	DockControlBar(&m_wndViewBar, AFX_IDW_DOCKBAR_LEFT);
 	DockControlBarLeftOf(&m_wndPeriodBar,&m_wndViewBar);
+	DockControlBarLeftOf(&m_wndPlaybackBar,&m_wndViewBar);
 
 	// Bar State and Window Placement
 	ShowControlBar( &m_wndMainBar, AfxGetApp()->GetProfileInt(szBarSection,szMainBar,1), FALSE );
