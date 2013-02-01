@@ -38,6 +38,7 @@ BEGIN_MESSAGE_MAP(CGraphView, CView)
 	ON_COMMAND(ID_VIEW_PDAY, OnViewPday)
 	ON_COMMAND(ID_VIEW_PWEEK, OnViewPweek)
 	ON_COMMAND(ID_VIEW_PMONTH, OnViewPmonth)
+	ON_COMMAND(ID_VIEW_PMIN1, OnViewPmin1)
 	ON_COMMAND(ID_VIEW_PMIN5, OnViewPmin5)
 	ON_COMMAND(ID_VIEW_PMIN15, OnViewPmin15)
 	ON_COMMAND(ID_VIEW_PMIN30, OnViewPmin30)
@@ -531,6 +532,7 @@ void CGraphView::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGraphView::OnViewPday()	{	ChangeKType( CKData::ktypeDay );	}
 void CGraphView::OnViewPweek()	{	ChangeKType( CKData::ktypeWeek );	}
 void CGraphView::OnViewPmonth()	{	ChangeKType( CKData::ktypeMonth );	}
+void CGraphView::OnViewPmin1()	{	ChangeKType( CKData::ktypeMin1 );	}
 void CGraphView::OnViewPmin5()	{	ChangeKType( CKData::ktypeMin5 );	}
 void CGraphView::OnViewPmin15()	{	ChangeKType( CKData::ktypeMin15 );	}
 void CGraphView::OnViewPmin30()	{	ChangeKType( CKData::ktypeMin30 );	}

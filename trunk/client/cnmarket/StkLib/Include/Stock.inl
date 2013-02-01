@@ -72,7 +72,8 @@ _STOCK_INLINE BOOL CKData::DateAt(int nIndex,
 	else if( ktypeMin60 == m_nKType
 		|| ktypeMin30 == m_nKType
 		|| ktypeMin15 == m_nKType
-		|| ktypeMin5 == m_nKType )
+		|| ktypeMin5 == m_nKType 
+		|| ktypeMin1 == m_nKType)
 	{
 		bOK	=	sptime.FromStockTimeMin( date );
 	}

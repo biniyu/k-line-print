@@ -86,6 +86,7 @@ protected:
 	afx_msg void OnViewPday();
 	afx_msg void OnViewPweek();
 	afx_msg void OnViewPmonth();
+	afx_msg void OnViewPmin1();
 	afx_msg void OnViewPmin5();
 	afx_msg void OnViewPmin15();
 	afx_msg void OnViewPmin30();

@@ -314,6 +314,8 @@ CSPString AfxGetKTypeString( int ktype )
 		return "周线";
 	else if( CKData::ktypeDay == ktype )
 		return "日线";
+	else if( CKData::ktypeMin1 == ktype )
+		return "一分钟线";
 	else if( CKData::ktypeMin5 == ktype )
 		return "五分钟线";
 	else if( CKData::ktypeMin15 == ktype )

@@ -698,7 +698,11 @@ LRESULT CStkReceiver::OnStkReceiverTsdata(
 
 //				CKData	kdata( CKData::ktypeDay );
 				int nKtype =CKData::ktypeDay;
-				if ( pHeader->m_wDataType == FILE_MIN5_EX)   //需要接口支持
+				if ( pHeader->m_wDataType == FILE_MIN1_EX)   //需要接口支持
+				{
+					 nKtype = CKData::ktypeMin1;
+				}
+				else if ( pHeader->m_wDataType == FILE_MIN5_EX)   //需要接口支持
 				{
 					 nKtype = CKData::ktypeMin5;
 				}

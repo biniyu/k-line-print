@@ -1011,6 +1011,7 @@ public:
 	CKData	&		GetKDataMin30( );
 	CKData	&		GetKDataMin15( );
 	CKData	&		GetKDataMin5( );
+	CKData	&		GetKDataMin1( );
 	CDRData	&		GetDRData( );
 	CReport &		GetReport( );
 	CMinute &		GetMinute( );
@@ -1043,6 +1044,7 @@ protected:
 	CKData		m_kdMin30;
 	CKData		m_kdMin15;
 	CKData		m_kdMin5;
+	CKData		m_kdMin1;
 	CDRData		m_drData;
 	CReport		m_report;
 	CMinute		m_minute;
