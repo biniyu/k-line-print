@@ -89,9 +89,9 @@ void CKLinePrintView::OnDraw(CDC* pDC)
 	CRect rc;
 	GetClientRect(&rc);
 
-//	m_graph.Redraw( pDC, rc );
+	m_graph.Redraw( pDC, rc );
 
-#if 1
+#if 0
 	CString txtSpeed;
 
 	txtSpeed.Format(_T("%dX(%c)"), PBCONFIG.nPlaySpeed, PBCONFIG.bRealTime ? 'R':'-');

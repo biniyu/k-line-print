@@ -171,6 +171,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CGuiMDIFrame)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PWEEK, OnUpdateViewPweek)
 	ON_COMMAND(ID_VIEW_PMONTH, OnViewPmonth)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PMONTH, OnUpdateViewPmonth)
+	ON_COMMAND(ID_VIEW_PMIN1, OnViewPmin1)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_PMIN1, OnUpdateViewPmin1)
 	ON_COMMAND(ID_VIEW_PMIN5, OnViewPmin5)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_PMIN5, OnUpdateViewPmin5)
 	ON_COMMAND(ID_VIEW_PMIN15, OnViewPmin15)
@@ -2270,6 +2272,10 @@ void CMainFrame::OnViewPweek()	{	SWITCH_SHOW_GRAPH_COMMAND( ID_VIEW_PWEEK, 0 );	
 void CMainFrame::OnUpdateViewPweek(CCmdUI* pCmdUI)	{	UPDATE_GRAPH_CMDUI(pCmdUI,OnUpdateViewPweek);	}
 void CMainFrame::OnViewPmonth()	{	SWITCH_SHOW_GRAPH_COMMAND( ID_VIEW_PMONTH, 0 );	}
 void CMainFrame::OnUpdateViewPmonth(CCmdUI* pCmdUI)	{	UPDATE_GRAPH_CMDUI(pCmdUI,OnUpdateViewPmonth);	}
+
+void CMainFrame::OnViewPmin1()	{	SWITCH_SHOW_GRAPH_COMMAND( ID_VIEW_PMIN1, 0 );	}
+void CMainFrame::OnUpdateViewPmin1(CCmdUI* pCmdUI)	{	UPDATE_GRAPH_CMDUI(pCmdUI,OnUpdateViewPmin1);	}
+
 void CMainFrame::OnViewPmin5()	{	SWITCH_SHOW_GRAPH_COMMAND( ID_VIEW_PMIN5, 0 );	}
 void CMainFrame::OnUpdateViewPmin5(CCmdUI* pCmdUI)	{	UPDATE_GRAPH_CMDUI(pCmdUI,OnUpdateViewPmin5);	}
 void CMainFrame::OnViewPmin15()	{	SWITCH_SHOW_GRAPH_COMMAND( ID_VIEW_PMIN15, 0 );	}

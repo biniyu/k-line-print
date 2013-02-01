@@ -660,7 +660,7 @@ LRESULT CStkReceiver::OnStkReceiverTsdata(
 				PRCV_REPORT_STRUCTEx pReport = (PRCV_REPORT_STRUCTEx)(pBaseBuf + nBufSize*i );
 
 				//	暂时作为上海证券交易所
-				pReport->m_wMarket = SH_MARKET_EX;
+//				pReport->m_wMarket = SH_MARKET_EX;
 
 				if( convert_TSREPORT_to_REPORT( pReport, &(pCommPacket->m_pReport[i]) ) )
 				{

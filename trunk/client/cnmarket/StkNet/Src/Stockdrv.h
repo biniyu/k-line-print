@@ -33,6 +33,7 @@
 #define		SH_MARKET_EX			'HS'		// 上海
 #define		SZ_MARKET_EX			'ZS'		// 深圳
 #define		HK_MARKET_EX			'KH'		// 香港
+#define		NQ_MARKET_EX			'QN'		// 国内期货
 
 // 文件数据类型
 // 结构数组形式的文件数据

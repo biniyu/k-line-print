@@ -70,10 +70,12 @@ BOOL CKLine::GetMinMaxInfo( int nStart, int nEnd, double *pdMin, double *pdMax )
 		if( nStart == k || dMin > kd.m_fLow )	dMin	=	(double)kd.m_fLow;
 		if( nStart == k || dMax < kd.m_fHigh )	dMax	=	(double)kd.m_fHigh;
 	}
-	dMin	-=	fabs(dMin) * 0.01;
-	dMax	+=	fabs(dMax) * 0.01;
+	dMin	-=	fabs(dMin - dMax) * 0.1;
+	dMax	+=	fabs(dMin - dMax) * 0.1;
+
 	if( dMin <= 0 )
 		dMin	=	0;
+	
 	if( dMax - dMin < 0.03 )
 		dMax	=	dMin + 0.03;
 

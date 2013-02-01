@@ -757,6 +757,7 @@
 #define ID_SYS_NOTIFYICON               34589
 #define ID_TOOL_ALARM                   34590
 #define ID_VIEW_SELECTOR                34591
+#define ID_VIEW_PMIN1                   34592
 #define IDS_OPENFILE                    45461
 #define IDS_SAVEFILE                    45462
 #define IDS_SAVEFILECOPY                45463
@@ -1160,6 +1161,7 @@
 #define IDS_REALTIME_BUY6               45967
 #define IDS_REALTIME_BUY7               45968
 #define IDS_REALTIME_BUY8               45969
+#define IDS_SLISTVIEW_NQ                45970
 #define IDW_MENUBAR                     0xE8F0
 #define IDW_MAINBAR                     0xE8F1
 #define IDW_VIEWBAR                     0xE8F2
@@ -1176,7 +1178,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        298
-#define _APS_NEXT_COMMAND_VALUE         34592
+#define _APS_NEXT_COMMAND_VALUE         34593
 #define _APS_NEXT_CONTROL_VALUE         1322
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

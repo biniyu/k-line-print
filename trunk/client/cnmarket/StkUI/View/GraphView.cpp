@@ -539,6 +539,7 @@ void CGraphView::OnViewPmin60()	{	ChangeKType( CKData::ktypeMin60 );	}
 void CGraphView::OnUpdateViewPday(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeDay == m_graph.GetKType() );		}
 void CGraphView::OnUpdateViewPweek(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeWeek == m_graph.GetKType() );	}
 void CGraphView::OnUpdateViewPmonth(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeMonth == m_graph.GetKType() );	}
+void CGraphView::OnUpdateViewPmin1(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeMin1 == m_graph.GetKType() );	}
 void CGraphView::OnUpdateViewPmin5(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeMin5 == m_graph.GetKType() );	}
 void CGraphView::OnUpdateViewPmin15(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeMin15 == m_graph.GetKType() );	}
 void CGraphView::OnUpdateViewPmin30(CCmdUI* pCmdUI)	{	pCmdUI->SetCheck( CKData::ktypeMin30 == m_graph.GetKType() );	}
