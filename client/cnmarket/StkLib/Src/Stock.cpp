@@ -676,7 +676,7 @@ int CStockInfo::DigitBit( )
 {
 	if( IsFund() || IsRight() || CStock::typeshB == m_type)
 		return 3;
-	return 2;
+	return 0;
 }
 
 BOOL CStockInfo::GetAverage( double *pValue )

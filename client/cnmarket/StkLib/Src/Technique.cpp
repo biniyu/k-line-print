@@ -46,8 +46,8 @@ BOOL AfxGetMinMaxInfo( int nStart, int nEnd, double *pdMin, double *pdMax, CTech
 			}
 		}
 	}
-	dMin	-=	fabs(dMin)*0.02;
-	dMax	+=	fabs(dMax)*0.02;
+	dMin	-=	fabs(dMin - dMax)*0.2;
+	dMax	+=	fabs(dMax - dMin)*0.2;
 	if( dMax - dMin < 0.03 )
 		dMax	=	dMin + 0.05;
 	if( pdMin )		*pdMin	=	dMin;

@@ -357,7 +357,8 @@ public:
 		ktypeDay		=	0x05,
 		ktypeWeek		=	0x06,
 		ktypeMonth		=	0x07,
-		ktypeMax		=	0x07,
+		ktypeMin1		=	0x08,
+		ktypeMax		=	0x08,
 	};
 
 	enum Formats {
@@ -927,6 +928,7 @@ public:
 		marketFLKFSE	=	'FKLF',	// 法兰克福证券交易所
 		marketNYSE		=	'ESYN',	// 纽约证券交易所
 		marketNASDAQ	=	'QDSN',	// 纳斯达克证券交易所
+		marketNQ		=	'NQQ',	// 国内期货
 	};
 
 	enum DataType {

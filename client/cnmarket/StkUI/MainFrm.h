@@ -220,6 +220,8 @@ protected:
 	afx_msg void OnUpdateViewPweek(CCmdUI* pCmdUI);
 	afx_msg void OnViewPmonth();
 	afx_msg void OnUpdateViewPmonth(CCmdUI* pCmdUI);
+	afx_msg void OnViewPmin1();
+	afx_msg void OnUpdateViewPmin1(CCmdUI* pCmdUI);
 	afx_msg void OnViewPmin5();
 	afx_msg void OnUpdateViewPmin5(CCmdUI* pCmdUI);
 	afx_msg void OnViewPmin15();

@@ -33,6 +33,8 @@ DWORD	TSMarket_to_Market( WORD wMarket )
 		dwMarket	=	CStock::marketSHSE;
 	else if( SZ_MARKET_EX == wMarket )
 		dwMarket	=	CStock::marketSZSE;
+	else if ( NQ_MARKET_EX == wMarket )
+		dwMarket	=	CStock::marketNQ;
 	return dwMarket;
 }
 
@@ -44,6 +46,9 @@ WORD	Market_to_TSMarket( DWORD dwMarket )
 		wMarket	=	SH_MARKET_EX;
 	else if( CStock::marketSZSE == dwMarket )
 		wMarket	=	SZ_MARKET_EX;
+	else if( CStock::marketNQ == dwMarket )
+		wMarket	=	NQ_MARKET_EX;
+
 	return wMarket;
 }
 

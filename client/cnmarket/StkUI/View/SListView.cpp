@@ -30,6 +30,7 @@ static char THIS_FILE[] = __FILE__;
 #define	SL_WORKTAB_SELF		6
 #define	SL_WORKTAB_GROUP	7
 #define	SL_WORKTAB_DOMAIN	8
+#define	SL_WORKTAB_NQ		9
 
 
 IMPLEMENT_DYNCREATE(CSListView, CFormView)
@@ -692,6 +693,8 @@ void CSListView::OnInitialUpdate()
 		CString	strName;
 		strName.LoadString( IDS_SLISTVIEW_CLASS );
 		m_wndWorkTab.Addtab( &m_Grid, strName, SL_WORKTAB_CLASS);
+		strName.LoadString(IDS_SLISTVIEW_NQ);
+		m_wndWorkTab.Addtab( &m_Grid, strName, SL_WORKTAB_NQ);
 		strName.LoadString( IDS_SLISTVIEW_A );
 		m_wndWorkTab.Addtab( &m_Grid, strName, SL_WORKTAB_A);
 		strName.LoadString( IDS_SLISTVIEW_SZNB );
@@ -989,6 +992,9 @@ void CSListView::OnSelchangeWorktab(NMHDR* pNMHDR, LRESULT* pResult)
 		break;
 	case SL_WORKTAB_A:
 		SetCurrentStatus( CStockContainer::typeA, NULL, -1 );
+		break;
+	case SL_WORKTAB_NQ:
+		SetCurrentStatus( CStockContainer::typeNQ, NULL, -1 );
 		break;
 	case SL_WORKTAB_SZNB:
 		SetCurrentStatus( CStockContainer::typeClassSznb, NULL, -1 );

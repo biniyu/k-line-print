@@ -69,7 +69,8 @@ public:
 		typeClassSznb	=	0x0C,
 		typeClassShabond=	0x0D,
 		typeClassSznbond=	0x0E,
-		typeMax			=	0x0E
+		typeNQ			=	0x0F,
+		typeMax			=	0x0F
 	};
 
 	// operations
