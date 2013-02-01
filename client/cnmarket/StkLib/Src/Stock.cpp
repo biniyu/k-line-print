@@ -1037,6 +1037,7 @@ void CStock::SetKDataTypes( )
 	m_kdMin30.SetKType( CKData::ktypeMin30 );
 	m_kdMin15.SetKType( CKData::ktypeMin15 );
 	m_kdMin5.SetKType( CKData::ktypeMin5 );
+	m_kdMin1.SetKType( CKData::ktypeMin1 );
 }
 
 void CStock::SetDatabase( CStDatabase * pDatabase )
@@ -1099,6 +1100,8 @@ CKData	& CStock::GetKData( int ktype )
 		return GetKDataMin15();
 	case CKData::ktypeMin5:
 		return GetKDataMin5();
+	case CKData::ktypeMin1:
+		return GetKDataMin1();
 	default:
 		SP_ASSERT( FALSE );
 		return GetKDataDay();
@@ -1111,6 +1114,7 @@ CKData	& CStock::GetKDataMin60( )		{	return m_kdMin60;	}
 CKData	& CStock::GetKDataMin30( )		{	return m_kdMin30;	}
 CKData	& CStock::GetKDataMin15( )		{	return m_kdMin15;	}
 CKData	& CStock::GetKDataMin5( )		{	return m_kdMin5;	}
+CKData	& CStock::GetKDataMin1( )		{	return m_kdMin1;	}
 CDRData	& CStock::GetDRData( )			{	return m_drData;	}
 CReport & CStock::GetReport( )			{	return m_report;	}
 CMinute & CStock::GetMinute( )			{	return m_minute;	}
@@ -1181,6 +1185,10 @@ int CStock::PrepareData( int type, int period, BOOL bReload )
 			case CKData::ktypeMin5:
 				if( bReload || GetKDataMin5().GetSize() == 0 )
 					m_pDatabase->LoadKData( this, CKData::ktypeMin5 );
+				break;
+			case CKData::ktypeMin1:
+				if( bReload || GetKDataMin1().GetSize() == 0 )
+					m_pDatabase->LoadKData( this, CKData::ktypeMin1 );
 				break;
 			default:
 				SP_ASSERT( FALSE );
@@ -1355,8 +1363,13 @@ int CStock::ExtractKData( int period, BOOL bForced )
 				return GetKDataMin15().GetSize();
 		}
 		break;
+	
 	case CKData::ktypeMin5:
 		return GetKDataMin5().GetSize();
+
+	case CKData::ktypeMin1:
+		return GetKDataMin1().GetSize();
+	
 	default:
 		SP_ASSERT( FALSE );
 		return 0;
@@ -1409,6 +1422,10 @@ int CStock::MergeKData( CStock &stock, int period )
 	case CKData::ktypeMin5:
 		pkdata	=	&(GetKDataMin5());
 		pkdata2	=	&(stock.GetKDataMin5());
+		break;
+	case CKData::ktypeMin1:
+		pkdata	=	&(GetKDataMin1());
+		pkdata2	=	&(stock.GetKDataMin1());
 		break;
 	default:
 		SP_ASSERT( FALSE );

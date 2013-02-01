@@ -419,7 +419,9 @@ void CKData::AutoSetKType( )
 		long elapse3 = ElementAt(3).m_time - ElementAt(2).m_time;
 		long elapse = min(elapse1,elapse2);
 		elapse = min(elapse,elapse3);
-		if( elapse < 600 )
+		if( elapse < 100 )
+			m_nKType = ktypeMin1;
+		else if( elapse < 600 )
 			m_nKType = ktypeMin5;
 		else if( elapse < 1200 )
 			m_nKType = ktypeMin15;
@@ -629,6 +631,7 @@ DWORD CKData::ToDayDate( DWORD date )
 	case ktypeMin30:
 	case ktypeMin15:
 	case ktypeMin5:
+	case ktypeMin1:
 		return (date / 10000 + 1990 * 10000);
 	default:
 		return date;

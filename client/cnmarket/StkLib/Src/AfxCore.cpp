@@ -199,6 +199,7 @@ BOOL AfxReloadStock( CStock & stock )
 	
 	stock.PrepareData( CStock::dataK, CKData::ktypeWeek );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMonth );
+	stock.PrepareData( CStock::dataK, CKData::ktypeMin1 );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMin5 );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMin15 );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMin30 );
@@ -214,6 +215,7 @@ BOOL AfxPrepareStockData( CStDatabase * pDatabase, CStock &stock, int nKType, in
 
 	stock.SetDatabase( pDatabase );
 	stock.PrepareData( CStock::dataK, CKData::ktypeDay, bReload );
+	stock.PrepareData( CStock::dataK, CKData::ktypeMin1, bReload );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMin5, bReload );
 	stock.PrepareData( CStock::dataDR, CKData::ktypeDay, bReload );
 	if( bReload || stock.GetKDataDay().GetCurFormat() == CKData::formatOriginal )

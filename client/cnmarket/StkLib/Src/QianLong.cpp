@@ -572,6 +572,7 @@ int CQianlong::LoadKData( CStock *pstock, int nKType )
 		return	0;
 	case CKData::ktypeMin15:
 		return	0;
+//	case CKData::ktypeMin1:
 	case CKData::ktypeMin5:
 		pkdata	=	&(pstock->GetKDataMin5());
 		break;
@@ -1177,6 +1178,7 @@ BOOL CQianlong::GetFileName( CSPString &sFileName, int nDataType,
 			return	FALSE;
 		case CKData::ktypeMin15:
 			return	FALSE;
+		case CKData::ktypeMin1:
 		case CKData::ktypeMin5:
 			sFileName	+=	CSPString(ml_min5) + pInfo->GetStockCode() + ml_ext_min5;
 			break;

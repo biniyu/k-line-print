@@ -453,8 +453,10 @@ int CMinute::ToKData( CKData & kdata )
 	if( GetSize() <= 0 )
 		return 0;
 	DWORD dwType = ElementAt(0).m_dwType;
-	if( 5 == dwType || 15 == dwType || 30 == dwType || 60 == dwType )
+	if( 1 == dwType || 5 == dwType || 15 == dwType || 30 == dwType || 60 == dwType )
 	{
+		if( 1 == dwType )
+			kdata.SetKType(CKData::ktypeMin1);
 		if( 5 == dwType )
 			kdata.SetKType(CKData::ktypeMin5);
 		else if( dwType )
