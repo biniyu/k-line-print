@@ -188,6 +188,10 @@ BOOL convert_TSMINUTE_to_MINUTE( DWORD dwMarket, LPCTSTR lpszCode, RCV_MINUTE_ST
 	if( NULL != lpszCode )
 		strncpy( pMinute->m_szCode, lpszCode, min(sizeof(pMinute->m_szCode)-1,strlen(lpszCode)) );
 
+	time_t tmp = pTSMinute->m_time;
+	
+	tm* t = localtime(&tmp);
+
 	pMinute->m_time		=	pTSMinute->m_time;
 	pMinute->m_fNew		=	pTSMinute->m_fPrice;
 	pMinute->m_fHigh	=	pTSMinute->m_fPrice;

@@ -785,7 +785,7 @@ void CRealTime::OnIndexCurrentChanged( )
 	CFont	* pOldFont	=	AfxSelectDCFont( pDC, 12 );
 
 	int	x	=	rectTop.left;
-	int	y	=	rectTop.top + 4;
+	int	y	=	rectTop.top + 2;
 	int	right	=	rectTop.right-100;
 	pDC->SetTextColor( clrText );
 	strTemp.LoadString( IDS_REALTIME_TIME );
@@ -943,11 +943,22 @@ void CRealTime::DrawDateAxis( CDC * pDC )
 
 	UINT nAlignOld = pDC->SetTextAlign( TA_TOP | TA_CENTER );
 	rect.left	=	m_rectPrice.left;
-	int	nStep = rect.Width()/4;
-	pDC->TextOut( rect.left, rect.top, "09:30" );
+	int	nStep = rect.Width()/8;
+	
+/*
+	pDC->TextOut( rect.left, rect.top, "09:00" );
 	pDC->TextOut( rect.left+nStep, rect.top, "10:30" );
 	pDC->TextOut( rect.left+nStep*2, rect.top, "11:30" );
-	pDC->TextOut( rect.left+nStep*3, rect.top, "14:00" );
+*/
+
+	pDC->TextOut( rect.left, rect.top, "09:00" );
+	pDC->TextOut( rect.left+nStep, rect.top, "9:30" );
+	pDC->TextOut( rect.left+nStep*2, rect.top, "10:00" );
+	pDC->TextOut( rect.left+nStep*3, rect.top, "10:30" );
+	pDC->TextOut( rect.left+nStep*4, rect.top, "11:00" );
+	pDC->TextOut( rect.left+nStep*5, rect.top, "13:30" );
+	pDC->TextOut( rect.left+nStep*6, rect.top, "14:00" );
+	pDC->TextOut( rect.left+nStep*7, rect.top, "14:30" );
 	pDC->TextOut( rect.right, rect.top, "15:00" );
 
 	pDC->SetTextAlign( nAlignOld );

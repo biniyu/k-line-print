@@ -316,7 +316,7 @@ BOOL CSPTime::InTradeTime( time_t tm, int nInflateSeconds )
 
 	time_t	day = (t.GetTime()+8*3600) % 86400;
 
-	if( day >= 9*3600+25*60-nInflateSeconds && day <= 11*3600+30*60+nInflateSeconds )
+	if( day >= 9*3600/*+25*60*/-nInflateSeconds && day <= 11*3600+30*60+nInflateSeconds )
 		return TRUE;
 	else if( day >= 13*3600-nInflateSeconds && day <= 15*3600+nInflateSeconds )
 		return TRUE;
@@ -414,24 +414,24 @@ DWORD CSPTime::ToStockTimeSecOrder( DWORD dwStockExchange )
 	if( -1 == GetTime() || GetTime() < 0 || 0 == GetTime() )
 		return 0;
 
-	if( GetHour() < 9 || (GetHour() == 9 && GetMinute() < 30) )
+	if( GetHour() < 9 )// || (GetHour() == 9 && GetMinute() < 30) )
 		return 0;
 
-	CSPTime tmStart = CSPTime(GetYear(),GetMonth(),GetDay(),9,30,0);
+	CSPTime tmStart = CSPTime(GetYear(),GetMonth(),GetDay(),9,0,0);
 	CSPTime tmEnd	= CSPTime(GetYear(),GetMonth(),GetDay(),15,0,0);
 	if( *this < tmStart )
 		return 0;
 	if( *this > tmEnd )
-		return 14400;
+		return 21600;
 	CSPTimeSpan	tmSpan	=	*this - tmStart;
 	
 	int	nSec	=	tmSpan.GetTotalSeconds();
-	if( nSec >= 0 && nSec <= 7200 )
+	if( nSec >= 0 && nSec <= 9000 )
 		return nSec;
-	if( nSec > 7200 && nSec < 12600 )
-		return 7200;
-	if( nSec >= 12600 && nSec <= 19800 )
-		return nSec-5400;
+	if( nSec > 9000 && nSec < 16200 )
+		return 9000;
+	if( nSec >= 16200 && nSec <= 21600 )
+		return nSec-7200;
 
 	SP_ASSERT( FALSE );
 	return 0;

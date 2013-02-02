@@ -1469,6 +1469,14 @@ DWORD ReadMinute( CStock * pstock, LPCTSTR lpszFileName )
 		aMinute.Sort( );
 		aMinute.RemoveDirty( );
 	}
+
+	if(aMinute.GetSize())
+	{
+		time_t tmp = aMinute[0].m_time;
+		tm* t = localtime(&tmp);
+		int i = 0;
+	}
+
 	return aMinute.GetSize();
 }
 
