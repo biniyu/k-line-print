@@ -25,9 +25,9 @@ CFont * AfxSelectDCFont( CDC * pDC, int nHeight )
 	static	CFont	font;
 	font.DeleteObject();
 
-	font.CreateFont(nHeight, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0,
+	font.CreateFont(nHeight + 5, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0,
 					DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, DEFAULT_PITCH,
-					"¿¬Ìå" );
+					"Î¢ÈíÑÅºÚ" );
 	return	pDC->SelectObject( &font );
 }
 

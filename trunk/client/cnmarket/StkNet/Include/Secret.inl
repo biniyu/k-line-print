@@ -220,6 +220,8 @@ _SECRET_INLINE BOOL CSView::ValidStd( LPCTSTR lpszUser, LPCTSTR lpszSoftNO, LPCT
 
 _SECRET_INLINE BOOL CSView::ValidProf( LPCTSTR lpszUser, LPCTSTR lpszSoftNO, LPCTSTR lpszRegCode )
 {
+	return TRUE;
+
 	CString	strUser	=	lpszUser;
 	CString	strSoftNO	=	lpszSoftNO;
 	CString	strRegCode	=	lpszRegCode;
