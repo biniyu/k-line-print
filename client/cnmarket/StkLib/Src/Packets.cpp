@@ -148,6 +148,8 @@ BOOL UpdateStockInfoByREPORT( CStockInfo & info, REPORT * pReport )
 			info.SetType( CStock::typeshA );
 		else if( CStock::marketSZSE == pReport->m_dwMarket )
 			info.SetType( CStock::typeszA );
+		else if( CStock::marketNQ == pReport->m_dwMarket )
+			info.SetType( CStock::typeNQ );
 		else
 			info.SetType( CStock::typeshA );
 	}

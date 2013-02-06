@@ -22,16 +22,15 @@ static char THIS_FILE[] = __FILE__;
 #define	IDC_SLISTVIEW_WORKTAB	101
 
 #define	SL_WORKTAB_CLASS	0
-#define	SL_WORKTAB_A		1
-#define	SL_WORKTAB_SZNB		2
-#define	SL_WORKTAB_SHB		3
-#define	SL_WORKTAB_BOND		4
-#define	SL_WORKTAB_FUND		5
-#define	SL_WORKTAB_SELF		6
-#define	SL_WORKTAB_GROUP	7
-#define	SL_WORKTAB_DOMAIN	8
-#define	SL_WORKTAB_NQ		9
-
+#define	SL_WORKTAB_NQ		1
+#define	SL_WORKTAB_A		2
+#define	SL_WORKTAB_SZNB		3
+#define	SL_WORKTAB_SHB		4
+#define	SL_WORKTAB_BOND		5
+#define	SL_WORKTAB_FUND		6
+#define	SL_WORKTAB_SELF		7
+#define	SL_WORKTAB_GROUP	8
+#define	SL_WORKTAB_DOMAIN	9
 
 IMPLEMENT_DYNCREATE(CSListView, CFormView)
 
@@ -785,6 +784,8 @@ void CSListView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 			m_Grid.SetItemFgColour( nRow, nCol, AfxGetVariantColor( anParams[nCol], info ) );
 			if( anParams[nCol] == SLH_DATE )
 				m_Grid.SetColumnWidth( nCol, 80 );
+			if( anParams[nCol] == SLH_CODE )
+				m_Grid.SetColumnWidth( nCol, 60 );
 		}
 
 		if( i == nPageCount+5 )
@@ -799,7 +800,7 @@ void CSListView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 	}
 
 	// Set Average and Weight Average
-	SetAverageItem( m_Grid, container, FALSE );
+//	SetAverageItem( m_Grid, container, FALSE );
 
 	// Sort If Needed
 	if( -1 != m_nColSort )
@@ -1106,7 +1107,7 @@ LRESULT CSListView::OnStkReceiverData(WPARAM wParam, LPARAM lParam)
 			if( bNeedReSort )
 			{
 				container.SetAverage( );
-				SetAverageItem( m_Grid, container, TRUE );
+//				SetAverageItem( m_Grid, container, TRUE );
 			}
 
 			// ÷ÿ–¬≈≈–Ú

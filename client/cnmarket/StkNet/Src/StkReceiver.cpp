@@ -692,6 +692,7 @@ LRESULT CStkReceiver::OnStkReceiverTsdata(
 		switch(pHeader->m_wDataType)
 		{
 		case FILE_HISTORY_EX:						// 补日线数据
+		case FILE_MIN5_EX:
 			{
 				RCV_HISTORY_STRUCTEx * pDay = pHeader->m_pDay;
 				int	nPacketNum	=	pHeader->m_nPacketNum;
@@ -995,7 +996,7 @@ LRESULT CStkReceiver::OnStkReceiverTsdata(
 			TRACE("MSG: CStkReceiver::OnStkDataOK, Replaced data \n");
 			break;
 		default:
-			TRACE("Msg: CStkReceiver::OnStkReceiverData,Unkonw data type\n");
+			TRACE("Msg: CStkReceiver::OnStkReceiverData,Unkonw data type %X\n", pHeader->m_wDataType);
 		}
 		break;
 	}
