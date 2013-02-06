@@ -1961,15 +1961,16 @@ void CStockGraph::DrawKData( CDC * pDC, CRect rect )
 
 	x	=	rect.right - 3;
 	UINT nOldAlign = pDC->SetTextAlign( TA_RIGHT | TA_TOP );
-	CSPTime	sptime;
+	
 	if( CKData::IsDayOrMin( m_nCurKType ) )
 	{
+		CSPTime	sptime;
 		sptime.FromStockTimeDay( kd.m_date );
 		strTemp	=	sptime.Format( "%y-%m-%d" );
 	}
 	else
 	{
-		sptime.FromStockTimeMin( kd.m_date );
+		CSPTime	sptime(kd.m_time);
 		strTemp	=	sptime.Format( "%m%d%H%M" );
 	}
 	pDC->SetTextColor( clrPlane );

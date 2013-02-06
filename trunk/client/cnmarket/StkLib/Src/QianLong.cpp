@@ -32,10 +32,12 @@ BOOL convert_QL_Data_5min_to_KDATA( DWORD dwMarket, const char *szCode, struct Q
 	if( szCode )
 		strncpy( pkd->m_szCode, szCode, min(sizeof(pkd->m_szCode)-1,strlen(szCode)) );
 
-	pkd->m_date		=	pqlkd->min_off;
-	CSPTime	sptime;
-	if( sptime.FromStockTimeMin( pkd->m_date) )
-		pkd->m_time	=	sptime.GetTime();
+	pkd->m_time		=	pqlkd->min_off;
+	CSPTime	sptime(pkd->m_time);
+	pkd->m_date		=	sptime.ToStockTimeDay();
+
+//	if( sptime.FromStockTimeMin( pkd->m_time) )
+//		pkd->m_time	=	sptime.GetTime();
 
 	pkd->m_fOpen	=	(float)fabs( pqlkd->open_price * 0.001 );
 	pkd->m_fHigh	=	(float)fabs( pqlkd->high_price * 0.001 );
@@ -95,7 +97,7 @@ BOOL convert_KDATA_to_QL_Data_5min( KDATA * pkd, struct QL_Data_5min * pqlkd )
 		return FALSE;
 	memset( pqlkd, 0, sizeof(struct QL_Data_day) );
 
-	pqlkd->min_off		=	(DWORD)( pkd->m_date );
+	pqlkd->min_off		=	(DWORD)( pkd->m_time );
 	pqlkd->open_price	=	(DWORD)( pkd->m_fOpen * 1000 );
 	pqlkd->high_price	=	(DWORD)( pkd->m_fHigh * 1000 );
 	pqlkd->low_price	=	(DWORD)( pkd->m_fLow * 1000 );
