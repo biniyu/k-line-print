@@ -148,6 +148,8 @@ BOOL CStockContainer::RetrieveFromStatic( int nType, LPCTSTR lpszDomain, CStrate
 	case typeClassSznb:
 	case typeClassShabond:
 	case typeClassSznbond:
+	case typeNQ:
+
 		{
 			int	nCount	=	0;
 			SetSize( 0, AfxGetStockContainer().GetSize() );
@@ -165,6 +167,7 @@ BOOL CStockContainer::RetrieveFromStatic( int nType, LPCTSTR lpszDomain, CStrate
 					|| ( typeClassSzna == nType && CStock::typeszA == stocktype )
 					|| ( typeClassSznb == nType && CStock::typeszB == stocktype )
 					|| ( typeClassShabond == nType && CStock::typeshBond == stocktype )
+					|| ( typeNQ == nType && CStock::typeNQ == stocktype )
 					|| ( typeClassSznbond == nType && CStock::typeszBond == stocktype ) )
 				{
 					Add( info );

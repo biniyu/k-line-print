@@ -964,6 +964,7 @@ public:
 		typeszRight		=	0x24,	//	深圳权证 0x24 
 		typeszBonus		=	0x25,	//	深圳红利 0x25 
 		typeszAdmeasure	=	0x26,	//	深圳配股 0x26 
+		typeNQ			=	0x27,	//	国内期货 0x26 
 		typeszInfo		=	0x2F,	//	深圳证交所信息 0x2f 
 		typeGeneralInfo	=	0x05,	//	综合财经信息 0x05 
 	};

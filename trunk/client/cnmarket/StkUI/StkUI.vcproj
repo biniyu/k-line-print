@@ -3541,5 +3541,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="StkUI.rc"
+		/>
 	</Globals>
 </VisualStudioProject>
