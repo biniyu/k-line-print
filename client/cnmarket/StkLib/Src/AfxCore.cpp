@@ -215,7 +215,7 @@ BOOL AfxPrepareStockData( CStDatabase * pDatabase, CStock &stock, int nKType, in
 
 	stock.SetDatabase( pDatabase );
 	stock.PrepareData( CStock::dataK, CKData::ktypeDay, bReload );
-	stock.PrepareData( CStock::dataK, CKData::ktypeMin1, bReload );
+//	stock.PrepareData( CStock::dataK, CKData::ktypeMin1, bReload );
 	stock.PrepareData( CStock::dataK, CKData::ktypeMin5, bReload );
 	stock.PrepareData( CStock::dataDR, CKData::ktypeDay, bReload );
 	if( bReload || stock.GetKDataDay().GetCurFormat() == CKData::formatOriginal )
