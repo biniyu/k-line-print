@@ -113,6 +113,72 @@ typedef struct _tw_ans_init_t {
 	CHAR	m_shortname[4];
 } TW_ANS_INIT;
 
+typedef struct _tw_ans_report_t {
+	WORD	m_number;				// No.
+	DWORD	m_volnow;				// 现手（单位为股）
+	DWORD	m_open;					// 0.001
+	DWORD	m_high;					// 0.001
+	DWORD	m_low;					// 0.001
+	DWORD	m_new;					// 0.001
+	DWORD	m_volume;
+	DWORD	m_amount;
+	DWORD	m_buy1;					// 0.001
+	DWORD	m_buy1vol;
+	DWORD	m_buy2;					// 0.001
+	DWORD	m_buy2vol;
+	DWORD	m_buy3;					// 0.001
+	DWORD	m_buy3vol;
+	DWORD	m_sell1;				// 0.001
+	DWORD	m_sell1vol;
+	DWORD	m_sell2;				// 0.001
+	DWORD	m_sell2vol;
+	DWORD	m_sell3;				// 0.001
+	DWORD	m_sell3vol;
+	WORD	m_reserved;				// = 0x64 0x00
+} TW_ANS_REPORT;
+
+
+typedef struct _tw_detail_t {
+	WORD	m_offset;
+	DWORD	m_price;				// 0.001
+	DWORD	m_volume;
+	DWORD	m_buy;					// 0.001
+	DWORD	m_sell;					// 0.001
+} TW_DETAIL;
+
+typedef struct _tw_minute_t {
+	DWORD	m_data1;				// * 0.001 if price
+	DWORD	m_data2;				// * 0.001 if price
+} TW_MINUTE;
+
+typedef struct _tw_ans_minute_t {
+	TW_DETAIL	m_details[11];
+	WORD	m_offset;
+	DWORD	m_bargain;
+	DWORD	m_outter;
+	DWORD	m_innter;
+	DWORD	m_open;					// 0.001
+	DWORD	m_high;					// 0.001
+	DWORD	m_low;					// 0.001
+	DWORD	m_new;					// 0.001
+	DWORD	m_volume;
+	DWORD	m_amount;
+	DWORD	m_buy1;					// 0.001
+	DWORD	m_buy1vol;
+	DWORD	m_buy2;					// 0.001
+	DWORD	m_buy2vol;
+	DWORD	m_buy3;					// 0.001
+	DWORD	m_buy3vol;
+	DWORD	m_sell1;				// 0.001
+	DWORD	m_sell1vol;
+	DWORD	m_sell2;				// 0.001
+	DWORD	m_sell2vol;
+	DWORD	m_sell3;				// 0.001
+	DWORD	m_sell3vol;
+	WORD	m_reserved;				// = 0x64 0x00
+	TW_MINUTE	m_minutes[246];
+} TW_ANS_MINUTE;
+
 
 int ConstructLength( TW_HEADER & header, int len )
 {
@@ -189,6 +255,32 @@ namespace
 
 						printf("ask report! serial %d, size %d\n", pAsk->m_serial, pAsk->m_size);
 
+						size_t dataoffset = 43;
+
+						int nTotalLen = dataoffset + sizeof(TW_ANS_REPORT) * 2;
+
+						char* pbuffer = new char[nTotalLen];
+
+						memset(pbuffer, 0, nTotalLen); 
+	
+						TW_ANS * pans = (TW_ANS*)pbuffer;
+
+						pans->m_header.m_magic = TW_MAGIC;
+						pans->m_serial = pAsk->m_serial;
+
+						ConstructLength(pans->m_header, nTotalLen - sizeof(TW_HEADER));
+
+						pans->m_tag1 = 0x0;
+						pans->m_tag2 = 0x3;
+
+						TW_ANS_REPORT * preport = (TW_ANS_REPORT*)(pbuffer + dataoffset);
+
+						preport[0].m_new = 90000000;
+						preport[1].m_new = 45360000;
+			
+						ss.sendBytes(pbuffer, nTotalLen);
+						delete []pbuffer;
+
 						for(int i = 0; i < pAsk->m_size; i++)
 						{
 							printf(" code %6.6s type %d\n", 
@@ -199,7 +291,39 @@ namespace
 					}
 					else if(tag1 == 0x01 && tag2== 0x04)	//	请求分钟数据
 					{	
-						printf("ask minute!\n");			
+						TW_ASK* pAsk = (TW_ASK*)buffer;
+
+						printf("ask minute! serial %d, size %d code %6.6s\n", pAsk->m_serial, pAsk->m_size, pAsk->m_stocks[0].m_code);
+
+						size_t dataoffset = 43;
+
+						int nTotalLen = dataoffset + sizeof(TW_ANS_MINUTE);
+
+						char* pbuffer = new char[nTotalLen];
+
+						memset(pbuffer, 0, nTotalLen); 
+	
+						TW_ANS * pans = (TW_ANS*)pbuffer;
+
+						pans->m_header.m_magic = TW_MAGIC;
+						pans->m_serial = pAsk->m_serial;
+
+						ConstructLength(pans->m_header, nTotalLen - sizeof(TW_HEADER));
+
+						pans->m_tag1 = 0x1;
+						pans->m_tag2 = 0x4;
+
+						TW_ANS_MINUTE * pminute = (TW_ANS_MINUTE*)(pbuffer + dataoffset);
+
+						for(int i = 0; i < 246; i++)
+						{
+							pminute->m_offset = 100;
+							pminute->m_minutes[i].m_data1 = 1000000 + 100*i;
+							pminute->m_minutes[i].m_data2 = 70000 + 37*i;
+						}
+			
+						ss.sendBytes(pbuffer, nTotalLen);
+						delete []pbuffer;
 					}
 					else if(tag2 == 0x09)					//	请求历史数据
 					{
