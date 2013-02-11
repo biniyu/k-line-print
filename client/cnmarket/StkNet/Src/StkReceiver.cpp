@@ -76,7 +76,7 @@ UINT StkProcessReceiveReport( LPVOID pParam )
 			FreeCommPacket( pCommPacket );
 		}
 
-		Sleep( 1000 );
+		Sleep( 100 );
 
 		// User wants to quit program
 		if(WAIT_OBJECT_0 == WaitForSingleObject(CStkReceiver::m_hEventKillProcessThread,0) )

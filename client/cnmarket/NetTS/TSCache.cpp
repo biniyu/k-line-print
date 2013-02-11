@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "TSCache.h"
 #include "TW.h"
+#include "TSWnd.h"
 #include "SpTime.h"
 #include "TWSocket.h"
 
@@ -252,6 +253,7 @@ int CTSCache::DiscardPacket( int nPacketLen )
 
 BOOL CTSCache::PushPacket( UINT nMsgType, PRCV_DATA pRCV_DATA )
 {
+#if 0
 	ASSERT( pRCV_DATA && pRCV_DATA->m_pData );
 
 	CSingleLock lock(&m_mutexPackets,TRUE);
@@ -260,6 +262,12 @@ BOOL CTSCache::PushPacket( UINT nMsgType, PRCV_DATA pRCV_DATA )
 	packet.m_nMsgType = nMsgType;
 	packet.m_pRCV_DATA = pRCV_DATA;
 	m_aPackets.Add( packet );
+	return TRUE;
+#endif
+
+	if( pRCV_DATA && pRCV_DATA->m_pData )
+		CTSWnd::GetInstance().SendMessage( nMsgType, (LPARAM)pRCV_DATA );
+	FreePacket( pRCV_DATA );
 	return TRUE;
 }
 

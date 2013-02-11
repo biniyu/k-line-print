@@ -96,7 +96,7 @@ UINT TSDispatchThreadMain( LPVOID pParam )
 			CTSCache::GetInstance().FreePacket( pRCV_DATA );
 		}
 
-		Sleep( 1000 );
+		Sleep( 100 );
 
 		// User wants to quit program
 		if(WAIT_OBJECT_0 == WaitForSingleObject(CTSWnd::m_hEventKillDispatchThread,0) )
