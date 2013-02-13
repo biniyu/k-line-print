@@ -16,6 +16,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGuiOfficeDemo", "Samples\C
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiAdoTest", "Samples\GuiAdoTest\GuiAdoTest.vcproj", "{5C1484FC-7DF8-40E5-BF35-68B02B902F26}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A23AFA67-8AA4-4512-9D7F-08C41085BF28} = {A23AFA67-8AA4-4512-9D7F-08C41085BF28}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiLib", "GuiLib\GuiLib.vcproj", "{A23AFA67-8AA4-4512-9D7F-08C41085BF28}"
 EndProject
@@ -27,6 +30,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiPanelAccessDemo", "Sampl
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gui_DevStudio", "Samples\Gui_DevStudio\Gui_DevStudio.vcproj", "{736B4B0F-FF3C-4699-9FED-14027F203414}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A23AFA67-8AA4-4512-9D7F-08C41085BF28} = {A23AFA67-8AA4-4512-9D7F-08C41085BF28}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OutlookDemo", "Samples\OutlookDemo\OutlookDemo.vcproj", "{67F4A48B-BD48-4C0A-821A-BE7F21A2F70F}"
 	ProjectSection(ProjectDependencies) = postProject
