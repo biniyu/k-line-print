@@ -221,6 +221,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\AccountWindow.cpp"
+				>
+			</File>
+			<File
 				RelativePath="AfxCore.cpp"
 				>
 				<FileConfiguration
@@ -394,6 +398,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\AccountWindow.h"
+				>
+			</File>
 			<File
 				RelativePath="AfxCore.h"
 				>
@@ -3231,6 +3239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\bitmaphelper.bmp"
+				>
+			</File>
+			<File
 				RelativePath="res\bmp00001.bmp"
 				>
 			</File>
@@ -3308,6 +3320,10 @@
 			</File>
 			<File
 				RelativePath="res\cursor1.cur"
+				>
+			</File>
+			<File
+				RelativePath=".\res\dbprojec.bmp"
 				>
 			</File>
 			<File

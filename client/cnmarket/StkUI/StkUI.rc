@@ -111,6 +111,8 @@ IDB_WORKSPBAR_BTN       BITMAP                  "res\\bmp00007.bmp"
 IDB_SPLASH              BITMAP                  "res\\splash.bmp"
 IDR_TOOLBAR1            BITMAP                  "res\\toolbar1.bmp"
 IDR_PLAYBACK            BITMAP                  "res\\playback.bmp"
+IDB_DBPROJECTS          BITMAP                  "res\\dbprojec.bmp"
+IDB_BITMAPHELP          BITMAP                  "res\\bitmaphelper.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -4121,7 +4123,6 @@ STRINGTABLE
 BEGIN
     IDS_SLHHDR_DAY          "日"
     IDS_SLISTVIEW_CLASS     "分类^"
-    IDS_SLISTVIEW_NQ        "国内期货"
     IDS_SLISTVIEW_A         "A股"
     IDS_SLISTVIEW_SZNB      "深B"
     IDS_SLISTVIEW_SHB       "沪B"
@@ -4130,6 +4131,13 @@ BEGIN
     IDS_SLISTVIEW_SELF      "自选"
     IDS_SLISTVIEW_GROUP     "分组^"
     IDS_SLISTVIEW_DOMAIN    "板块^"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_REALTIME_BUY7       "买⑦"
+    IDS_REALTIME_BUY8       "买⑧"
+    IDS_SLISTVIEW_NQ        "国内期货"
 END
 
 STRINGTABLE 
@@ -4644,12 +4652,6 @@ BEGIN
     IDS_REALTIME_SELL7      "卖⑦"
     IDS_REALTIME_SELL6      "卖⑥"
     IDS_REALTIME_BUY6       "买⑥"
-END
-
-STRINGTABLE 
-BEGIN
-    IDS_REALTIME_BUY7       "买⑦"
-    IDS_REALTIME_BUY8       "买⑧"
 END
 
 STRINGTABLE 

@@ -169,6 +169,9 @@
 #define IDD_REGAPPLYEVA                 297
 #define IDR_PLAYBACK                    297
 #define IDD_SELECTOR_FORM               298
+#define IDB_DBPROJECTS                  298
+#define IDB_BITMAP2                     299
+#define IDB_BITMAPHELP                  299
 #define IDC_URL_ADDRESS                 1000
 #define IDC_PROGRESS                    1001
 #define IDC_EDITCODE                    1001
@@ -1177,7 +1180,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        298
+#define _APS_NEXT_RESOURCE_VALUE        300
 #define _APS_NEXT_COMMAND_VALUE         34593
 #define _APS_NEXT_CONTROL_VALUE         1322
 #define _APS_NEXT_SYMED_VALUE           101
