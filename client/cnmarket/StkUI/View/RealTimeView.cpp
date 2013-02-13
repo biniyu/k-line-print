@@ -366,8 +366,8 @@ int CRealTimeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndReportTab.Addtab( this, strName, -1);
 
 	m_wndReportTab.SetColorTabs(AfxGetProfile().GetColor(CColorClass::clrGraphBK));
-	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
-									AfxGetProfile().GetColor(CColorClass::clrTitle) );
+//	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
+//									AfxGetProfile().GetColor(CColorClass::clrTitle) );
 	m_wndReportTab.SetAutoAjust(FALSE);
 	m_wndReportTab.ShowButtonClose(FALSE);
 	m_wndReportTab.SetALingTabs( CGuiTabWnd::ALN_BOTTOM );
@@ -392,7 +392,7 @@ void CRealTimeView::OnSelchangeReporttab(NMHDR* pNMHDR, LRESULT* pResult)
 		return;
 
 	int nCur = m_wndReportTab.GetCurtab();
-	CRect	rect = m_wndReportTab.GetTabRect( nCur );
+//	CRect	rect = m_wndReportTab.GetTabRect( nCur );
 
 	int nTechLine = m_realtime[0].GetDrawTechLine();
 	switch( nCur )
@@ -520,8 +520,8 @@ LRESULT CRealTimeView::OnGetViewCmdid(WPARAM wParam, LPARAM lParam)
 LRESULT CRealTimeView::OnColorChange(WPARAM wParam, LPARAM lParam)
 {
 	m_wndReportTab.SetColorTabs(AfxGetProfile().GetColor(CColorClass::clrGraphBK));
-	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
-									AfxGetProfile().GetColor(CColorClass::clrTitle) );
+//	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
+//									AfxGetProfile().GetColor(CColorClass::clrTitle) );
 	m_wndReportTab.Invalidate( );
 
 	Invalidate( );

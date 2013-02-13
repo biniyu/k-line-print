@@ -49,7 +49,7 @@
 #include	"../ProfUIS/Include/Prof-UIS.h"
 
 // GuiLib
-#include	"../GuiLib/Header/ExtLib.h"
+#include <Guilib.h>
 
 // XPFace
 // #define	SPFACE_STATIC

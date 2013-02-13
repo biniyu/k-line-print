@@ -52,6 +52,8 @@
 
 #include "./htmlhelp/htmlhelp.h"
 
+#include <Guilib.h>
+
 #include "../Include/XPFace.h"
 
 

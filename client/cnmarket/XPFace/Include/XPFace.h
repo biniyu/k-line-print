@@ -1,5 +1,5 @@
 //
-// Copyright © 1998 Kirk Stowell ( kstowel@sprynet.com )
+// Copyright ?1998 Kirk Stowell ( kstowel@sprynet.com )
 // www.geocities.com/SiliconValley/Haven/8230/index.html
 //
 // You are free to use, modify and distribute this source, as long as
@@ -46,8 +46,6 @@
 #else 
   #define CLASS_EXPORT AFX_CLASS_IMPORT
 #endif 
-
-#include "../../GuiLib/Header/ExtLib.h"
 
 #include "Dibapi.h"
 #include "CJButton.h"
