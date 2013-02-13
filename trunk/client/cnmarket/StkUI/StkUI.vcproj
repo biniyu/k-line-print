@@ -148,10 +148,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\GuiLib2\GuiLib"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				ForceConformanceInForLoopScope="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\Debug/StkUI.pch"
@@ -162,6 +164,7 @@
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -180,7 +183,7 @@
 				OutputFile="Debug/StockAna.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="../StkLib/Lib,../StkNet/Lib,../ProfUIS/Bin,../GuiLib/Lib,../XPFace/Lib"
+				AdditionalLibraryDirectories="../StkLib/Lib;../StkNet/Lib;../ProfUIS/Bin;../GuiLib2/Lib;../XPFace/Lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/StockAna.pdb"
 				SubSystem="2"

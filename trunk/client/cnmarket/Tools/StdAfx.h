@@ -44,7 +44,7 @@
 #include "htmlhelp/htmlhelp.h"
 
 // GuiLib
-#include	"../GuiLib/Header/ExtLib.h"
+#include <Guilib.h>
 
 // XPFace
 // #define	SPFACE_STATIC

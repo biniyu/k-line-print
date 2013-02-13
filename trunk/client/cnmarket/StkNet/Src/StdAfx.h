@@ -62,7 +62,7 @@
 #include	"../../StkLib/Include/StkLib.h"
 
 // GuiLib
-#include	"../../GuiLib/Header/ExtLib.h"
+#include <Guilib.h>
 
 #include	<math.h>
 #include	"Resource.h"

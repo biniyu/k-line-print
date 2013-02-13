@@ -465,7 +465,7 @@ LRESULT CStrategyView::OnColorChange(WPARAM wParam, LPARAM lParam)
 	
 	CWnd * pParent = GetParent();
 	if( pParent && ::IsWindow(pParent->GetSafeHwnd()) )
-		pParent->SendMessage( WM_GUITABWND_COLORCHANGE, clrBK, clrText );
+		pParent->SendMessage( 8888/*WM_GUITABWND_COLORCHANGE*/, clrBK, clrText );
 
 	Invalidate( );
 	return 0;

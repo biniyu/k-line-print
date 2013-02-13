@@ -166,7 +166,7 @@ void CWorkspBar::ShowNormal( BOOL bShowNormal )
 		if( !IsSizeNormal() )
 		{
 			m_sizeVert.cx	=	210;
-			m_tabctrl.ResetDeplaza( );
+//			m_tabctrl.ResetDeplaza( );
 			RecalWindowPos();
 		}
 		if( !IsWindowVisible() )
