@@ -785,6 +785,7 @@ char	szSimuBar[]		=	"SimuBar";
 char	szWorkspBar[]	=	"WorkspBar";
 char	szViewBar[]		=	"ViewBar";
 char	szPeriodBar[]	=	"PeriodBar";
+char	szAccountBar[]	=	"AccountBar";
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -807,13 +808,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	// Create ToolBars
 	if( !CreateMenuBar( ) || 
-		!CreateMainBar( ) || 
+//		!CreateMainBar( ) || 
 		!CreateViewBar( ) || 
 		!CreatePeriodBar( ) || 
-		!CreateSListBar( ) || 
+//		!CreateSListBar( ) || 
 		!CreateSimuBar( ) ||
 		!CreateStatusBar( ) ||
-		!CreateWorkspBar( ) ||
+//		!CreateWorkspBar( ) ||
 		!CreatePlaybackBar( )
 		)
 	{
@@ -838,32 +839,44 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CExtControlBar::FrameEnableDocking(this);
 	*/
 
+	if (!m_wndAccount.Create(_T("Account"),WS_CHILD | WS_VISIBLE, this, 0x997))
+    {
+        TRACE0("Failed to create Account\n");
+        return -1;      
+	}
+
+
+	m_wndAccount.SetBarStyle(m_wndAccount.GetBarStyle() |
+		CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC);
+
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndMainBar.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndAccount.EnableDocking(CBRS_ALIGN_ANY);
+//	m_wndMainBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndViewBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndSListBar.EnableDocking(CBRS_ALIGN_TOP|CBRS_ALIGN_BOTTOM);
+//	m_wndSListBar.EnableDocking(CBRS_ALIGN_TOP|CBRS_ALIGN_BOTTOM);
 	m_wndPeriodBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndSimuBar.EnableDocking(CBRS_ALIGN_ANY);
 	m_wndPlaybackBar.EnableDocking(CBRS_ALIGN_ANY);
-	m_wndWorkspBar.EnableDocking(CBRS_ALIGN_LEFT|CBRS_ALIGN_RIGHT);
+//	m_wndWorkspBar.EnableDocking(CBRS_ALIGN_LEFT|CBRS_ALIGN_RIGHT);
 
 	// Set Bar Position
 	DockControlBar(&m_wndMenuBar,AFX_IDW_DOCKBAR_TOP);
 
-	DockControlBar(&m_wndMainBar,AFX_IDW_DOCKBAR_TOP);
-	DockControlBar(&m_wndSListBar,AFX_IDW_DOCKBAR_TOP);
-	DockControlBarLeftOf(&m_wndSimuBar,&m_wndSListBar);
+//	DockControlBar(&m_wndMainBar,AFX_IDW_DOCKBAR_TOP);
+//	DockControlBar(&m_wndSListBar,AFX_IDW_DOCKBAR_TOP);
+//	DockControlBarLeftOf(&m_wndSimuBar,&m_wndSListBar);
 	
-	DockControlBar(&m_wndWorkspBar, AFX_IDW_DOCKBAR_LEFT);
-	DockControlBar(&m_wndViewBar, AFX_IDW_DOCKBAR_LEFT);
-	DockControlBarLeftOf(&m_wndPeriodBar,&m_wndViewBar);
-	DockControlBarLeftOf(&m_wndPlaybackBar,&m_wndViewBar);
+//	DockControlBar(&m_wndWorkspBar, AFX_IDW_DOCKBAR_TOP);
+	DockControlBar(&m_wndPeriodBar, AFX_IDW_DOCKBAR_TOP);
+	DockControlBarLeftOf(&m_wndPlaybackBar,&m_wndPeriodBar);
+	DockControlBarLeftOf(&m_wndViewBar,&m_wndPlaybackBar);
+	DockControlBar(&m_wndAccount, AFX_IDW_DOCKBAR_BOTTOM);
 
 	// Bar State and Window Placement
-	ShowControlBar( &m_wndMainBar, AfxGetApp()->GetProfileInt(szBarSection,szMainBar,1), FALSE );
-	ShowControlBar( &m_wndSListBar, AfxGetApp()->GetProfileInt(szBarSection,szSListBar,0), FALSE );
+//	ShowControlBar( &m_wndMainBar, AfxGetApp()->GetProfileInt(szBarSection,szMainBar,1), FALSE );
+//	ShowControlBar( &m_wndSListBar, AfxGetApp()->GetProfileInt(szBarSection,szSListBar,0), FALSE );
 	ShowControlBar( &m_wndSimuBar, AfxGetApp()->GetProfileInt(szBarSection,szSimuBar,0), FALSE );
-	ShowControlBar( &m_wndWorkspBar, AfxGetApp()->GetProfileInt(szBarSection,szWorkspBar,0), FALSE );
+//	ShowControlBar( &m_wndWorkspBar, AfxGetApp()->GetProfileInt(szBarSection,szWorkspBar,0), FALSE );
 	ShowControlBar( &m_wndViewBar, AfxGetApp()->GetProfileInt(szBarSection,szViewBar,1), FALSE );
 	ShowControlBar( &m_wndPeriodBar, AfxGetApp()->GetProfileInt(szBarSection,szPeriodBar,1), FALSE );
 	
@@ -1624,12 +1637,13 @@ void CMainFrame::OnClose()
 	{
 		// My Own Bar State and Window Placement
 		// SaveBarState(_T("BarState"));
-		AfxGetApp()->WriteProfileInt( szBarSection, szMainBar, m_wndMainBar.IsWindowVisible() );
-		AfxGetApp()->WriteProfileInt( szBarSection, szSListBar, m_wndSListBar.IsWindowVisible() );
-		AfxGetApp()->WriteProfileInt( szBarSection, szSimuBar, m_wndSimuBar.IsWindowVisible() );
-		AfxGetApp()->WriteProfileInt( szBarSection, szWorkspBar, m_wndWorkspBar.IsWindowVisible() );
+//		AfxGetApp()->WriteProfileInt( szBarSection, szMainBar, m_wndMainBar.IsWindowVisible() );
+//		AfxGetApp()->WriteProfileInt( szBarSection, szSListBar, m_wndSListBar.IsWindowVisible() );
+//		AfxGetApp()->WriteProfileInt( szBarSection, szSimuBar, m_wndSimuBar.IsWindowVisible() );
+//		AfxGetApp()->WriteProfileInt( szBarSection, szWorkspBar, m_wndWorkspBar.IsWindowVisible() );
 		AfxGetApp()->WriteProfileInt( szBarSection, szViewBar, m_wndViewBar.IsWindowVisible() );
 		AfxGetApp()->WriteProfileInt( szBarSection, szPeriodBar, m_wndPeriodBar.IsWindowVisible() );
+		AfxGetApp()->WriteProfileInt( szBarSection, szAccountBar, m_wndAccount.IsWindowVisible() );
 		
 		WINDOWPLACEMENT wp;
 		wp.length = sizeof wp;

@@ -66,6 +66,9 @@
 #include	"Resource.h"
 #include	"AfxCore.h"
 
+#define 	GUISTYLE_XP   0x08001 	
+
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

@@ -21,6 +21,7 @@
 #define	WM_USER_UPDATESLISTVIEW		(WM_USER+1004)
 
 #include	"SListCombos.h"
+#include	"AccountWindow.h"
 #include	"View/StrategyView.h"
 #include	"View/GroupView.h"
 #include	"View/TechsView.h"
@@ -123,6 +124,8 @@ protected:
 	//CImageList	m_ImageWorkspTab;
 	//CCJTabCtrlBar	m_wndWorkspBar;
 	CWorkspBar		m_wndWorkspBar;
+
+	CAccountWindow  m_wndAccount;
 
 // Generated message map functions
 protected:
