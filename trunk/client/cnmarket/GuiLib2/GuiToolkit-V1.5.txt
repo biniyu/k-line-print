@@ -1,0 +1,9 @@
+NewMenu.cpp
+
+Line 2776 
+
+//       szCaption.Format("%S",pTemplate->mtString);
+
+Line 2789
+
+//       szCaption.Format("%S",(wchar_t*)&pTemplate->mtID);
