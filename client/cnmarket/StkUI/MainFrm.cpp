@@ -895,6 +895,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	InitMDITabbed();
 
+//	GuiDrawLayer::m_Style=GUISTYLE_2003;
+//	StyleDispl(GUISTYLE_2003);
+
 	// Set Timer
 	SetTimer( TIMER_TIME, 1000, NULL );
 	SetTimer( TIMER_STOCKINDEXREFRESH, 3000, NULL );

@@ -711,8 +711,8 @@ void CSListView::OnInitialUpdate()
 		strName.LoadString( IDS_SLISTVIEW_DOMAIN );
 		m_wndWorkTab.Addtab( &m_Grid, strName, SL_WORKTAB_DOMAIN);
 
-//		m_wndWorkTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrSListBK),
-//										AfxGetProfile().GetColor(CColorClass::clrTitle) );
+		m_wndWorkTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrSListBK),
+										AfxGetProfile().GetColor(CColorClass::clrTitle) );
 		m_wndWorkTab.SetActualTitle(FALSE);
 		m_wndWorkTab.SetCurtab( SL_WORKTAB_SELF );
 
@@ -979,7 +979,7 @@ void CSListView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* pDe
 void CSListView::OnSelchangeWorktab(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	int nCur = m_wndWorkTab.GetCurtab();
-	CRect	rect;// = m_wndWorkTab.GetTabRect( nCur );
+	CRect	rect = m_wndWorkTab.GetTabRect( nCur );
 	CMenu	menu;
 	switch( nCur )
 	{
@@ -1058,8 +1058,8 @@ LRESULT CSListView::OnGetViewCmdid(WPARAM wParam, LPARAM lParam)
 
 LRESULT CSListView::OnColorChange(WPARAM wParam, LPARAM lParam)
 {
-//	m_wndWorkTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrSListBK),
-//									AfxGetProfile().GetColor(CColorClass::clrTitle) );
+	m_wndWorkTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrSListBK),
+									AfxGetProfile().GetColor(CColorClass::clrTitle) );
 	m_wndWorkTab.Invalidate( );
 
 	m_Grid.SetBkColor( AfxGetProfile().GetColor(CColorClass::clrSListBK) );

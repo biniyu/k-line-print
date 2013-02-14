@@ -331,8 +331,8 @@ int CGraphView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndReportTab.Addtab( this, strName, -1);
 
 	m_wndReportTab.SetColorTabs(AfxGetProfile().GetColor(CColorClass::clrGraphBK));
-//	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
-//									AfxGetProfile().GetColor(CColorClass::clrTitle) );
+	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
+									AfxGetProfile().GetColor(CColorClass::clrTitle) );
 	m_wndReportTab.SetAutoAjust(FALSE);
 	m_wndReportTab.ShowButtonClose(FALSE);
 	m_wndReportTab.SetALingTabs( CGuiTabWnd::ALN_BOTTOM );
@@ -346,7 +346,7 @@ int CGraphView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CGraphView::OnSelchangeReporttab(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	int nCur = m_wndReportTab.GetCurtab();
-//	CRect	rect = m_wndReportTab.GetTabRect( nCur );
+	CRect	rect = m_wndReportTab.GetTabRect( nCur );
 
 	switch( nCur )
 	{
@@ -436,8 +436,8 @@ LRESULT CGraphView::OnGetViewCmdid(WPARAM wParam, LPARAM lParam)
 LRESULT CGraphView::OnColorChange(WPARAM wParam, LPARAM lParam)
 {
 	m_wndReportTab.SetColorTabs(AfxGetProfile().GetColor(CColorClass::clrGraphBK));
-//	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
-//									AfxGetProfile().GetColor(CColorClass::clrTitle) );
+	m_wndReportTab.SetSelectTabColor( AfxGetProfile().GetColor(CColorClass::clrGraphBK),
+									AfxGetProfile().GetColor(CColorClass::clrTitle) );
 
 	Invalidate( );
 	return 0L;

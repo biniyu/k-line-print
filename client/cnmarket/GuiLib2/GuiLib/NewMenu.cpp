@@ -2772,12 +2772,22 @@ BOOL CNewMenu::LoadMenu(LPCTSTR lpszResourceName)
       dwID = pTemplate->mtID;
       #ifdef UNICODE
         szCaption = pTemplate->mtString;
+		pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
       #else
- //       szCaption.Format("%S",pTemplate->mtString);
+#if _MSC_VER <= 1200 // MFC 6.0 or earlier
+        szCaption.Format("%S",pTemplate->mtString);
+		pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
+#else
+	   USES_CONVERSION;
+	   szCaption.Format("%s",W2A(pTemplate->mtString));
+	   pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+                                     szCaption.GetLength()*2 *sizeof(char));
+#endif
       #endif 
           
-      pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
-                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
+     
     }
     else
     {
@@ -2785,12 +2795,22 @@ BOOL CNewMenu::LoadMenu(LPCTSTR lpszResourceName)
 
       #ifdef UNICODE
         szCaption = (wchar_t*)&pTemplate->mtID;
+		pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
       #else
- //       szCaption.Format("%S",(wchar_t*)&pTemplate->mtID);
+#if _MSC_VER <= 1200 // MFC 6.0 or earlier
+       szCaption.Format("%S",(wchar_t*)&pTemplate->mtID);
+       pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
+#else
+      USES_CONVERSION;
+	  szCaption.Format("%s",W2A((wchar_t*)&pTemplate->mtID));
+	  pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
+		                      szCaption.GetLength() *2*sizeof(char));
+#endif
       #endif 
           
-      pTemplate = (MENUITEMTEMPLATE*)(DWORD_PTR)((DWORD)(DWORD_PTR)(pTemplate+1) +
-                                      wcslen(pTemplate->mtString)*sizeof(wchar_t));
+      
     }
     // Handle popup menus first....
     if(wFlags & MF_POPUP)

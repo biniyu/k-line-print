@@ -689,7 +689,18 @@ void CGuiTabWnd::SetCurtab(int m_numtab)
 			AjustTabs();
 		Invalidate();
 		UpdateWindow();
+	}
 
+	// Modified By SunZhenYu, 2003/10/28, add next 3 lines
+	CWnd * pParent = GetParent();
+	if( pParent )
+	{
+		WPARAM wParam = GetDlgCtrlID();
+		NMHDR hdr;
+		hdr.hwndFrom = GetSafeHwnd();
+		hdr.idFrom = GetDlgCtrlID();
+		hdr.code = TCN_SELCHANGE;
+		pParent->SendMessage( WM_NOTIFY, wParam, (LPARAM)&hdr);
 	}
 
 }
@@ -789,4 +800,32 @@ BOOL CGuiTabWnd::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 		pParent->SendMessage(WM_NOTIFY, wParam, lParam);
 	
 	return TRUE;
+}
+
+// Modified By SunZhenyu, 2003/10/28, add the next function
+CRect CGuiTabWnd::GetTabRect( int m_numtab )
+{
+	if( m_numtab >= 0 && m_numtab < m_Numtabs )
+	{
+		CGuiTab* ct=(CGuiTab*) m_pArray[m_numtab];
+		CRect	rect = ct->rect;
+		ClientToScreen( &rect );
+		return rect;
+	}
+	return CRect(0,0,0,0);
+}
+
+// Modified By SunZhenyu, 2003/11/09, add the next function
+void CGuiTabWnd::SetSelectTabColor( COLORREF clrBK, COLORREF clrText )
+{
+	m_clrSelectTabBK	=	clrBK;
+	m_clrSelectTabText	=	clrText;
+}
+
+// Modified By SunZhenyu, 2003/11/11, add the next 1 function
+LRESULT CGuiTabWnd::OnColorChange(WPARAM wParam, LPARAM lParam)
+{
+	SetSelectTabColor( wParam, lParam );
+	Invalidate( );
+	return 0L;
 }
