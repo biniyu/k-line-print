@@ -77,6 +77,9 @@ public:
 	void    UpdateCaption(CWnd* pWnd,CString m_Title);
 	void    SetTabsTitle(int iTabNr, CString sNewTitle);
 	void    SetTabMenu(UINT nMENU,int nNumTab=0);
+	CRect	GetTabRect( int m_numtab );
+	void	SetSelectTabColor( COLORREF clrBK, COLORREF clrText );
+	LRESULT OnColorChange(WPARAM wParam, LPARAM lParam);
 	
 	virtual void StyleDispl(DWORD dwDsp=GUISTYLE_XP)
 	{m_StyleDisplay=dwDsp;SendMessage(WM_NCPAINT);Invalidate(); UpdateWindow();}
@@ -104,6 +107,9 @@ protected:
 	CWnd*			pParent;
 	AlingTab		m_alnTab;
 	BOOL			m_InTab;
+	// Modified By SunZhenyu, 2003/11/09, add the next 2 member
+	COLORREF		m_clrSelectTabBK;
+	COLORREF		m_clrSelectTabText;
 
 protected:
 

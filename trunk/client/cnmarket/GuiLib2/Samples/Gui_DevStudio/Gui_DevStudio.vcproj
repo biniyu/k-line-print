@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Gui_DevStudio"
 	ProjectGUID="{736B4B0F-FF3C-4699-9FED-14027F203414}"
+	RootNamespace="Gui_DevStudio"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="131072"
 	>
@@ -82,7 +83,7 @@
 				OutputFile="..\..\bin/Gui_DevStudioD.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\bin"
+				AdditionalLibraryDirectories="..\..\Lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\..\..\bin/Gui_DevStudioD.pdb"
 				SubSystem="2"

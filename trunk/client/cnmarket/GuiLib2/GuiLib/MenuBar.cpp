@@ -2909,7 +2909,7 @@ void CMenuIcon::UpdateButtons()
 //******************************************************************
 void CMenuIcon::TrackPopup(CWnd* pBar, CWnd* pWndSentCmd)
 {
-	ASSERT(!(m_fsState & MISTATE_HIDDEN));
+//	ASSERT(!(m_fsState & MISTATE_HIDDEN));
 	ASSERT_VALID(m_pMenuBar);
 	
 	CWnd* pFrame = m_pMenuBar->GetTopLevelFrame();
