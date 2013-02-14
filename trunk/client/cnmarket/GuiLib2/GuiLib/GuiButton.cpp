@@ -51,6 +51,10 @@ CGuiButton::CGuiButton()
 	m_clrface      = GuiDrawLayer::GetRGBColorFace();
 	m_ReposWindow  = FALSE;
 	m_bIsDark      = FALSE;
+
+	/*Modified By SunZhenyu 2004/08/24, add the next 2 line */
+	m_iStyle=STYLEXP;
+	m_ViewText=TRUE;
 }
 
 CGuiButton::~CGuiButton()
@@ -755,18 +759,18 @@ void CGuiButton::PreSubclassWindow()
 //*****************************************************************************
 void CGuiButton::OnLButtonUp(UINT nFlags, CPoint point) 
 {
-	CButton::OnLButtonUp(nFlags, point);
-	if (m_iSelected == 1)
-		m_iSelected = 0;
+
+	if (m_iSelected == 1) m_iSelected = 0;
 
 	Invalidate();
 	UpdateWindow();
+
+	CButton::OnLButtonUp(nFlags, point);
 }
 
 //*****************************************************************************
 void CGuiButton::OnLButtonDown(UINT nFlags, CPoint point) 
 {
-	CButton::OnLButtonDown(nFlags, point);
 	Invalidate();
 	UpdateWindow();
 	if (m_iTypeButton == TYPE_ARROW)
@@ -774,6 +778,8 @@ void CGuiButton::OnLButtonDown(UINT nFlags, CPoint point)
 		SetFocus();
 		ShowMenu();
 	}
+
+	CButton::OnLButtonDown(nFlags, point);
 }
 
 void CGuiButton::SetPopupMenu(CMenu* pMenu)

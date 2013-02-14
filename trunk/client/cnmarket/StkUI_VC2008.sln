@@ -8,6 +8,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StkNet", "StkNet\Src\StkNet.vcproj", "{5CA1542D-10EE-427D-A7B2-A9A3FE6251BA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{19283E59-3CF7-4931-BCB6-2B793DAE8003} = {19283E59-3CF7-4931-BCB6-2B793DAE8003}
+		{A23AFA67-8AA4-4512-9D7F-08C41085BF28} = {A23AFA67-8AA4-4512-9D7F-08C41085BF28}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StkTech", "StkTech\StkTech.vcproj", "{6E08C1A6-C42A-494D-B12C-A79F3B8D7965}"
@@ -30,8 +31,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tools", "Tools\Tools.vcproj
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XPFace", "XPFace\Src\XPFace.vcproj", "{0E6ED976-E876-4E46-B086-B0A914335C14}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A23AFA67-8AA4-4512-9D7F-08C41085BF28} = {A23AFA67-8AA4-4512-9D7F-08C41085BF28}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "profuisdll", "ProfUIS\profuisdll\profuisdll.vcproj", "{A33E346C-D5D7-4D58-95DF-0E9674B9D26E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A23AFA67-8AA4-4512-9D7F-08C41085BF28} = {A23AFA67-8AA4-4512-9D7F-08C41085BF28}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuiLib", "GuiLib2\GuiLib\GuiLib.vcproj", "{A23AFA67-8AA4-4512-9D7F-08C41085BF28}"
 EndProject
