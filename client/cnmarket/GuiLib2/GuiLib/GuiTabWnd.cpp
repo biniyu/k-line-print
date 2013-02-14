@@ -55,8 +55,8 @@ CGuiTabWnd::CGuiTabWnd()
 	m_sizeImag=CSize(15,15);
 	m_pArray.RemoveAll();
 	m_iMinValRec=0;  //minimo valor requerido para mostrar toda las carpetas
-	m_cfont.CreateFont(-11,0,0,0,400,0,0,0,0,1,2,1,34,_T("MS Sans Serif"));
-	m_cfontBold.CreateFont(-11,2,0,0,FW_BOLD,0,0,0,0,1,2,1,34,_T("MS Sans Serif"));
+	m_cfont.CreateFont(18,0,0,0,400,0,0,0,0,1,2,1,34,_T("Î¢ÈíÑÅºÚ"));
+	m_cfontBold.CreateFont(18,0,0,0,FW_BOLD,0,0,0,0,1,2,1,34,_T("Î¢ÈíÑÅºÚ"));
 	m_style=S3D;
 	m_ActualTitle=TRUE;
 	m_alnTab=ALN_BOTTOM;
