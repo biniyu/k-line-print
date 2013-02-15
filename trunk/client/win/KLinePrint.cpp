@@ -138,7 +138,7 @@ BOOL CKLinePrintApp::InitInstance()
 		return FALSE;
 
 	CalendarGenerator cg;
-	cg.Generate("D:\\Future\\ZZ", m_cal);
+	cg.Generate("C:\\FutureData\\ZZ", m_cal);
 
 	//	读入账户/品种信息
 	EXCHANGE.SetBalance(Utility::ReadBalance());
