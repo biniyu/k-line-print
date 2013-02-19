@@ -583,7 +583,7 @@ void CGuiTabWnd::ShowTitle(CString m_Caption)
 	{
 		CWnd* pParent=GetParent();
 		pParent->SetWindowText(m_Caption);
-		pParent->SendMessage(WM_COMMAND,WM_SHOWTITLE);
+		pParent->SendMessage(WM_COMMAND,ID_GUI_SHOWTITLE);
 	}
 	
 }
