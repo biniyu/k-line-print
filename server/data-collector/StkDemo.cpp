@@ -91,12 +91,17 @@ LONG CStkDemo::OnStkDataOK(
 		UINT wFileType,				// 文件类型, 参见 StockDrv.H
 		LONG lPara)					
 {
-int i;
+	int i, j;
+	CString filename;
+	FILE* fp;
+	char buf[2048];
 
-PBYTE pFileBuf = NULL;
-RCV_DATA *	pHeader;
-PGZLXBINDATA pGZLX;
-int j;
+	const char* header = "日期,时间,成交价,成交量,总量,属性(持仓增减),B1价,B1量,B2价,B2量,B3价,B3量,S1价,S1量,S2价,S2量,S3价,S3量,BS\n";
+
+	PBYTE pFileBuf = NULL;
+	RCV_DATA *	pHeader;
+	PGZLXBINDATA pGZLX;
+
 	pHeader = (RCV_DATA *) lPara;
 	My_PankouType* pData;
 	PBYTE pBuffx;
@@ -140,12 +145,26 @@ int j;
 
 		pData = (My_PankouType*)lPara;
 		
-		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f\n",
+		filename.Format("%s_%d.csv", codemap[pData->m_szLabel].c_str(), pData->m_lDate);
+
+		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f , file: %s\n",
 			pData->m_wMarket, pData->m_wStkIdx, 
 			codemap[pData->m_szLabel].c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
-			pData->R0, pData->m_fLastClose, pData->m_fOpen);
+			pData->R0, pData->m_fLastClose, pData->m_fOpen, filename);
 
-#if 0
+		if(0 == pData->R0)	//	重建文件
+		{
+			fp = fopen(filename, "w+");
+			fputs(header, fp);
+		}
+		else				//	追加记录
+		{
+			fp = fopen(filename, "a+");
+		}
+
+		if(!fp) return 0L;
+
+#if 1
 		for(i = 0; i < pData->m_nCount; i++)
 		{
 			RCV_PANKOU_STRUCTEx& tick = pData->m_Data[i];
@@ -153,14 +172,33 @@ int j;
 			struct tm * tt;
 			tt = localtime(&tick.m_time);
 
+			int year = pData->m_lDate / 10000;
+			int month = pData->m_lDate % 10000 / 100;
+			int day = pData->m_lDate % 10000 % 100;
+
+			sprintf(buf, "%d-%02d-%02d,%02d:%02d:%02d,"
+						"%.2f,%d,%d,%d, %.2f,%d,%.2f,%d,%.2f,%d, %.2f,%d,%.2f,%d,%.2f,%d,%c\n",
+						year, month, day, tt->tm_hour, tt->tm_min, tt->tm_sec,
+						tick.m_fNewPrice, 0, (int)tick.m_fVolume, 0,
+						tick.m_fBuyPrice[0], (int)tick.m_fBuyVolume[0], 
+						tick.m_fBuyPrice[1], (int)tick.m_fBuyVolume[1], 
+						tick.m_fBuyPrice[2], (int)tick.m_fBuyVolume[2], 
+						tick.m_fSellPrice[0], (int)tick.m_fSellVolume[0], 
+						tick.m_fSellPrice[1], (int)tick.m_fSellVolume[1], 
+						tick.m_fSellPrice[2], (int)tick.m_fSellVolume[2], 
+						'-');
+/*
 			TRACE(" %02d:%02d:%02d %.2f B:%.2f(%.2f) S:%.2f(%.2f) AVG %.2f h:%.2f l:%.2f vol:%.2f\n", 
 				tt->tm_hour, tt->tm_min, tt->tm_sec,
 				tick.m_fNewPrice, 
 				tick.m_fBuyPrice[0], tick.m_fBuyVolume[0],
 				tick.m_fSellPrice[0], tick.m_fSellVolume[0],
 				tick.m_fAvgPrice, tick.m_fHigh, tick.m_fLow, tick.m_fVolume);
+*/
+			fputs(buf, fp);
 		}
 #endif
+		fclose(fp);
 		break;
 	
 	case RCV_FILEDATA:
