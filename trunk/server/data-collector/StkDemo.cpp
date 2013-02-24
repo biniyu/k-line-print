@@ -92,9 +92,11 @@ LONG CStkDemo::OnStkDataOK(
 		LONG lPara)					
 {
 	int i, j;
-	CString filename;
 	FILE* fp;
+
 	char buf[2048];
+	CString filename;
+	string contractname;
 
 	const char* header = "日期,时间,成交价,成交量,总量,属性(持仓增减),B1价,B1量,B2价,B2量,B3价,B3量,S1价,S1量,S2价,S2量,S3价,S3量,BS\n";
 
@@ -144,12 +146,21 @@ LONG CStkDemo::OnStkDataOK(
 	case RCV_PANKOUDATA:
 
 		pData = (My_PankouType*)lPara;
+
+		contractname = codemap[pData->m_szLabel];
+
+		//	过滤掉无关的合约
+		if(!isdigit((unsigned char)contractname[contractname.length() - 1])) return 0L;
+		if(!isdigit((unsigned char)contractname[contractname.length() - 2])) return 0L;
+
+		//	去掉合约的年份数字
+		contractname.erase(contractname.length() - 4, 2);
 		
-		filename.Format("%s_%d.csv", codemap[pData->m_szLabel].c_str(), pData->m_lDate);
+		filename.Format("%s_%d.csv", contractname.c_str(), pData->m_lDate);
 
 		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f , file: %s\n",
 			pData->m_wMarket, pData->m_wStkIdx, 
-			codemap[pData->m_szLabel].c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
+			contractname.c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
 			pData->R0, pData->m_fLastClose, pData->m_fOpen, filename);
 
 		if(0 == pData->R0)	//	重建文件

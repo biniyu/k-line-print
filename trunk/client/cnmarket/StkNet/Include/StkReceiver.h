@@ -51,7 +51,7 @@ public:
 	BOOL	RemoveRcvDataWnd( HWND hWnd );
 	void	NotifyWndRcvData( WPARAM wParam, LPARAM lParam );
 
-	// 网络接收引擎
+	//	网络接收引擎
 	BOOL	NetEngineBeginWorking( );
 	BOOL	NetEngineBeginWorking( LPCTSTR lpszAddress, UINT nPort, LPCTSTR lpszUser, LPCTSTR lpszPasswd );
 	BOOL	NetEngineEndWorking( );
@@ -59,6 +59,12 @@ public:
 	int		NetEngineSetAutoReport( int bAutoReport );
 	int		RequestStockData( int nDataType/*CStock::DataType*/, CStockInfo * pStockInfo, int nSize, int nKType, int nDataCount );
 	int		RequestKData( CStock *pstock, int period );
+
+	//	扩展播放控制接口
+	int		Playback();
+
+	//	扩展交易接口
+	int		Trade();
 
 	// 通视卡和永新卡公共方法
 	BOOL	EngineBeginWorking( BOOL bShowSelectEngineDialog );
