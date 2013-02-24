@@ -161,8 +161,15 @@ BOOL convert_TSHISTORY_to_KDATA( DWORD dwMarket, LPCTSTR lpszCode, RCV_HISTORY_S
 
 	pkd->m_time			=	pHistory->m_time;
 	CSPTime	sptime(pkd->m_time);
+
 	if( 0 != pkd->m_time && -1 != pkd->m_time )
-		pkd->m_date			=	sptime.ToStockTimeDay();
+	{
+		if(0 == sptime.GetHour() && 0 == sptime.GetMinute())
+			pkd->m_date			=	sptime.ToStockTimeDay();
+		else
+			pkd->m_date			=	sptime.ToStockTimeMin();
+	}
+
 	pkd->m_fOpen		=	pHistory->m_fOpen;
 	pkd->m_fHigh		=	pHistory->m_fHigh;
 	pkd->m_fLow			=	pHistory->m_fLow;

@@ -34,7 +34,7 @@ BOOL convert_QL_Data_5min_to_KDATA( DWORD dwMarket, const char *szCode, struct Q
 
 	pkd->m_time		=	pqlkd->min_off;
 	CSPTime	sptime(pkd->m_time);
-	pkd->m_date		=	sptime.ToStockTimeDay();
+	pkd->m_date		=	sptime.ToStockTimeMin();
 
 //	if( sptime.FromStockTimeMin( pkd->m_time) )
 //		pkd->m_time	=	sptime.GetTime();

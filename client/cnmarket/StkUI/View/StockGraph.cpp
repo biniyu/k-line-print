@@ -1447,13 +1447,18 @@ void CStockGraph::DrawDateAxis( CDC * pDC )
 				CString	strText;
 				if( (CKData::ktypeDay == m_nCurKType )
 					&& (sptimeLast.GetMonth() != sptime.GetMonth()) )
-						strText	=	sptime.Format( "%m" );
+				{
+					if(1 == sptime.GetMonth())
+						strText	=	sptime.Format( "%Y年%m月" );
+					else
+						strText	=	sptime.Format( "%m月" );
+				}
 				else if( (CKData::ktypeWeek == m_nCurKType || CKData::ktypeMonth == m_nCurKType)
 					&& (sptimeLast.GetYear() != sptime.GetYear()) )
-						strText	=	sptime.Format( "%y" );
+						strText	=	sptime.Format( "%Y年" );
 				else if( !CKData::IsDayOrMin(m_nCurKType)
 					&& (sptimeLast.GetDay() != sptime.GetDay()) )
-						strText	=	sptime.Format( "%d" );
+						strText	=	sptime.Format( "%m月%d日" );
 				CRect	rectK;
 				if( strText.GetLength() > 0 && GetOneKLineRect( k, &rectK, NULL, NULL, NULL ) && xLast < rectK.left )
 				{
@@ -1966,12 +1971,12 @@ void CStockGraph::DrawKData( CDC * pDC, CRect rect )
 	{
 		CSPTime	sptime;
 		sptime.FromStockTimeDay( kd.m_date );
-		strTemp	=	sptime.Format( "%y-%m-%d" );
+		strTemp	=	sptime.Format( "%Y-%m-%d" );
 	}
 	else
 	{
 		CSPTime	sptime(kd.m_time);
-		strTemp	=	sptime.Format( "%m%d%H%M" );
+		strTemp	=	sptime.Format( "%m-%d %H:%M" );
 	}
 	pDC->SetTextColor( clrPlane );
 	pDC->TextOut( x, y+18, strTemp );
