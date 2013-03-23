@@ -49,6 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../../public/include;../../public/include/cppconn"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USE_32BIT_TIME_T"
 				MinimalRebuild="true"
 				RuntimeLibrary="3"
@@ -76,9 +77,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="mysqlcppconn.lib mysqlcppconn-static.lib"
 				OutputFile=".\Debug/demo32.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="../../public/lib/mysql"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/demo32.pdb"
 				SubSystem="2"
