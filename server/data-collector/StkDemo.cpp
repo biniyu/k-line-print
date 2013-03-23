@@ -32,32 +32,41 @@ CSTKDRV		gSTOCKDLL;
 static char THIS_FILE[] = __FILE__;
 #endif
 
-/*
+
 void RunConnectMySQL()
 {
 	mysql::MySQL_Driver *driver;
 	Connection *con;
 	Statement *state;
 	ResultSet *result;
-	// 初始化驱动
-	driver = sql::mysql::get_mysql_driver_instance();
-	// 建立链接
-	con = driver->connect("tcp://127.0.0.1:3306", "root", "123");
-	state = con->createStatement();
-	state->execute("use test");
-	// 查询
-	result = state->executeQuery("select * from testuser where id < 1002");
-	// 输出查询
-	while(result->next())
+
+	try
 	{
-		int id = result->getInt("ID");
-		string name = result->getString("name");
-		cout << id << " : " << name << endl;
+		// 初始化驱动
+		driver = sql::mysql::get_mysql_driver_instance();
+
+		// 建立链接
+		con = driver->connect("tcp://127.0.0.1:3306", "root", "123456");
+		state = con->createStatement();
+		state->execute("use toptrader");
+		// 查询
+		result = state->executeQuery("select * from tick");
+		// 输出查询
+		while(result->next())
+		{
+			int id = result->getInt("ID");
+			string name = result->getString("name");
+			cout << id << " : " << name << endl;
+		}
+		delete state;
+		delete con;
 	}
-	delete state;
-	delete con;
+	catch(sql::SQLException& excp)
+	{
+		printf("error!\n");
+	}
 }
-*/
+
 /////////////////////////////////////////////////////////////////////////////
 // CStkDemo
 
@@ -322,7 +331,7 @@ LONG CStkDemo::OnStkDataOK(
 
 int CStkDemo::MyCreate(CWnd* pWnd)
 {
-//	RunConnectMySQL();
+	RunConnectMySQL();
 
 	CRect rect(0, 0, 550,280);
 	HBRUSH hBrush;
