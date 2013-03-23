@@ -14,6 +14,14 @@
 #include <string>
 #include <map>
 
+#include <mysql_connection.h>
+#include <mysql_driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+
+using namespace sql;
 using namespace std;
 
 CSTKDRV		gSTOCKDLL;
@@ -24,6 +32,32 @@ CSTKDRV		gSTOCKDLL;
 static char THIS_FILE[] = __FILE__;
 #endif
 
+/*
+void RunConnectMySQL()
+{
+	mysql::MySQL_Driver *driver;
+	Connection *con;
+	Statement *state;
+	ResultSet *result;
+	// 初始化驱动
+	driver = sql::mysql::get_mysql_driver_instance();
+	// 建立链接
+	con = driver->connect("tcp://127.0.0.1:3306", "root", "123");
+	state = con->createStatement();
+	state->execute("use test");
+	// 查询
+	result = state->executeQuery("select * from testuser where id < 1002");
+	// 输出查询
+	while(result->next())
+	{
+		int id = result->getInt("ID");
+		string name = result->getString("name");
+		cout << id << " : " << name << endl;
+	}
+	delete state;
+	delete con;
+}
+*/
 /////////////////////////////////////////////////////////////////////////////
 // CStkDemo
 
@@ -95,10 +129,12 @@ LONG CStkDemo::OnStkDataOK(
 	FILE* fp;
 
 	char buf[2048];
+
+	int lastvol = 0;
 	CString filename;
 	string contractname;
 
-	const char* header = "日期,时间,成交价,成交量,总量,属性(持仓增减),B1价,B1量,B2价,B2量,B3价,B3量,S1价,S1量,S2价,S2量,S3价,S3量,BS\n";
+	const char* header = "日期,时间,成交价,均价,成交量,总量,持仓量,B1价,B1量,B2价,B2量,B3价,B3量,S1价,S1量,S2价,S2量,S3价,S3量,BS\n";
 
 	PBYTE pFileBuf = NULL;
 	RCV_DATA *	pHeader;
@@ -156,7 +192,7 @@ LONG CStkDemo::OnStkDataOK(
 		//	去掉合约的年份数字
 		contractname.erase(contractname.length() - 4, 2);
 		
-		filename.Format("%s_%d.csv", contractname.c_str(), pData->m_lDate);
+		filename.Format("data/%s_%d.csv", contractname.c_str(), pData->m_lDate);
 
 		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f , file: %s\n",
 			pData->m_wMarket, pData->m_wStkIdx, 
@@ -167,6 +203,7 @@ LONG CStkDemo::OnStkDataOK(
 		{
 			fp = fopen(filename, "w+");
 			fputs(header, fp);
+			lastvol = 0;
 		}
 		else				//	追加记录
 		{
@@ -187,10 +224,11 @@ LONG CStkDemo::OnStkDataOK(
 			int month = pData->m_lDate % 10000 / 100;
 			int day = pData->m_lDate % 10000 % 100;
 
-			sprintf(buf, "%d-%02d-%02d,%02d:%02d:%02d,"
-						"%.2f,%d,%d,%d, %.2f,%d,%.2f,%d,%.2f,%d, %.2f,%d,%.2f,%d,%.2f,%d,%c\n",
-						year, month, day, tt->tm_hour, tt->tm_min, tt->tm_sec,
-						tick.m_fNewPrice, 0, (int)tick.m_fVolume, 0,
+			sprintf(buf, "%d-%02d-%02d,%02d:%02d:%02d.%02d,"
+						"%.2f,%.2f,%d,%.2f,%.2f, %.2f,%d,%.2f,%d,%.2f,%d, %.2f,%d,%.2f,%d,%.2f,%d,%c\n",
+						year, month, day, tt->tm_hour, tt->tm_min, tt->tm_sec, tick.m_fTickAll >> 24,
+						tick.m_fNewPrice, tick.m_fAvgPrice, 
+						(int)(tick.m_fVolume - lastvol), tick.m_fVolume, tick.m_fAmount,
 						tick.m_fBuyPrice[0], (int)tick.m_fBuyVolume[0], 
 						tick.m_fBuyPrice[1], (int)tick.m_fBuyVolume[1], 
 						tick.m_fBuyPrice[2], (int)tick.m_fBuyVolume[2], 
@@ -206,6 +244,7 @@ LONG CStkDemo::OnStkDataOK(
 				tick.m_fSellPrice[0], tick.m_fSellVolume[0],
 				tick.m_fAvgPrice, tick.m_fHigh, tick.m_fLow, tick.m_fVolume);
 */
+			lastvol = tick.m_fVolume;
 			fputs(buf, fp);
 		}
 #endif
@@ -283,8 +322,11 @@ LONG CStkDemo::OnStkDataOK(
 
 int CStkDemo::MyCreate(CWnd* pWnd)
 {
-CRect rect(0, 0, 550,280);
-HBRUSH hBrush;
+//	RunConnectMySQL();
+
+	CRect rect(0, 0, 550,280);
+	HBRUSH hBrush;
+
 	if( m_bRunFlag ) return -1;
 	hBrush = (HBRUSH)GetStockObject(WHITE_BRUSH);
    	LPCTSTR lpszClassName = AfxRegisterWndClass(CS_HREDRAW|CS_VREDRAW,0,hBrush);
