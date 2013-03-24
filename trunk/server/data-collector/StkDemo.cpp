@@ -32,6 +32,8 @@ CSTKDRV		gSTOCKDLL;
 static char THIS_FILE[] = __FILE__;
 #endif
 
+map<string/*label*/,string/*name*/> labelmap;
+map<string/*name*/,string/*code(market+code)*/> codemap;
 
 void RunConnectMySQL()
 {
@@ -72,14 +74,19 @@ void RunConnectMySQL()
 
 CStkDemo::CStkDemo()
 {
-int i;
-	for(i=0; i<StkBufNum; i++){
+	int i;
+	
+	for(i = 0; i < StkBufNum; i++)
+	{
 		m_Stock[i] = _T("股票: ");
 	}
+
 	m_StkPtr = 0;
 	m_Min = _T("分时走势:");
 	m_File = _T("文件:");
 	m_bRunFlag = FALSE;
+
+	remove("data/label.txt");
 }
 
 CStkDemo::~CStkDemo()
@@ -127,7 +134,6 @@ char * pTitle = "  股号     名  称      最新     今开     昨收     最高     最低
 	dc.TextOut(1,y,m_File,m_File.GetLength());
 }
 
-map<string, string> codemap;
 
 // 处理数据
 LONG CStkDemo::OnStkDataOK(
@@ -141,7 +147,7 @@ LONG CStkDemo::OnStkDataOK(
 
 	int lastvol = 0;
 	CString filename;
-	string contractname;
+	string strContract, strLabel, strVar, strMonth, strCode;
 
 	const char* header = "日期,时间,成交价,均价,成交量,总量,持仓量,B1价,B1量,B2价,B2量,B3价,B3量,S1价,S1量,S2价,S2量,S3价,S3量,BS\n";
 
@@ -161,6 +167,9 @@ LONG CStkDemo::OnStkDataOK(
 		{
 			int nBufSize = pHeader->m_pReport[0].m_cbSize;
 			PBYTE pBaseBuf = (PBYTE)&pHeader->m_pReport[0];
+
+			fp = fopen("data/label.txt", "a+");
+
 			for(i=0; i<pHeader->m_nPacketNum; i++)
 			{
 				RCV_REPORT_STRUCTEx & Buf = *(PRCV_REPORT_STRUCTEx)(pBaseBuf + nBufSize*i );
@@ -180,11 +189,15 @@ LONG CStkDemo::OnStkDataOK(
 				string label = Buf.m_szLabel;
 				string name = Buf.m_szName;
 
-				codemap[label] = name;
+				labelmap[label] = name;
+
+				fprintf(fp, "%s <-> %s\n", Buf.m_szLabel, Buf.m_szName);
 
 				m_StkPtr ++;
 				m_StkPtr = m_StkPtr % StkBufNum;
 			}
+
+			fclose(fp);
 		}
 		break;
 
@@ -192,20 +205,30 @@ LONG CStkDemo::OnStkDataOK(
 
 		pData = (My_PankouType*)lPara;
 
-		contractname = codemap[pData->m_szLabel];
+		strContract = labelmap[pData->m_szLabel];
 
 		//	过滤掉无关的合约
-		if(!isdigit((unsigned char)contractname[contractname.length() - 1])) return 0L;
-		if(!isdigit((unsigned char)contractname[contractname.length() - 2])) return 0L;
+		if(!isdigit((unsigned char)strContract[strContract.length() - 1])) return 0L;
+		if(!isdigit((unsigned char)strContract[strContract.length() - 2])) return 0L;
 
 		//	去掉合约的年份数字
-		contractname.erase(contractname.length() - 4, 2);
+		strContract.erase(strContract.length() - 4, 2);
+
+		//	获取品种名和月份
+		strVar = strContract.substr(0, strContract.length() - 2);
+		strMonth = strContract.substr(strContract.length() - 2 , 2);
+
+		if(codemap.find(strVar) == codemap.end())
+			TRACE("cannot find code for %s\n", strVar.c_str());
+
+		//	获取标准代码
+		strCode = codemap[strVar] + "." + strMonth;
 		
-		filename.Format("data/%s_%d.csv", contractname.c_str(), pData->m_lDate);
+		filename.Format("data/%s_%d.csv", strCode.c_str(), pData->m_lDate);
 
 		TRACE("pankou data : market:%d index:%d label:%s date:%d   %d ticks of %d (block %d), lastclose %f, open %f , file: %s\n",
 			pData->m_wMarket, pData->m_wStkIdx, 
-			contractname.c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
+			strContract.c_str(), pData->m_lDate, pData->m_nCount, pData->m_nAllCount, 
 			pData->R0, pData->m_fLastClose, pData->m_fOpen, filename);
 
 		if(0 == pData->R0)	//	重建文件
@@ -221,7 +244,6 @@ LONG CStkDemo::OnStkDataOK(
 
 		if(!fp) return 0L;
 
-#if 1
 		for(i = 0; i < pData->m_nCount; i++)
 		{
 			RCV_PANKOU_STRUCTEx& tick = pData->m_Data[i];
@@ -256,7 +278,7 @@ LONG CStkDemo::OnStkDataOK(
 			lastvol = tick.m_fVolume;
 			fputs(buf, fp);
 		}
-#endif
+
 		fclose(fp);
 		break;
 	
@@ -332,6 +354,18 @@ LONG CStkDemo::OnStkDataOK(
 int CStkDemo::MyCreate(CWnd* pWnd)
 {
 	RunConnectMySQL();
+
+	FILE* fp;
+
+	char name[30], market[30], code[30];
+
+	fp = fopen("data/code.txt", "r");
+
+	while(!feof(fp))
+	{
+		fscanf(fp, "%s %s %s\n", name, market, code);
+		codemap[string(name)] = string(market) + "." + string(code);
+	}
 
 	CRect rect(0, 0, 550,280);
 	HBRUSH hBrush;
