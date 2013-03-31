@@ -6,13 +6,8 @@ MySQL Cluster -  高可用性的数据库
 
 = 网络/高可用性 =
 
-1. 基于进程的任务调度
-
-2. 基于线程的任务调度
-
-3. 基于进程/线程的任务调度
-
-4. 基于Apache MPM的任务调度
+Apache 2.x Module 
+Apache MPM
 
 = 业务层 =
 
