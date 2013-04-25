@@ -1,0 +1,71 @@
+package toptrader.oscar;
+
+message GenHeader {
+  required uint32 magic = 1;
+  required uint32 len = 2;
+  required uint32 tag = 3;
+}
+
+message LoginCmd {
+  required string account = 1;
+  required string password = 2;
+}
+
+message LoginAck {
+  required bool success = 1;
+  optional string errcode = 2;    
+}
+
+message AccountQuery {
+  required string account = 1;
+}
+
+message AccountAck {
+  message AccountInfo {
+    required string account = 1;
+    required float balance = 2;
+    required float available = 3;
+    optional float lastbalance = 4;
+    optional float buyfreeze = 5;
+    optional float sellfreeze = 6;
+    optional float buymargin = 7;
+    optional float sellmargin = 8;
+    optional float settleprofit = 9;
+    optional float fee = 10;
+  } 
+
+  required AccountInfo accinfo = 1;
+
+  message OrderInfo {
+    required uint32 orderid = 1;
+    required string code = 2;
+    required string status = 3;
+    required bool buy = 4;
+    required bool open = 5;
+    required uint32 commissionslot = 6;
+    required float commissionprice = 7;
+    required uint32 settleslot = 8;
+    required float settleprice = 9;
+    required uint32 unsettleslot = 10;
+    required string commissiontime = 11;
+    required string declaretime = 12;
+    required string canceltime = 13;
+  }     
+  
+  repeated OrderInfo orderinfo = 2;
+
+  message PositionInfo {
+    required string code = 1;
+    required uint32 buyslot = 2;
+    required float buyprice = 3;
+    required uint32 sellslot = 4;
+    required float sellprice = 5;
+    required uint32 todaybuyslot = 6;
+    required uint32 todaysellslot = 7;
+  }  
+
+  repeated PositionInfo positioninfo = 3;
+}
+
+
+
