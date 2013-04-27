@@ -16,6 +16,8 @@ message LoginAck {
   optional string errcode = 2;    
 }
 
+
+
 message AccountQuery {
   required string account = 1;
 }
@@ -65,6 +67,130 @@ message AccountAck {
   }  
 
   repeated PositionInfo positioninfo = 3;
+}
+
+message MarketQuery {
+  required int dum = 1;
+}
+
+message MarketAck {
+
+  message MarketInfo
+  {
+    required string name = 1;
+    optional int opentime = 2;
+    optional int closetime = 3;
+    optional int timezone = 4;
+  }
+
+  repeated MarketInfo markets = 1;
+}
+
+message CodeQuery {
+  required string market = 1;
+}
+
+message CodeAck {
+  repeated string codes = 1;
+}
+
+message PlaybackCommand {
+
+  enum PlayCmd {
+    PB_CMD_PLAY = 0;
+    PB_CMD_PAUSE = 1;
+    PB_CMD_SPEED = 2;
+  }
+
+  required PlayCmd cmd = 1;
+  optional int speed = 2;
+  optional string time = 3;
+}
+
+message Quote {
+  
+  required int time;
+  required string code;
+  optional float lastclose;
+  optional float open;
+  optional float high;
+  optional float low;
+  optional float newprice;
+  optional float vol;
+  optional float amount;
+
+  repeated float buyprice;
+  repeated float buyvol;
+  repeated float sellprice;
+  repeated float sellvol;
+};
+
+message PlaybackConfQuery {
+  required string account = 1;
+}
+
+message PlaybackConfAck {
+  required string code = 1;
+  required string time = 2;
+  required int speed = 3;
+  enum PlaybackMode {
+    PB_MODE_SEQUENCE = 0;
+    PB_MODE_RANDOM = 1;
+  }
+}
+
+message TradeCommand { 
+
+}
+
+message TradeAck {
+
+}
+
+message TransactionQuery {
+  required string account = 1;
+  required int starttime = 2;
+  required int endtime = 3;
+}
+
+message TransactionAck { 
+  message TransItem  {
+  
+  }
+}
+
+message HistoryQuery {
+
+  required string code = 1;
+  required int time = 2;
+  required int count = 3;
+  
+  enum HistoryType {
+    1MIN = 0;
+    5MIN = 1;
+    15MIN = 2;
+    30MIN = 3;
+    60MIN = 4;
+    DAY = 5;
+    WEEK = 6;
+    MONTH = 7;
+  }
+
+  required HistoryType type = 3 [default = DAY]; 
+}
+
+message HistoryAck {
+  message HistoryData {
+    required int time = 1;
+    required float close = 2;
+    optional float open = 3;
+    optional float high = 4;
+    optional float low = 5;
+    optional float vol = 6;
+    optional flaot interest = 7;
+  }
+
+  repeated HistoryData data = 1;
 }
 
 
