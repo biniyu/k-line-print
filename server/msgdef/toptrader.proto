@@ -16,8 +16,6 @@ message LoginAck {
   optional string errcode = 2;    
 }
 
-
-
 message AccountQuery {
   required string account = 1;
 }
@@ -132,7 +130,7 @@ message PlaybackConfQuery {
 message PlaybackConfAck {
   required string code = 1;
   required string time = 2;
-  required int speed = 3;
+  required uint32 speed = 3;
   enum PlaybackMode {
     PB_MODE_SEQUENCE = 0;
     PB_MODE_RANDOM = 1;
@@ -140,23 +138,44 @@ message PlaybackConfAck {
 }
 
 message TradeCommand { 
-
+  required string account = 1;
+  required string code = 2;
+  required bool buy = 3;
+  required bool open = 4;
+  required float commissionprice = 5;
+  required uint32 commissionslot = 6;
 }
 
 message TradeAck {
-
+ required uint32 dum = 1;
 }
 
 message TransactionQuery {
   required string account = 1;
   required int starttime = 2;
   required int endtime = 3;
+  optional string code = 4;
 }
 
 message TransactionAck { 
+
+  required string account = 1;
+
   message TransItem  {
-  
+    required int realtime = 1;
+    required int simutime = 2;
+    required string code = 3;
+    required uint32 orderid = 4;
+    required uint32 transid = 5;
+    required bool buy = 6;
+    required bool open = 7;
+    required float price = 8;
+    required uint32 slot = 9;
+    required float fee = 10;
+    required float profit = 11;
   }
+
+  repeated TransItem trans = 2;
 }
 
 message HistoryQuery {
