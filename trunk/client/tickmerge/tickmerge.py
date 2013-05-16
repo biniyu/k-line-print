@@ -21,6 +21,7 @@ def EnterDir(arg, dirname, names):
             print maxpath + ' size:' + str(maxsize)
 
         with open(maxpath) as f:
+            tmp = f.readline() # filter title row
             for line in f:
                 m.write(line)
         f.close()
