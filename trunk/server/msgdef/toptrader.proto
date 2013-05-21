@@ -68,7 +68,7 @@ message AccountAck {
 }
 
 message MarketQuery {
-  required int dum = 1;
+  required uint32 dum = 1;
 }
 
 message MarketAck {
@@ -76,9 +76,9 @@ message MarketAck {
   message MarketInfo
   {
     required string name = 1;
-    optional int opentime = 2;
-    optional int closetime = 3;
-    optional int timezone = 4;
+    optional uint32 opentime = 2;
+    optional uint32 closetime = 3;
+    optional uint32 timezone = 4;
   }
 
   repeated MarketInfo markets = 1;
@@ -101,26 +101,26 @@ message PlaybackCommand {
   }
 
   required PlayCmd cmd = 1;
-  optional int speed = 2;
+  optional uint32 speed = 2;
   optional string time = 3;
 }
 
 message Quote {
   
-  required int time;
-  required string code;
-  optional float lastclose;
-  optional float open;
-  optional float high;
-  optional float low;
-  optional float newprice;
-  optional float vol;
-  optional float amount;
+  required uint32 time = 1;
+  required string code = 2;
+  optional float lastclose = 3;
+  optional float open = 4;
+  optional float high = 5;
+  optional float low = 6;
+  optional float newprice = 7;
+  optional float vol = 8;
+  optional float amount = 9;
 
-  repeated float buyprice;
-  repeated float buyvol;
-  repeated float sellprice;
-  repeated float sellvol;
+  repeated float buyprice = 10;
+  repeated float buyvol = 11;
+  repeated float sellprice = 12;
+  repeated float sellvol = 13;
 };
 
 message PlaybackConfQuery {
@@ -152,8 +152,8 @@ message TradeAck {
 
 message TransactionQuery {
   required string account = 1;
-  required int starttime = 2;
-  required int endtime = 3;
+  required uint32 starttime = 2;
+  required uint32 endtime = 3;
   optional string code = 4;
 }
 
@@ -162,8 +162,8 @@ message TransactionAck {
   required string account = 1;
 
   message TransItem  {
-    required int realtime = 1;
-    required int simutime = 2;
+    required uint32 realtime = 1;
+    required uint32 simutime = 2;
     required string code = 3;
     required uint32 orderid = 4;
     required uint32 transid = 5;
@@ -181,32 +181,32 @@ message TransactionAck {
 message HistoryQuery {
 
   required string code = 1;
-  required int time = 2;
-  required int count = 3;
+  required uint32 time = 2;
+  required uint32 count = 3;
   
   enum HistoryType {
-    1MIN = 0;
-    5MIN = 1;
-    15MIN = 2;
-    30MIN = 3;
-    60MIN = 4;
+    _1MIN = 0;
+    _5MIN = 1;
+    _15MIN = 2;
+    _30MIN = 3;
+    _60MIN = 4;
     DAY = 5;
     WEEK = 6;
     MONTH = 7;
   }
 
-  required HistoryType type = 3 [default = DAY]; 
+  required HistoryType type = 4 [default = DAY]; 
 }
 
 message HistoryAck {
   message HistoryData {
-    required int time = 1;
+    required uint32 time = 1;
     required float close = 2;
     optional float open = 3;
     optional float high = 4;
     optional float low = 5;
     optional float vol = 6;
-    optional flaot interest = 7;
+    optional float interest = 7;
   }
 
   repeated HistoryData data = 1;
