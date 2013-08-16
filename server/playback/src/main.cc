@@ -146,7 +146,6 @@ int main()
             if(acc.heartbeat > 0)
             {
 				acc.cur_msec += 100 * acc.speed;
-
 				acc.cur_time += acc.cur_msec / 1000;
 				acc.cur_msec = acc.cur_msec % 1000;
 				
@@ -156,9 +155,42 @@ int main()
 
 					if(sym.active)
 					{
-						
+						while(sym.startpos != sym.endpos)
+						{
+							// sym.tickbar[sym.startpos]
+							if(sym.datatype == DATA_TYPE_TICK)
+							{
+								if(sym.tickbar[sym.startpos].tick.time < acc.cur_time)
+								{
+									// encode tick
+									//sym.tickbar[sym.startpos].tick;
+								}
+								else if(sym.tickbar[sym.startpos].tick.time == acc.cur_time)
+								{
+									if(sym.tickbar[sym.startpos].tick.msec <= acc.cur_msec)
+									{
+										// encode tick
+									}
+								}
+							}
+							else  // DATA_TYPE_BAR 
+							{
+								if(sym.tickbar[sym.startpos].bar.time <= acc.cur_time)
+								{
+									//  encode bar
+									//sym.tickbar[sym.startpos].bar;
+								}
+							}
+							
+							sym.startpos++;
+							if(sym.startpos == MAX_CACHE_DATA_ITEM)
+								sym.startpos = 0;
+						}
 					}
                 }
+
+				//  publish tick/bar for account
+				
             }
         }
 		
