@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: toptrader
 -- ------------------------------------------------------
--- Server version	5.6.10
+-- Server version	5.6.10-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -118,6 +118,35 @@ CREATE TABLE `order` (
   `canceltime` datetime DEFAULT NULL,
   PRIMARY KEY (`orderid`,`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `playback`
+--
+
+DROP TABLE IF EXISTS `playback`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `playback` (
+  `account` int(11) NOT NULL COMMENT '账号',
+  `play_sequence` enum('Seq','Random') DEFAULT NULL COMMENT '顺序播放，随机播放',
+  `play_speed` int(11) DEFAULT NULL,
+  `date_range_type` enum('All','StartEnd','Recent') DEFAULT NULL COMMENT 'All-所有日期的数据 \nStartEnd-在指定的日期内\nRecent-在最近几个月内',
+  `date_range_start` date DEFAULT NULL COMMENT '起始日期',
+  `date_range_end` date DEFAULT NULL COMMENT '结束日期',
+  `date_range_recent` int(11) DEFAULT NULL COMMENT '当前日期几个月内',
+  `time_start` time DEFAULT NULL COMMENT '开始时间',
+  `time_end` time DEFAULT NULL COMMENT '结束时间',
+  `weekday_mon` char(1) DEFAULT NULL,
+  `weekday_tue` char(1) DEFAULT NULL,
+  `weekday_wed` char(1) DEFAULT NULL,
+  `weekday_thu` char(1) DEFAULT NULL,
+  `weekday_fri` char(1) DEFAULT NULL,
+  `cur_code` varchar(45) DEFAULT NULL,
+  `cur_date` date DEFAULT NULL,
+  `cur_time` time DEFAULT NULL,
+  PRIMARY KEY (`account`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='回放参数';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -327,4 +356,4 @@ CREATE TABLE `variety` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-30 14:14:46
+-- Dump completed on 2013-08-22 22:44:00
