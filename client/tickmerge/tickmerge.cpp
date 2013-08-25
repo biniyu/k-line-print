@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define DATA_DIR	"C:\\Users\\Oscar\\Documents\\FutureData\\ZZ201212"
+#define DATA_DIR	"C:\\Users\\Oscar\\Documents\\FutureData\\ZZ201201"
 #define VARIETY		"TA"
 
 typedef struct _tagstuFileNameAndSize
